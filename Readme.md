@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
-* Студент: [Артем Вафин](https://up.htmlacademy.ru/ecmascript/13/user/1394233).
-* Наставник: `Неизвестно`.
+- Студент: [Артем Вафин](https://up.htmlacademy.ru/ecmascript/13/user/1394233).
+- Наставник: [Сергей Шершнев](https://up.htmlacademy.ru/ecmascript/13/user/587797).
 
 ---
 
