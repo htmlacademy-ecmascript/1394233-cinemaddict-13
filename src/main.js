@@ -8,14 +8,16 @@ import {createShowMoreBtnTemplate} from "./view/show-more-btn.js";
 import {createTopRatedListTemplate} from "./view/top-rated.js";
 import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
+import {createPopupTemplate} from "./view/popup.js";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteHeaderNode = document.querySelector(`.header`);
-const siteMainNode = document.querySelector(`.main`);
-const siteFooterNode = document.querySelector(`.footer`);
+const siteBodyNode = document.querySelector(`body`);
+const siteHeaderNode = siteBodyNode.querySelector(`.header`);
+const siteMainNode = siteBodyNode.querySelector(`.main`);
+const siteFooterNode = siteBodyNode.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 render(siteHeaderNode, createUserRangTemplate(), `beforeend`);
@@ -52,3 +54,5 @@ render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
+
+render(siteBodyNode, createPopupTemplate(), `beforeend`);
