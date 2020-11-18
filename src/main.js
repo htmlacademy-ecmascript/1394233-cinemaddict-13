@@ -14,10 +14,9 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteBodyNode = document.querySelector(`body`);
-const siteHeaderNode = siteBodyNode.querySelector(`.header`);
-const siteMainNode = siteBodyNode.querySelector(`.main`);
-const siteFooterNode = siteBodyNode.querySelector(`.footer`);
+const siteHeaderNode = document.querySelector(`.header`);
+const siteMainNode = document.querySelector(`.main`);
+const siteFooterNode = document.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 render(siteHeaderNode, createUserRangTemplate(), `beforeend`);
@@ -55,4 +54,4 @@ render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
-render(siteBodyNode, createPopupTemplate(), `beforeend`);
+render(siteFooterNode, createPopupTemplate(), `afterend`);
