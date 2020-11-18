@@ -16,6 +16,7 @@ const render = (container, template, place) => {
 const siteHeaderNode = document.querySelector(`.header`);
 const siteMainNode = document.querySelector(`.main`);
 const siteFooterNode = document.querySelector(`.footer`);
+const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 render(siteHeaderNode, createUserRangTemplate(), `beforeend`);
 render(siteMainNode, createSiteMenuTemplate(), `beforeend`);
@@ -50,4 +51,4 @@ render(topRatedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 
-render(siteFooterNode, createSiteStatisticTemplate(), `beforeend`);
+render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
