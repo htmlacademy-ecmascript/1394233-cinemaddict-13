@@ -9,6 +9,7 @@ import {createTopRatedListTemplate} from "./view/top-rated.js";
 import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
+import {generateFilm} from "./moks/film.js";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -55,3 +56,6 @@ render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
 render(siteFooterNode, createPopupTemplate(), `afterend`);
+
+const film = generateFilm();
+console.log(film);
