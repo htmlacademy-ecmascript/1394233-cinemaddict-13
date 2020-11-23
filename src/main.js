@@ -8,10 +8,14 @@ import {createShowMoreBtnTemplate} from "./view/show-more-btn.js";
 import {createTopRatedListTemplate} from "./view/top-rated.js";
 import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
-import {createPopupTemplate} from "./view/popup.js";
+// import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 
 const FILMS_AMOUNT = 20;
+
+const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
+
+console.log(films)
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -35,11 +39,10 @@ const filmsListNode = filmsNode.querySelector(`.films-list`);
 const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 
 render(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
-render(filmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(filmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(filmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(filmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(filmsContainerNode, createCardFilmTemplate(), `beforeend`);
+
+for (let i = 0; i < 5; i++) {
+  render(filmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+}
 
 render(filmsNode, createTopRatedListTemplate(), `beforeend`);
 render(filmsNode, createMostCommentedListTemplate(), `beforeend`);
@@ -49,16 +52,16 @@ const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list_
 const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
-render(topRatedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(topRatedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
+for (let i = 0; i < 2; i++) {
+  render(topRatedFilmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+}
 
-render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
-render(mostCommentedFilmsContainerNode, createCardFilmTemplate(), `beforeend`);
+for (let i = 0; i < 2; i++) {
+  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+}
+
 
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
-render(siteFooterNode, createPopupTemplate(), `afterend`);
-
-const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
-console.log(films);
+// render(siteFooterNode, createPopupTemplate(), `afterend`);
 

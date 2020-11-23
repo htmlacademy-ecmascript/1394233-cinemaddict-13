@@ -103,9 +103,9 @@ const generateDate = () => {
   const maxDaysGap = 30;
   const maxYearsGap = 40;
   const maxMonthsGap = 12;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  const yearsGap = getRandomInteger(-maxYearsGap, maxYearsGap);
-  const monthsGap = getRandomInteger(-maxMonthsGap, maxMonthsGap);
+  const daysGap = getRandomInteger(-maxDaysGap, 0);
+  const yearsGap = getRandomInteger(-maxYearsGap, 0);
+  const monthsGap = getRandomInteger(-maxMonthsGap, 0);
 
   return dayjs().add(daysGap, `day`).add(yearsGap, `year`).add(monthsGap, `month`).toDate();
 };
@@ -116,7 +116,7 @@ const generateTime = () => {
   const hour = getRandomInteger(0, maxHour);
   const minute = getRandomInteger(0, maxMinute);
 
-  return dayjs().add(hour, `hour`).add(minute, `minute`).toDate();
+  return dayjs().hour(0).minute(0).add(hour, `hour`).add(minute, `minute`).toDate();
 };
 
 const generateDescription = () => {
