@@ -69,6 +69,16 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
+const POSTERS = [
+  `made-for-each-other.png`,
+  `popeye-meets-sinbad.png`,
+  `sagebrush-trail.jpg`,
+  `santa-claus-conquers-the-martians.jpg`,
+  `the-dance-of-life.jpg`,
+  `the-great-flamarion.jpg`,
+  `the-man-with-the-golden-arm.jpg`
+];
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -109,8 +119,15 @@ const generateTime = () => {
   return dayjs().add(hour, `hour`).add(minute, `minute`).toDate();
 };
 
+const generateDescription = () => {
+  const amountSentence = getRandomInteger(1, 5);
+
+  return new Array(amountSentence).fill(generateRandomItem(DESCRIPTIONS));
+};
+
 export const generateFilm = function () {
   return {
+    poster: generateRandomItem(POSTERS),
     title: generateRandomItem(TITLES),
     originalTitle: `Original: ${generateRandomItem(TITLES)}`,
     rating: getRandomIntegerDecimal(1, 10),
@@ -121,7 +138,7 @@ export const generateFilm = function () {
     duration: generateTime(),
     country: generateRandomItem(COUNTRIES),
     genre: generateRandomItem(GENRES),
-    description: generateRandomItem(DESCRIPTIONS),
+    description: String(generateDescription()),
     ageRating: `${getRandomInteger(0, 18)}+`
   };
 };

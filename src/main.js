@@ -11,6 +11,8 @@ import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 
+const FILMS_AMOUNT = 20;
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -57,5 +59,6 @@ render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
 render(siteFooterNode, createPopupTemplate(), `afterend`);
 
-const film = generateFilm();
-console.log(film);
+const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
+console.log(films);
+
