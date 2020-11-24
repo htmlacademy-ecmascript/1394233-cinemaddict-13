@@ -10,12 +10,31 @@ import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
 // import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
+import {generateRandomComment} from "./moks/comments.js";
 
 const FILMS_AMOUNT = 20;
 
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 
-console.log(films)
+const getRandomInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+const newComments = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
+
+newComments.forEach((element, index) => {
+  element.id = index;
+});
+
+for (let i = 0; i < films.length; i++) {
+  films[i].comments = new Array(newComments.length);
+  for (let j = 0; j < films[i].comments.length; j++) {
+    films[i].comments[j] = j;
+  }
+}
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -41,7 +60,7 @@ const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 render(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
 
 for (let i = 0; i < 5; i++) {
-  render(filmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+  render(filmsContainerNode, createCardFilmTemplate(films[i], newComments), `beforeend`);
 }
 
 render(filmsNode, createTopRatedListTemplate(), `beforeend`);

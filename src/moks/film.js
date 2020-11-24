@@ -145,6 +145,7 @@ export const generateFilm = function () {
     country: generateRandomItem(COUNTRIES),
     genre: generateRandomItem(GENRES),
     description: generateDescription().join(` `),
-    ageRating: `${getRandomInteger(0, 18)}+`
+    ageRating: `${getRandomInteger(0, 18)}+`,
+    comments: null,
   };
 };
