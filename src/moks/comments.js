@@ -57,7 +57,7 @@ const generateCommentDate = () => {
 export const generateRandomComment = () => {
   return {
     id: null,
-    comment: generateRandomItem(COMMENTS),
+    text: generateRandomItem(COMMENTS),
     emoji: generateRandomItem(EMOJI),
     author: generateRandomItem(AUTHORS),
     date: generateCommentDate(),

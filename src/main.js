@@ -8,7 +8,7 @@ import {createShowMoreBtnTemplate} from "./view/show-more-btn.js";
 import {createTopRatedListTemplate} from "./view/top-rated.js";
 import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
-// import {createPopupTemplate} from "./view/popup.js";
+import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 import {generateRandomComment} from "./moks/comments.js";
 
@@ -82,5 +82,5 @@ for (let i = 0; i < 2; i++) {
 
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
-// render(siteFooterNode, createPopupTemplate(), `afterend`);
+render(siteFooterNode, createPopupTemplate(films[6], newComments), `afterend`);
 
