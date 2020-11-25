@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 export const createPopupTemplate = (film, comment) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const time = dayjs(duration).format(`H`);
@@ -40,7 +40,7 @@ export const createPopupTemplate = (film, comment) => {
   const comentsNodeTemplate = createCommentsNodeTemplate(comment);
   const genresNodeTemplate = createGenresNodeTemplate(genre);
 
-  return `<section class="film-details hidden">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -50,7 +50,7 @@ export const createPopupTemplate = (film, comment) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${ageRating}</p>
         </div>
 
         <div class="film-details__info">
@@ -91,7 +91,7 @@ export const createPopupTemplate = (film, comment) => {
               <td class="film-details__cell">${country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`} </td>
               <td class="film-details__cell">
                 ${genresNodeTemplate}</td>
             </tr>

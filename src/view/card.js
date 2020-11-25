@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 const MAX_SYMBOLS_DESCRIPTION = 140;
 
-const limitStr = (descriptionText, maxSymbols) => {
+const limitDesc = (descriptionText, maxSymbols) => {
   if (descriptionText.length > maxSymbols) {
     return `${descriptionText.substring(0, maxSymbols - 1)}...`;
   }
@@ -26,7 +26,7 @@ export const createCardFilmTemplate = (film) => {
     <span class="film-card__genre">${genre[0]}</span>
   </p>
   <img src="./images/posters/${poster}" alt="" class="film-card__poster">
-  <p class="film-card__description">${limitStr(description, MAX_SYMBOLS_DESCRIPTION)}</p>
+  <p class="film-card__description">${limitDesc(description, MAX_SYMBOLS_DESCRIPTION)}</p>
   <a class="film-card__comments">${comments.length} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
