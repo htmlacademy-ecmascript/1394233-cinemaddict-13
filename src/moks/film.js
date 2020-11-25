@@ -117,6 +117,12 @@ const generateRandomActor = () => {
   return ACTORS[randomIndex];
 };
 
+const generateRandomScreenWriter = () => {
+  const randomIndex = getRandomInteger(0, SCREENWRITERS.length - 1);
+
+  return SCREENWRITERS[randomIndex];
+};
+
 const generateDate = () => {
   const maxDaysGap = 30;
   const maxYearsGap = 40;
@@ -155,6 +161,12 @@ const generateActors = () => {
   return new Array(amountActors).fill().map(generateRandomActor);
 };
 
+const generateScreenWriters = () => {
+  const amountScreenWriters = getRandomInteger(1, 2);
+
+  return new Array(amountScreenWriters).fill().map(generateRandomScreenWriter);
+};
+
 export const generateFilm = function () {
   return {
     poster: generateRandomItem(POSTERS),
@@ -162,7 +174,7 @@ export const generateFilm = function () {
     originalTitle: `Original: ${generateRandomItem(TITLES)}`,
     rating: getRandomIntegerDecimal(1, 10),
     director: generateRandomItem(DIRECTORS),
-    screenwriter: generateRandomItem(SCREENWRITERS),
+    screenwriter: generateScreenWriters().join(`, `),
     cast: generateActors().join(`, `),
     productionYear: generateDate(),
     duration: generateTime(),
