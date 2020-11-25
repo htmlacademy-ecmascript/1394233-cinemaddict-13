@@ -1,14 +1,6 @@
 import dayjs from "dayjs";
-
-const MAX_SYMBOLS_DESCRIPTION = 140;
-
-const limitDesc = (descriptionText, maxSymbols) => {
-  if (descriptionText.length > maxSymbols) {
-    return `${descriptionText.substring(0, maxSymbols - 1)}...`;
-  }
-
-  return descriptionText;
-};
+import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
+import {limitDesc} from "../utils.js";
 
 export const createCardFilmTemplate = (film) => {
   const {poster, title, rating, genre, description, productionYear, duration, comments} = film;

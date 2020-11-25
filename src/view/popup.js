@@ -7,7 +7,6 @@ export const createPopupTemplate = (film, comment) => {
   const time = dayjs(duration).format(`H`);
   const minutes = dayjs(duration).format(`m`);
 
-
   const createCommentNodeTemplate = (elem) => {
 
     return `<li class="film-details__comment">

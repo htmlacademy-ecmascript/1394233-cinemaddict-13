@@ -11,26 +11,20 @@ import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 import {generateRandomComment} from "./moks/comments.js";
+import {getRandomInteger} from "./utils.js";
 
 const FILMS_AMOUNT = 20;
 
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+const сomments = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const newComments = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
-
-newComments.forEach((element, index) => {
+сomments.forEach((element, index) => {
   element.id = index;
 });
 
 for (let i = 0; i < films.length; i++) {
-  films[i].comments = new Array(newComments.length);
+  films[i].comments = new Array(сomments.length);
   for (let j = 0; j < films[i].comments.length; j++) {
     films[i].comments[j] = j;
   }
@@ -59,8 +53,8 @@ const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 
 render(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
 
-for (let i = 0; i < 5; i++) {
-  render(filmsContainerNode, createCardFilmTemplate(films[i], newComments), `beforeend`);
+for (let i = 1; i < 6; i++) {
+  render(filmsContainerNode, createCardFilmTemplate(films[i], сomments), `beforeend`);
 }
 
 render(filmsNode, createTopRatedListTemplate(), `beforeend`);
@@ -82,5 +76,5 @@ for (let i = 0; i < 2; i++) {
 
 render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
 
-render(siteFooterNode, createPopupTemplate(films[6], newComments), `afterend`);
+render(siteFooterNode, createPopupTemplate(films[0], сomments), `afterend`);
 
