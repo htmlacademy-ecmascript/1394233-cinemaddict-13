@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
+import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
 export const createPopupTemplate = (film, comment) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating, isWathchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const time = dayjs(duration).format(`H`);
@@ -17,7 +18,7 @@ export const createPopupTemplate = (film, comment) => {
       <p class="film-details__comment-text">${elem.text}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${elem.author}</span>
-        <span class="film-details__comment-day">2019/12/31 23:59</span>
+        <span class="film-details__comment-day">${dayjs(elem.date).format(`YYYY/MM/DD HH:mm`)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
@@ -90,7 +91,7 @@ export const createPopupTemplate = (film, comment) => {
               <td class="film-details__cell">${country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`} </td>
+              <td class="film-details__term">${genre.length > AMOUNT_GENRES_FOR_SINGLE_NUMBER ? `Genres` : `Genre`} </td>
               <td class="film-details__cell">
                 ${genresNodeTemplate}</td>
             </tr>
@@ -103,13 +104,13 @@ export const createPopupTemplate = (film, comment) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWathchList ? `checked` : ``}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavourite ? `checked` : ``}>
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>

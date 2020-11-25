@@ -171,5 +171,8 @@ export const generateFilm = function () {
     description: generateDescription().join(` `),
     ageRating: `${getRandomInteger(0, 18)}+`,
     comments: null,
+    isWathchList: Boolean(getRandomInteger(0, 1)),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isFavourite: Boolean(getRandomInteger(0, 1)),
   };
 };

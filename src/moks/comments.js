@@ -24,12 +24,6 @@ const AUTHORS = [
   `Orange`
 ];
 
-// const generateComments = () => {
-//   const amountComments = getRandomInteger(1, 5);
-
-//   return new Array(amountComments).fill().map(generateRandomComment);
-// };
-
 const generateRandomItem = (array) => {
   const randomIndex = getRandomInteger(0, array.length - 1);
 
@@ -47,11 +41,15 @@ const generateCommentDate = () => {
   const maxDaysGap = 10;
   const maxYearsGap = 1;
   const maxMonthsGap = 6;
+  const maxHour = 24;
+  const maxMinute = 59;
   const daysGap = getRandomInteger(-maxDaysGap, 0);
   const yearsGap = getRandomInteger(-maxYearsGap, 0);
   const monthsGap = getRandomInteger(-maxMonthsGap, 0);
+  const hourGap = getRandomInteger(0, maxHour);
+  const minuteGap = getRandomInteger(0, maxMinute);
 
-  return dayjs().add(daysGap, `day`).add(yearsGap, `year`).add(monthsGap, `month`).toDate();
+  return dayjs().add(daysGap, `day`).add(yearsGap, `year`).add(monthsGap, `month`).add(hourGap, `hour`).add(minuteGap, `minute`).toDate();
 };
 
 export const generateRandomComment = () => {
