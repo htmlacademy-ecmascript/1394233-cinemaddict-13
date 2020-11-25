@@ -31,13 +31,13 @@ const SCREENWRITERS = [
 ];
 
 const ACTORS = [
-  `Билли Уайлдер`,
-  `Джоэл Коэн`,
-  `Роберт Таун`,
-  `Квентин Тарантино`,
-  `Уильям Голдман`,
-  `Чарли Кауфман`,
-  `Нора Эфрон`
+  `Alan Rickman`,
+  `Benedict Cumberbatch`,
+  `Benicio del Toro`,
+  `James McAvoy`,
+  `Cillian Murphy`,
+  `Christian Bale`,
+  `Leonardo DiCaprio`,
 ];
 
 const COUNTRIES = [
@@ -111,6 +111,12 @@ const generateRandomGenre = () => {
   return GENRES[randomIndex];
 };
 
+const generateRandomActor = () => {
+  const randomIndex = getRandomInteger(0, ACTORS.length - 1);
+
+  return ACTORS[randomIndex];
+};
+
 const generateDate = () => {
   const maxDaysGap = 30;
   const maxYearsGap = 40;
@@ -143,6 +149,12 @@ const generateGenre = () => {
   return new Array(amountGenres).fill().map(generateRandomGenre);
 };
 
+const generateActors = () => {
+  const amountActors = getRandomInteger(2, 3);
+
+  return new Array(amountActors).fill().map(generateRandomActor);
+};
+
 export const generateFilm = function () {
   return {
     poster: generateRandomItem(POSTERS),
@@ -151,7 +163,7 @@ export const generateFilm = function () {
     rating: getRandomIntegerDecimal(1, 10),
     director: generateRandomItem(DIRECTORS),
     screenwriter: generateRandomItem(SCREENWRITERS),
-    cast: generateRandomItem(ACTORS),
+    cast: generateActors().join(`, `),
     productionYear: generateDate(),
     duration: generateTime(),
     country: generateRandomItem(COUNTRIES),
