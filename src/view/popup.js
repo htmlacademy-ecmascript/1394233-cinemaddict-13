@@ -40,7 +40,7 @@ export const createPopupTemplate = (film, comment) => {
   const comentsNodeTemplate = createCommentsNodeTemplate(comment);
   const genresNodeTemplate = createGenresNodeTemplate(genre);
 
-  return `<section class="film-details">
+  return `<section class="film-details hidden">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
