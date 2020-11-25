@@ -105,6 +105,12 @@ const generateRandomDescription = () => {
   return DESCRIPTIONS[randomIndex];
 };
 
+const generateRandomGenre = () => {
+  const randomIndex = getRandomInteger(0, GENRES.length - 1);
+
+  return GENRES[randomIndex];
+};
+
 const generateDate = () => {
   const maxDaysGap = 30;
   const maxYearsGap = 40;
@@ -131,6 +137,12 @@ const generateDescription = () => {
   return new Array(amountSentence).fill().map(generateRandomDescription);
 };
 
+const generateGenre = () => {
+  const amountGenres = getRandomInteger(1, 3);
+
+  return new Array(amountGenres).fill().map(generateRandomGenre);
+};
+
 export const generateFilm = function () {
   return {
     poster: generateRandomItem(POSTERS),
@@ -143,7 +155,7 @@ export const generateFilm = function () {
     productionYear: generateDate(),
     duration: generateTime(),
     country: generateRandomItem(COUNTRIES),
-    genre: generateRandomItem(GENRES),
+    genre: generateGenre(),
     description: generateDescription().join(` `),
     ageRating: `${getRandomInteger(0, 18)}+`,
     comments: null,

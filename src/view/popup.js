@@ -25,13 +25,22 @@ export const createPopupTemplate = (film, comment) => {
   </li>`;
   };
 
+  const createGenreNodeTemplate = (elem) => {
+    return `<span class="film-details__genre">${elem}</span>`;
+  };
+
+  const createGenresNodeTemplate = (genreArray) => {
+    return genreArray.map(createGenreNodeTemplate).join(` `);
+  };
+
   const createCommentsNodeTemplate = (commentArray) => {
     return commentArray.map(createCommentNodeTemplate).join(` `);
   };
 
   const comentsNodeTemplate = createCommentsNodeTemplate(comment);
+  const genresNodeTemplate = createGenresNodeTemplate(genre);
 
-  return `<section class="film-details hidden">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -84,9 +93,7 @@ export const createPopupTemplate = (film, comment) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genre}</span>
-                <span class="film-details__genre">${genre}</span>
-                <span class="film-details__genre">${genre}</span></td>
+                ${genresNodeTemplate}</td>
             </tr>
           </table>
 
