@@ -20,14 +20,49 @@ const FILMS_AMOUNT_PER_STEP = 5;
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
 
-const сomments = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
+const comments = {};
 
-сomments.forEach((element, index) => {
-  element.id = index;
-});
+for (let i = 0; i < FILMS_AMOUNT; i++) {
+  const commentsArr = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
+  commentsArr.forEach((element, index) => {
+    element.id = index;
+  });
+  comments[i] = commentsArr;
+}
+
+console.log(comments);
+
+
+const sortByRating = (array) => {
+  return array.slice().sort((a, b) => {
+    if (a.rating > b.rating) {
+      return -1;
+    }
+
+    if (a.rating < b.rating) {
+      return 1;
+    }
+
+    return 0;
+  });
+};
+
+const sortByComments = (array) => {
+  return array.slice().sort((a, b) => {
+    if (a.comments.length > b.comments.length) {
+      return -1;
+    }
+
+    if (a.comments.length < b.comments.length) {
+      return 1;
+    }
+
+    return 0;
+  });
+};
 
 for (let i = 0; i < films.length; i++) {
-  films[i].comments = new Array(сomments.length);
+  films[i].comments = new Array(comments[i].length);
   for (let j = 0; j < films[i].comments.length; j++) {
     films[i].comments[j] = j;
   }
@@ -87,35 +122,6 @@ const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list_
 const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
-
-const sortByRating = (array) => {
-  return array.slice().sort((a, b) => {
-    if (a.rating > b.rating) {
-      return -1;
-    }
-
-    if (a.rating < b.rating) {
-      return 1;
-    }
-
-    return 0;
-  });
-};
-
-const sortByComments = (array) => {
-  return array.slice().sort((a, b) => {
-    if (a.comments.length > b.comments.length) {
-      return -1;
-    }
-
-    if (a.comments.length < b.comments.length) {
-      return 1;
-    }
-
-    return 0;
-  });
-};
-
 for (let i = 0; i < 2; i++) {
   render(topRatedFilmsContainerNode, createCardFilmTemplate(sortByRating(films)[i]), `beforeend`);
 }
@@ -127,5 +133,5 @@ for (let i = 0; i < 2; i++) {
 
 render(statisticNode, createSiteStatisticTemplate(films), `beforeend`);
 
-render(siteFooterNode, createPopupTemplate(films[0], сomments), `afterend`);
+render(siteFooterNode, createPopupTemplate(films[0], comments[0]), `afterend`);
 
