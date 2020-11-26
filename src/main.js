@@ -87,12 +87,41 @@ const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list_
 const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
+
+const sortByRating = (array) => {
+  return array.slice().sort((a, b) => {
+    if (a.rating > b.rating) {
+      return -1;
+    }
+
+    if (a.rating < b.rating) {
+      return 1;
+    }
+
+    return 0;
+  });
+};
+
+const sortByComments = (array) => {
+  return array.slice().sort((a, b) => {
+    if (a.comments.length > b.comments.length) {
+      return -1;
+    }
+
+    if (a.comments.length < b.comments.length) {
+      return 1;
+    }
+
+    return 0;
+  });
+};
+
 for (let i = 0; i < 2; i++) {
-  render(topRatedFilmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+  render(topRatedFilmsContainerNode, createCardFilmTemplate(sortByRating(films)[i]), `beforeend`);
 }
 
 for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
+  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(sortByComments(films)[i]), `beforeend`);
 }
 
 
