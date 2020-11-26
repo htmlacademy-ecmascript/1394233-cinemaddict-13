@@ -1,3 +1,5 @@
+import {generateRandomComment} from "./moks/comments.js";
+import {getRandomInteger} from "./utils.js";
 import {createUserRangTemplate} from "./view/user-rang.js";
 import {createSiteMenuTemplate} from "./view/site-menu.js";
 import {createFilterTemplate} from "./view/filter.js";
@@ -10,12 +12,12 @@ import {createMostCommentedListTemplate} from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
-import {generateRandomComment} from "./moks/comments.js";
-import {getRandomInteger} from "./utils.js";
+import {generateFilter} from "./moks/filter.js";
 
 const FILMS_AMOUNT = 20;
 
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
+const filters = generateFilter(films);
 
 const сomments = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
 
@@ -40,7 +42,7 @@ const siteFooterNode = document.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 render(siteHeaderNode, createUserRangTemplate(), `beforeend`);
-render(siteMainNode, createSiteMenuTemplate(), `beforeend`);
+render(siteMainNode, createSiteMenuTemplate(filters), `beforeend`);
 render(siteMainNode, createFilterTemplate(), `beforeend`);
 render(siteMainNode, createMainContentTemplate(), `beforeend`);
 

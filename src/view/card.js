@@ -3,7 +3,7 @@ import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
 import {limitDesc} from "../utils.js";
 
 export const createCardFilmTemplate = (film) => {
-  const {poster, title, rating, genre, description, productionYear, duration, comments, isWathchList, isWatched, isFavourite} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, comments, isWatchList, isWatched, isFavourite} = film;
 
   const year = dayjs(productionYear).format(`YYYY`);
   const time = dayjs(duration).format(`H`);
@@ -21,7 +21,7 @@ export const createCardFilmTemplate = (film) => {
   <p class="film-card__description">${limitDesc(description, MAX_SYMBOLS_DESCRIPTION)}</p>
   <a class="film-card__comments">${comments.length} comments</a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWathchList ? `film-card__controls-item--active` : ``}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}" type="button">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}" type="button">Mark as watched</button>
     <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavourite ? `film-card__controls-item--active` : ``}" type="button">Mark as favorite</button>
   </div>

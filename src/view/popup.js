@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
 export const createPopupTemplate = (film, comment) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating, isWathchList, isWatched, isFavourite} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating, isWatchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const time = dayjs(duration).format(`H`);
@@ -40,7 +40,7 @@ export const createPopupTemplate = (film, comment) => {
   const comentsNodeTemplate = createCommentsNodeTemplate(comment);
   const genresNodeTemplate = createGenresNodeTemplate(genre);
 
-  return `<section class="film-details">
+  return `<section class="film-details hidden">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -104,7 +104,7 @@ export const createPopupTemplate = (film, comment) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWathchList ? `checked` : ``}>
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchList ? `checked` : ``}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
         <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
