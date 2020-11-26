@@ -19,3 +19,7 @@ export const limitDesc = (descriptionText, maxSymbols) => {
 
   return descriptionText;
 };
+
+export const upperFirst = (string) => {
+  return string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
+}
