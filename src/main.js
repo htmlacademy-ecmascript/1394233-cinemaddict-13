@@ -96,7 +96,7 @@ for (let i = 0; i < 2; i++) {
 }
 
 
-render(statisticNode, createSiteStatisticTemplate(), `beforeend`);
+render(statisticNode, createSiteStatisticTemplate(films), `beforeend`);
 
 render(siteFooterNode, createPopupTemplate(films[0], сomments), `afterend`);
 
