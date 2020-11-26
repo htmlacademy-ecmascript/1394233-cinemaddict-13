@@ -21,7 +21,6 @@ const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
 
 const comments = {};
-
 for (let i = 0; i < FILMS_AMOUNT; i++) {
   const commentsArr = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
   commentsArr.forEach((element, index) => {
@@ -29,9 +28,6 @@ for (let i = 0; i < FILMS_AMOUNT; i++) {
   });
   comments[i] = commentsArr;
 }
-
-console.log(comments);
-
 
 const sortByRating = (array) => {
   return array.slice().sort((a, b) => {
