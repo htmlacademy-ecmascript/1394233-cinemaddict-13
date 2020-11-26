@@ -15,6 +15,7 @@ import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
 
 const FILMS_AMOUNT = 20;
+const FILMS_AMOUNT_PER_STEP = 5;
 
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
@@ -53,9 +54,28 @@ render(filmsNode, createFilmsListTemplate(), `beforeend`);
 const filmsListNode = filmsNode.querySelector(`.films-list`);
 const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 
-render(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
+if (films.length > FILMS_AMOUNT_PER_STEP) {
+  let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
 
-for (let i = 1; i < 6; i++) {
+  render(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
+
+  const showMoreButton = filmsListNode.querySelector(`.films-list__show-more`);
+
+  showMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    films.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
+    .forEach((filmsArr) => render(filmsContainerNode, createCardFilmTemplate(filmsArr, сomments), `beforeend`));
+
+    renderedFilmCount += FILMS_AMOUNT_PER_STEP;
+
+    if (renderedFilmCount >= films.length) {
+      showMoreButton.remove();
+    }
+  });
+}
+
+for (let i = 1; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP + 1); i++) {
   render(filmsContainerNode, createCardFilmTemplate(films[i], сomments), `beforeend`);
 }
 
