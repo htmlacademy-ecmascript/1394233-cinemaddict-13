@@ -65,7 +65,7 @@ if (films.length > FILMS_AMOUNT_PER_STEP) {
     evt.preventDefault();
 
     films.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
-    .forEach((filmsArr) => render(filmsContainerNode, createCardFilmTemplate(filmsArr, сomments), `beforeend`));
+    .forEach((filmsElems) => render(filmsContainerNode, createCardFilmTemplate(filmsElems), `beforeend`));
 
     renderedFilmCount += FILMS_AMOUNT_PER_STEP;
 
@@ -76,7 +76,7 @@ if (films.length > FILMS_AMOUNT_PER_STEP) {
 }
 
 for (let i = 1; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP + 1); i++) {
-  render(filmsContainerNode, createCardFilmTemplate(films[i], сomments), `beforeend`);
+  render(filmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
 }
 
 render(filmsNode, createTopRatedListTemplate(), `beforeend`);
