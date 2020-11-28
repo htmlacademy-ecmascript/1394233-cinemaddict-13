@@ -1,1 +1,1 @@
-export const createSiteStatisticTemplate = (films) => `<p>${films.length} movies inside</p>`;
+export const createSiteStatisticTemplate = (statistic) => `<p>${statistic} movies inside</p>`;

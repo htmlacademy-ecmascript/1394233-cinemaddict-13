@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomIntegerDecimal} from "../utils.js";
+import {getRandomInteger, getRandomIntegerDecimal, generateRandomItem} from "../utils.js";
 
 const TITLES = [
   `The Dance of Life`,
@@ -80,12 +80,6 @@ const POSTERS = [
   `the-man-with-the-golden-arm.jpg`
 ];
 
-const generateRandomItem = (array) => {
-  const randomIndex = getRandomInteger(0, array.length - 1);
-
-  return array[randomIndex];
-};
-
 const generateRandomDescription = () => {
   const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
 
@@ -154,6 +148,10 @@ const generateScreenWriters = () => {
   return new Array(amountScreenWriters).fill().map(generateRandomScreenWriter);
 };
 
+const getRandomBooleanValue = () => {
+  return Boolean(getRandomInteger(0, 1));
+};
+
 export const generateFilm = function () {
   return {
     poster: generateRandomItem(POSTERS),
@@ -170,8 +168,8 @@ export const generateFilm = function () {
     description: generateDescription().join(` `),
     ageRating: `${getRandomInteger(0, 18)}+`,
     comments: null,
-    isWatchList: Boolean(getRandomInteger(0, 1)),
-    isWatched: Boolean(getRandomInteger(0, 1)),
-    isFavourite: Boolean(getRandomInteger(0, 1)),
+    isWatchList: getRandomBooleanValue(),
+    isWatched: getRandomBooleanValue(),
+    isFavourite: getRandomBooleanValue(),
   };
 };

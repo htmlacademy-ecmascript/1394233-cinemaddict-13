@@ -14,11 +14,12 @@ import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
 
-const FILMS_AMOUNT = 20;
+const FILMS_AMOUNT = 25;
 const FILMS_AMOUNT_PER_STEP = 5;
 
 const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
+const numberOfFilmsInData = films.length;
 
 const comments = {};
 for (let i = 0; i < FILMS_AMOUNT; i++) {
@@ -127,7 +128,7 @@ for (let i = 0; i < 2; i++) {
 }
 
 
-render(statisticNode, createSiteStatisticTemplate(films), `beforeend`);
+render(statisticNode, createSiteStatisticTemplate(numberOfFilmsInData), `beforeend`);
 
 render(siteFooterNode, createPopupTemplate(films[0], comments[0]), `afterend`);
 

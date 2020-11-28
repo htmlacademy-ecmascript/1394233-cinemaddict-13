@@ -1,7 +1,6 @@
 import {upperFirst} from "../utils.js";
 
-const createFilterItemTemplate = (filter, isActive) => {
-  const {name, count} = filter;
+const createFilterItemTemplate = ({name, count}, isActive) => {
 
   return (
     `<a href="#${name}"

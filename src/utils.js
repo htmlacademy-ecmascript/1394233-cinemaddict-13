@@ -12,7 +12,7 @@ export const getRandomIntegerDecimal = (a = 0, b = 1) => {
   return ((lower + Math.random() * (upper - lower + 1)) - 1).toFixed(1);
 };
 
-export const limitDesc = (descriptionText, maxSymbols) => {
+export const limitDescription = (descriptionText, maxSymbols) => {
   if (descriptionText.length > maxSymbols) {
     return `${descriptionText.substring(0, maxSymbols - 1)}...`;
   }
@@ -22,4 +22,10 @@ export const limitDesc = (descriptionText, maxSymbols) => {
 
 export const upperFirst = (string) => {
   return string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
+};
+
+export const generateRandomItem = (array) => {
+  const randomIndex = getRandomInteger(0, array.length - 1);
+
+  return array[randomIndex];
 };

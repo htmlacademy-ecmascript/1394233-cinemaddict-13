@@ -1,43 +1,43 @@
 import dayjs from "dayjs";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
-export const createPopupTemplate = (film, comment) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, comments, ageRating, isWatchList, isWatched, isFavourite} = film;
+const createCommentNodeTemplate = (elem) => {
+
+  return `<li class="film-details__comment">
+  <span class="film-details__comment-emoji">
+    <img src="./images/emoji/${elem.emoji}" width="55" height="55" alt="emoji-smile">
+  </span>
+  <div>
+    <p class="film-details__comment-text">${elem.text}</p>
+    <p class="film-details__comment-info">
+      <span class="film-details__comment-author">${elem.author}</span>
+      <span class="film-details__comment-day">${dayjs(elem.date).format(`YYYY/MM/DD HH:mm`)}</span>
+      <button class="film-details__comment-delete">Delete</button>
+    </p>
+  </div>
+</li>`;
+};
+
+const createGenreNodeTemplate = (elem) => {
+  return `<span class="film-details__genre">${elem}</span>`;
+};
+
+const createGenresNodeTemplate = (genreArray) => {
+  return genreArray.map(createGenreNodeTemplate).join(` `);
+};
+
+const createCommentsNodeTemplate = (commentArray) => {
+  return commentArray.map(createCommentNodeTemplate).join(` `);
+};
+
+export const createPopupTemplate = (film, comments) => {
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const time = dayjs(duration).format(`H`);
   const minutes = dayjs(duration).format(`m`);
 
-  const createCommentNodeTemplate = (elem) => {
-
-    return `<li class="film-details__comment">
-    <span class="film-details__comment-emoji">
-      <img src="./images/emoji/${elem.emoji}" width="55" height="55" alt="emoji-smile">
-    </span>
-    <div>
-      <p class="film-details__comment-text">${elem.text}</p>
-      <p class="film-details__comment-info">
-        <span class="film-details__comment-author">${elem.author}</span>
-        <span class="film-details__comment-day">${dayjs(elem.date).format(`YYYY/MM/DD HH:mm`)}</span>
-        <button class="film-details__comment-delete">Delete</button>
-      </p>
-    </div>
-  </li>`;
-  };
-
-  const createGenreNodeTemplate = (elem) => {
-    return `<span class="film-details__genre">${elem}</span>`;
-  };
-
-  const createGenresNodeTemplate = (genreArray) => {
-    return genreArray.map(createGenreNodeTemplate).join(` `);
-  };
-
-  const createCommentsNodeTemplate = (commentArray) => {
-    return commentArray.map(createCommentNodeTemplate).join(` `);
-  };
-
-  const comentsNodeTemplate = createCommentsNodeTemplate(comment);
+  const comentsNodeTemplate = createCommentsNodeTemplate(comments);
   const genresNodeTemplate = createGenresNodeTemplate(genre);
 
   return `<section class="film-details hidden">
