@@ -21,6 +21,13 @@ const films = new Array(FILMS_AMOUNT).fill(``).map(generateFilm);
 const filters = generateFilter(films);
 const numberOfFilmsInData = films.length;
 
+const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
+const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
+
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
 const comments = {};
 for (let i = 0; i < FILMS_AMOUNT; i++) {
   const commentsArr = new Array(getRandomInteger(1, 5)).fill(``).map(generateRandomComment);
@@ -30,19 +37,12 @@ for (let i = 0; i < FILMS_AMOUNT; i++) {
   comments[i] = commentsArr;
 }
 
-const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
-const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
-
 for (let i = 0; i < films.length; i++) {
   films[i].comments = new Array(comments[i].length);
   for (let j = 0; j < films[i].comments.length; j++) {
     films[i].comments[j] = j;
   }
 }
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const siteHeaderNode = document.querySelector(`.header`);
 const siteMainNode = document.querySelector(`.main`);
@@ -94,12 +94,15 @@ const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list_
 const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
+const filmsSortByRating = sortByRating(films);
+const filmsSortByComments = sortByComments(films);
+
 for (let i = 0; i < 2; i++) {
-  render(topRatedFilmsContainerNode, createCardFilmTemplate(sortByRating(films)[i]), `beforeend`);
+  render(topRatedFilmsContainerNode, createCardFilmTemplate(filmsSortByRating[i]), `beforeend`);
 }
 
 for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(sortByComments(films)[i]), `beforeend`);
+  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(filmsSortByComments[i]), `beforeend`);
 }
 
 

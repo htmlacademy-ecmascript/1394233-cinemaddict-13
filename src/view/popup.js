@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
-const createCommentNodeTemplate = ({emoji, text, author, date}) => {
+const createCommentTemplate = ({emoji, text, author, date}) => {
 
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
@@ -18,16 +18,16 @@ const createCommentNodeTemplate = ({emoji, text, author, date}) => {
 </li>`;
 };
 
-const createGenreNodeTemplate = (elem) => {
+const createGenreTemplate = (elem) => {
   return `<span class="film-details__genre">${elem}</span>`;
 };
 
-const createGenresNodeTemplate = (genreArray) => {
-  return genreArray.map(createGenreNodeTemplate).join(` `);
+const createGenresTemplate = (genreArray) => {
+  return genreArray.map(createGenreTemplate).join(` `);
 };
 
-const createCommentsNodeTemplate = (commentArray) => {
-  return commentArray.map(createCommentNodeTemplate).join(` `);
+const createCommentsTemplate = (commentArray) => {
+  return commentArray.map(createCommentTemplate).join(` `);
 };
 
 export const createPopupTemplate = (film, comments) => {
@@ -36,8 +36,8 @@ export const createPopupTemplate = (film, comments) => {
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);
 
-  const comentsNodeTemplate = createCommentsNodeTemplate(comments);
-  const genresNodeTemplate = createGenresNodeTemplate(genre);
+  const comentsNodeTemplate = createCommentsTemplate(comments);
+  const genresNodeTemplate = createGenresTemplate(genre);
 
   return `<section class="film-details hidden">
   <form class="film-details__inner" action="" method="get">
