@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import {getRandomInteger, generateRandomItem} from "../utils.js";
 
 const COMMENTS = [
   `Interesting setting and a good cast`,
@@ -24,19 +25,6 @@ const AUTHORS = [
   `Orange`
 ];
 
-const generateRandomItem = (array) => {
-  const randomIndex = getRandomInteger(0, array.length - 1);
-
-  return array[randomIndex];
-};
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
 const generateCommentDate = () => {
   const maxDaysGap = 10;
   const maxYearsGap = 1;
@@ -52,12 +40,10 @@ const generateCommentDate = () => {
   return dayjs().add(daysGap, `day`).add(yearsGap, `year`).add(monthsGap, `month`).add(hourGap, `hour`).add(minuteGap, `minute`).toDate();
 };
 
-export const generateRandomComment = () => {
-  return {
-    id: null,
-    text: generateRandomItem(COMMENTS),
-    emoji: generateRandomItem(EMOJI),
-    author: generateRandomItem(AUTHORS),
-    date: generateCommentDate(),
-  };
-};
+export const generateRandomComment = () => ({
+  id: null,
+  text: generateRandomItem(COMMENTS),
+  emoji: generateRandomItem(EMOJI),
+  author: generateRandomItem(AUTHORS),
+  date: generateCommentDate(),
+});

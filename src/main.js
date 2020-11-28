@@ -30,33 +30,8 @@ for (let i = 0; i < FILMS_AMOUNT; i++) {
   comments[i] = commentsArr;
 }
 
-const sortByRating = (array) => {
-  return array.slice().sort((a, b) => {
-    if (a.rating > b.rating) {
-      return -1;
-    }
-
-    if (a.rating < b.rating) {
-      return 1;
-    }
-
-    return 0;
-  });
-};
-
-const sortByComments = (array) => {
-  return array.slice().sort((a, b) => {
-    if (a.comments.length > b.comments.length) {
-      return -1;
-    }
-
-    if (a.comments.length < b.comments.length) {
-      return 1;
-    }
-
-    return 0;
-  });
-};
+const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
+const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
 
 for (let i = 0; i < films.length; i++) {
   films[i].comments = new Array(comments[i].length);
