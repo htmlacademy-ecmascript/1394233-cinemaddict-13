@@ -80,6 +80,16 @@ const POSTERS = [
   `the-man-with-the-golden-arm.jpg`
 ];
 
+const Rating = {
+  MIN: 1,
+  MAX: 10
+};
+
+const AgeRating = {
+  MIN: 0,
+  MAX: 18
+};
+
 const generateRandomDescription = () => {
   const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
 
@@ -157,16 +167,16 @@ export const generateFilm = function () {
     poster: generateRandomItem(POSTERS),
     title: generateRandomItem(TITLES),
     originalTitle: `Original: ${generateRandomItem(TITLES)}`,
-    rating: getRandomIntegerDecimal(1, 10),
+    rating: getRandomIntegerDecimal(Rating.MIN, Rating.MAX),
     director: generateRandomItem(DIRECTORS),
-    screenwriter: generateScreenWriters().join(`, `),
-    cast: generateActors().join(`, `),
+    screenwriter: generateScreenWriters(),
+    cast: generateActors(),
     productionYear: generateDate(),
     duration: generateTime(),
     country: generateRandomItem(COUNTRIES),
     genre: generateGenre(),
-    description: generateDescription().join(` `),
-    ageRating: `${getRandomInteger(0, 18)}+`,
+    description: generateDescription(),
+    ageRating: `${getRandomInteger(AgeRating.MIN, AgeRating.MAX)}+`,
     comments: null,
     isWatchList: getRandomBooleanValue(),
     isWatched: getRandomBooleanValue(),

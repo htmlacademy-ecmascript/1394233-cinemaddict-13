@@ -1,17 +1,17 @@
 import dayjs from "dayjs";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
-const createCommentNodeTemplate = (elem) => {
+const createCommentNodeTemplate = ({emoji, text, author, date}) => {
 
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${elem.emoji}" width="55" height="55" alt="emoji-smile">
+    <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
   </span>
   <div>
-    <p class="film-details__comment-text">${elem.text}</p>
+    <p class="film-details__comment-text">${text}</p>
     <p class="film-details__comment-info">
-      <span class="film-details__comment-author">${elem.author}</span>
-      <span class="film-details__comment-day">${dayjs(elem.date).format(`YYYY/MM/DD HH:mm`)}</span>
+      <span class="film-details__comment-author">${author}</span>
+      <span class="film-details__comment-day">${dayjs(date).format(`YYYY/MM/DD HH:mm`)}</span>
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>
@@ -34,8 +34,7 @@ export const createPopupTemplate = (film, comments) => {
   const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
-  const time = dayjs(duration).format(`H`);
-  const minutes = dayjs(duration).format(`m`);
+  const durationFilm = dayjs(duration).format(`H[h] m[m]`);
 
   const comentsNodeTemplate = createCommentsNodeTemplate(comments);
   const genresNodeTemplate = createGenresNodeTemplate(genre);
@@ -72,11 +71,11 @@ export const createPopupTemplate = (film, comments) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">${screenwriter}</td>
+              <td class="film-details__cell">${screenwriter.join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${cast}</td>
+              <td class="film-details__cell">${cast.join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
@@ -84,7 +83,7 @@ export const createPopupTemplate = (film, comments) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${time}h ${minutes}m</td>
+              <td class="film-details__cell">${durationFilm}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -98,7 +97,7 @@ export const createPopupTemplate = (film, comments) => {
           </table>
 
           <p class="film-details__film-description">
-            ${description}
+            ${description.join(` `)}
           </p>
         </div>
       </div>

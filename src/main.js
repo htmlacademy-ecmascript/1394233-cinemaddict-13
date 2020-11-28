@@ -17,13 +17,13 @@ import {generateFilter} from "./moks/filter.js";
 const FILMS_AMOUNT = 25;
 const FILMS_AMOUNT_PER_STEP = 5;
 
-const films = new Array(FILMS_AMOUNT).fill().map(generateFilm);
+const films = new Array(FILMS_AMOUNT).fill(``).map(generateFilm);
 const filters = generateFilter(films);
 const numberOfFilmsInData = films.length;
 
 const comments = {};
 for (let i = 0; i < FILMS_AMOUNT; i++) {
-  const commentsArr = new Array(getRandomInteger(1, 5)).fill().map(generateRandomComment);
+  const commentsArr = new Array(getRandomInteger(1, 5)).fill(``).map(generateRandomComment);
   commentsArr.forEach((element, index) => {
     element.id = index;
   });
