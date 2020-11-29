@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import {nanoid} from "nanoid";
 import {getRandomInteger, generateRandomItem} from "../utils.js";
 
 const COMMENTS = [
@@ -41,7 +42,7 @@ const generateCommentDate = () => {
 };
 
 export const generateRandomComment = () => ({
-  id: null,
+  id: nanoid(),
   text: generateRandomItem(COMMENTS),
   emoji: generateRandomItem(EMOJI),
   author: generateRandomItem(AUTHORS),

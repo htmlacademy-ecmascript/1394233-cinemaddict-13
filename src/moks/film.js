@@ -90,29 +90,10 @@ const AgeRating = {
   MAX: 18
 };
 
-const generateRandomDescription = () => {
-  const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
-
-  return DESCRIPTIONS[randomIndex];
-};
-
-const generateRandomGenre = () => {
-  const randomIndex = getRandomInteger(0, GENRES.length - 1);
-
-  return GENRES[randomIndex];
-};
-
-const generateRandomActor = () => {
-  const randomIndex = getRandomInteger(0, ACTORS.length - 1);
-
-  return ACTORS[randomIndex];
-};
-
-const generateRandomScreenWriter = () => {
-  const randomIndex = getRandomInteger(0, SCREENWRITERS.length - 1);
-
-  return SCREENWRITERS[randomIndex];
-};
+const generateRandomDescription = () => DESCRIPTIONS[getRandomInteger(0, GENRES.length - 1)];
+const generateRandomGenre = () => GENRES[getRandomInteger(0, GENRES.length - 1)];
+const generateRandomActor = () => ACTORS[getRandomInteger(0, ACTORS.length - 1)];
+const generateRandomScreenWriter = () => SCREENWRITERS[getRandomInteger(0, SCREENWRITERS.length - 1)];
 
 const generateDate = () => {
   const maxDaysGap = 30;
@@ -134,52 +115,28 @@ const generateTime = () => {
   return dayjs().hour(0).minute(0).add(hour, `hour`).add(minute, `minute`).toDate();
 };
 
-const generateDescription = () => {
-  const amountSentence = getRandomInteger(1, 5);
+const generateDescription = () => new Array(getRandomInteger(1, 5)).fill().map(generateRandomDescription);
+const generateGenre = () => new Array(getRandomInteger(1, 3)).fill().map(generateRandomGenre);
+const generateActors = () => new Array(getRandomInteger(2, 3)).fill().map(generateRandomActor);
+const generateScreenWriters = () => new Array(getRandomInteger(1, 2)).fill().map(generateRandomScreenWriter);
+const getRandomBooleanValue = () => Boolean(getRandomInteger(0, 1));
 
-  return new Array(amountSentence).fill().map(generateRandomDescription);
-};
-
-const generateGenre = () => {
-  const amountGenres = getRandomInteger(1, 3);
-
-  return new Array(amountGenres).fill().map(generateRandomGenre);
-};
-
-const generateActors = () => {
-  const amountActors = getRandomInteger(2, 3);
-
-  return new Array(amountActors).fill().map(generateRandomActor);
-};
-
-const generateScreenWriters = () => {
-  const amountScreenWriters = getRandomInteger(1, 2);
-
-  return new Array(amountScreenWriters).fill().map(generateRandomScreenWriter);
-};
-
-const getRandomBooleanValue = () => {
-  return Boolean(getRandomInteger(0, 1));
-};
-
-export const generateFilm = function () {
-  return {
-    poster: generateRandomItem(POSTERS),
-    title: generateRandomItem(TITLES),
-    originalTitle: `Original: ${generateRandomItem(TITLES)}`,
-    rating: getRandomIntegerDecimal(Rating.MIN, Rating.MAX),
-    director: generateRandomItem(DIRECTORS),
-    screenwriter: generateScreenWriters(),
-    cast: generateActors(),
-    productionYear: generateDate(),
-    duration: generateTime(),
-    country: generateRandomItem(COUNTRIES),
-    genre: generateGenre(),
-    description: generateDescription(),
-    ageRating: `${getRandomInteger(AgeRating.MIN, AgeRating.MAX)}+`,
-    comments: null,
-    isWatchList: getRandomBooleanValue(),
-    isWatched: getRandomBooleanValue(),
-    isFavourite: getRandomBooleanValue(),
-  };
-};
+export const generateFilm = () => ({
+  poster: generateRandomItem(POSTERS),
+  title: generateRandomItem(TITLES),
+  originalTitle: `Original: ${generateRandomItem(TITLES)}`,
+  rating: getRandomIntegerDecimal(Rating.MIN, Rating.MAX),
+  director: generateRandomItem(DIRECTORS),
+  screenwriter: generateScreenWriters(),
+  cast: generateActors(),
+  productionYear: generateDate(),
+  duration: generateTime(),
+  country: generateRandomItem(COUNTRIES),
+  genre: generateGenre(),
+  description: generateDescription(),
+  ageRating: `${getRandomInteger(AgeRating.MIN, AgeRating.MAX)}+`,
+  comments: null,
+  isWatchList: getRandomBooleanValue(),
+  isWatched: getRandomBooleanValue(),
+  isFavourite: getRandomBooleanValue(),
+});

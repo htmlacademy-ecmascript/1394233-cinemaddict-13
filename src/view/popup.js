@@ -22,16 +22,12 @@ const createGenreTemplate = (elem) => {
   return `<span class="film-details__genre">${elem}</span>`;
 };
 
-const createGenresTemplate = (genreArray) => {
-  return genreArray.map(createGenreTemplate).join(` `);
-};
+const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` `);
 
-const createCommentsTemplate = (commentArray) => {
-  return commentArray.map(createCommentTemplate).join(` `);
-};
+const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
-export const createPopupTemplate = (film, comments) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
+export const createPopupTemplate = (film) => {
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);

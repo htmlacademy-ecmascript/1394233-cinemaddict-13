@@ -1,4 +1,3 @@
-import {generateRandomComment} from "./moks/comments.js";
 import {getRandomInteger} from "./utils.js";
 import {createUserRangTemplate} from "./view/user-rang.js";
 import {createSiteMenuTemplate} from "./view/site-menu.js";
@@ -13,13 +12,19 @@ import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
+import {generateRandomComment} from "./moks/comments.js";
+
 
 const FILMS_AMOUNT = 25;
 const FILMS_AMOUNT_PER_STEP = 5;
 
+const ComentsAmmount = {
+  MIN: 1,
+  MAX: 5,
+};
+
 const films = new Array(FILMS_AMOUNT).fill(``).map(generateFilm);
 const filters = generateFilter(films);
-const numberOfFilmsInData = films.length;
 
 const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
 const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
@@ -28,20 +33,8 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const comments = {};
-for (let i = 0; i < FILMS_AMOUNT; i++) {
-  const commentsArr = new Array(getRandomInteger(1, 5)).fill(``).map(generateRandomComment);
-  commentsArr.forEach((element, index) => {
-    element.id = index;
-  });
-  comments[i] = commentsArr;
-}
-
-for (let i = 0; i < films.length; i++) {
-  films[i].comments = new Array(comments[i].length);
-  for (let j = 0; j < films[i].comments.length; j++) {
-    films[i].comments[j] = j;
-  }
+for (let film of films) {
+  film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
 }
 
 const siteHeaderNode = document.querySelector(`.header`);
@@ -94,19 +87,15 @@ const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list_
 const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
-const filmsSortByRating = sortByRating(films);
-const filmsSortByComments = sortByComments(films);
+sortByComments(films).slice(0, 2).forEach((film) => {
+  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(film), `beforeend`);
+});
 
-for (let i = 0; i < 2; i++) {
-  render(topRatedFilmsContainerNode, createCardFilmTemplate(filmsSortByRating[i]), `beforeend`);
-}
+sortByRating(films).slice(0, 2).forEach((film) => {
+  render(topRatedFilmsContainerNode, createCardFilmTemplate(film), `beforeend`);
+});
 
-for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainerNode, createCardFilmTemplate(filmsSortByComments[i]), `beforeend`);
-}
+render(statisticNode, createSiteStatisticTemplate(films.length), `beforeend`);
 
-
-render(statisticNode, createSiteStatisticTemplate(numberOfFilmsInData), `beforeend`);
-
-render(siteFooterNode, createPopupTemplate(films[0], comments[0]), `afterend`);
+render(siteFooterNode, createPopupTemplate(films[0]), `afterend`);
 

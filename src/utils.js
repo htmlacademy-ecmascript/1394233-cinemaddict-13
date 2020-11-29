@@ -13,11 +13,7 @@ export const getRandomIntegerDecimal = (a = 0, b = 1) => {
 };
 
 export const limitDescription = (descriptionText, maxSymbols) => {
-  if (descriptionText.length > maxSymbols) {
-    return `${descriptionText.substring(0, maxSymbols - 1)}...`;
-  }
-
-  return descriptionText;
+  return descriptionText.length > maxSymbols ? `${descriptionText.substring(0, maxSymbols - 1)}...` : `${descriptionText}`;
 };
 
 export const upperFirst = (string) => {
