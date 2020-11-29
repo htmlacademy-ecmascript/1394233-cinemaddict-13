@@ -12,13 +12,9 @@ export const getRandomIntegerDecimal = (a = 0, b = 1) => {
   return ((lower + Math.random() * (upper - lower + 1)) - 1).toFixed(1);
 };
 
-export const limitDescription = (descriptionText, maxSymbols) => {
-  return descriptionText.length > maxSymbols ? `${descriptionText.substring(0, maxSymbols - 1)}...` : `${descriptionText}`;
-};
+export const limitDescription = (descriptionText, maxSymbols) => descriptionText.length > maxSymbols ? `${descriptionText.substring(0, maxSymbols - 1)}...` : `${descriptionText}`;
 
-export const upperFirst = (string) => {
-  return string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
-};
+export const upperFirst = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
 
 export const generateRandomItem = (array) => {
   const randomIndex = getRandomInteger(0, array.length - 1);
