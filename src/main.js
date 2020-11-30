@@ -1,5 +1,5 @@
-import {getRandomInteger, renderTemplate} from "./utils.js";
-import {createUserRangTemplate} from "./view/user-rang.js";
+import {getRandomInteger, renderTemplate, renderElement, RenderPosition} from "./utils.js";
+import UserRangView from "./view/user-rang.js";
 import {createSiteMenuTemplate} from "./view/site-menu.js";
 import {createFilterTemplate} from "./view/filter.js";
 import {createMainContentTemplate} from "./view/main-content.js";
@@ -13,7 +13,6 @@ import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
 import {generateRandomComment} from "./moks/comments.js";
-
 
 const FILMS_AMOUNT = 25;
 const FILMS_AMOUNT_PER_STEP = 5;
@@ -38,7 +37,8 @@ const siteMainNode = document.querySelector(`.main`);
 const siteFooterNode = document.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
-renderTemplate(siteHeaderNode, createUserRangTemplate(), `beforeend`);
+renderElement(siteHeaderNode, new UserRangView().getElement(), RenderPosition.BEFOREEND);
+// renderTemplate(siteHeaderNode, createUserRangTemplate(), `beforeend`);
 renderTemplate(siteMainNode, createSiteMenuTemplate(filters), `beforeend`);
 renderTemplate(siteMainNode, createFilterTemplate(), `beforeend`);
 renderTemplate(siteMainNode, createMainContentTemplate(), `beforeend`);
