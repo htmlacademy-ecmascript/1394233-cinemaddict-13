@@ -1,13 +1,15 @@
 import {getRandomInteger, renderTemplate, renderElement, RenderPosition} from "./utils.js";
 import UserRangView from "./view/user-rang.js";
+import ShowMoreButtonView from "./view/show-more-btn.js";
+import SortView from "./view/sort.js";
+
 import {createSiteMenuTemplate} from "./view/site-menu.js";
-import {createFilterTemplate} from "./view/filter.js";
-import {createMainContentTemplate} from "./view/main-content.js";
-import {createFilmsListTemplate} from "./view/films-list.js";
+import MainContentView from "./view/main-content.js";
+import FilmsListView from "./view/films-list.js";
 import {createCardFilmTemplate} from "./view/card.js";
-import {createShowMoreBtnTemplate} from "./view/show-more-btn.js";
-import {createTopRatedListTemplate} from "./view/top-rated.js";
-import {createMostCommentedListTemplate} from "./view/most-comment.js";
+
+import TopRatedListView from "./view/top-rated.js";
+import MostCommentedListView from "./view/most-comment.js";
 import {createSiteStatisticTemplate} from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateFilm} from "./moks/film.js";
@@ -38,14 +40,13 @@ const siteFooterNode = document.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 renderElement(siteHeaderNode, new UserRangView().getElement(), RenderPosition.BEFOREEND);
-// renderTemplate(siteHeaderNode, createUserRangTemplate(), `beforeend`);
 renderTemplate(siteMainNode, createSiteMenuTemplate(filters), `beforeend`);
-renderTemplate(siteMainNode, createFilterTemplate(), `beforeend`);
-renderTemplate(siteMainNode, createMainContentTemplate(), `beforeend`);
+renderElement(siteMainNode, new SortView().getElement(), RenderPosition.BEFOREEND);
+renderElement(siteMainNode, new MainContentView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsNode = siteMainNode.querySelector(`.films`);
 
-renderTemplate(filmsNode, createFilmsListTemplate(), `beforeend`);
+renderElement(filmsNode, new FilmsListView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsListNode = filmsNode.querySelector(`.films-list`);
 const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
@@ -53,7 +54,7 @@ const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 if (films.length > FILMS_AMOUNT_PER_STEP) {
   let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
 
-  renderTemplate(filmsListNode, createShowMoreBtnTemplate(), `beforeend`);
+  renderElement(filmsListNode, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
 
   const showMoreButton = filmsListNode.querySelector(`.films-list__show-more`);
 
@@ -75,8 +76,8 @@ for (let i = 1; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP + 1); i++) {
   renderTemplate(filmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
 }
 
-renderTemplate(filmsNode, createTopRatedListTemplate(), `beforeend`);
-renderTemplate(filmsNode, createMostCommentedListTemplate(), `beforeend`);
+renderElement(filmsNode, new TopRatedListView().getElement(), RenderPosition.BEFOREEND);
+renderElement(filmsNode, new MostCommentedListView().getElement(), RenderPosition.BEFOREEND);
 
 const topRatedFilmsNode = filmsNode.querySelector(`.films-list--top-rated`);
 const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list__container`);
