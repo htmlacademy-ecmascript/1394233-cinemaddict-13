@@ -3,7 +3,7 @@ import UserRangView from "./view/user-rang.js";
 import ShowMoreButtonView from "./view/show-more-btn.js";
 import SortView from "./view/sort.js";
 
-import {createSiteMenuTemplate} from "./view/site-menu.js";
+import FilterView from "./view/site-menu.js";
 import MainContentView from "./view/main-content.js";
 import FilmsListView from "./view/films-list.js";
 import {createCardFilmTemplate} from "./view/card.js";
@@ -40,7 +40,7 @@ const siteFooterNode = document.querySelector(`.footer`);
 const statisticNode = siteFooterNode.querySelector(`.footer__statistics`);
 
 renderElement(siteHeaderNode, new UserRangView().getElement(), RenderPosition.BEFOREEND);
-renderTemplate(siteMainNode, createSiteMenuTemplate(filters), `beforeend`);
+renderElement(siteMainNode, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
 renderElement(siteMainNode, new SortView().getElement(), RenderPosition.BEFOREEND);
 renderElement(siteMainNode, new MainContentView().getElement(), RenderPosition.BEFOREEND);
 
