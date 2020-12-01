@@ -53,12 +53,11 @@ const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 
 if (films.length > FILMS_AMOUNT_PER_STEP) {
   let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
+  const showMoreButtonComponent = new ShowMoreButtonView();
 
-  renderElement(filmsListNode, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
+  renderElement(filmsListNode, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-  const showMoreButton = filmsListNode.querySelector(`.films-list__show-more`);
-
-  showMoreButton.addEventListener(`click`, (evt) => {
+  showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
     evt.preventDefault();
 
     films.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
@@ -67,7 +66,8 @@ if (films.length > FILMS_AMOUNT_PER_STEP) {
     renderedFilmCount += FILMS_AMOUNT_PER_STEP;
 
     if (renderedFilmCount >= films.length) {
-      showMoreButton.remove();
+      showMoreButtonComponent.getElement().remove();
+      showMoreButtonComponent.removeElement();
     }
   });
 }
