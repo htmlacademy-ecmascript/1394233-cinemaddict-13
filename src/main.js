@@ -64,12 +64,14 @@ const renderFilm = (filmListElement, film) => {
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 
-  const openPopup = () => {
-    render(siteBodyNode, popupComponent.getElement(), RenderPosition.BEFOREEND);
+  const openPopup = (evt) => {
+    evt.preventDefault();
+
+    siteBodyNode.appendChild(popupComponent.getElement());
     siteBodyNode.classList.add(`hide-overflow`);
 
     popupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
-      popupComponent.getElement().remove();
+      siteBodyNode.removeChild(popupComponent.getElement());
       siteBodyNode.classList.remove(`hide-overflow`);
     });
   };
