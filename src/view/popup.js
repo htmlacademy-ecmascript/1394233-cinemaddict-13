@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
+import {createElement} from "../utils.js";
 
 const createCommentTemplate = ({emoji, text, author, date}) => {
 
@@ -26,7 +27,7 @@ const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` 
 
 const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
-export const createPopupTemplate = (film) => {
+const createPopupTemplate = (film) => {
   const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
@@ -35,7 +36,7 @@ export const createPopupTemplate = (film) => {
   const comentsNodeTemplate = createCommentsTemplate(comments);
   const genresNodeTemplate = createGenresTemplate(genre);
 
-  return `<section class="film-details hidden">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -152,3 +153,26 @@ export const createPopupTemplate = (film) => {
   </form>
 </section>`;
 };
+
+export default class Popup {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,13 +1,15 @@
 import {createElement} from "../utils.js";
 
-const createMainContentTemplate = () => `<section class="films"></section>`;
-export default class MainContent {
+
+const createStatsLinkTemplate = () => `<a href="#stats" class="main-navigation__additional">Stats</a>`;
+
+export default class StatsLink {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMainContentTemplate();
+    return createStatsLinkTemplate();
   }
 
   getElement() {

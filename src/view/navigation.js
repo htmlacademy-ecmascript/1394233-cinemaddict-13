@@ -1,13 +1,15 @@
 import {createElement} from "../utils.js";
 
-const createMainContentTemplate = () => `<section class="films"></section>`;
-export default class MainContent {
+
+const createNavigationTemplate = () => `<nav class="main-navigation"></nav>`;
+
+export default class Navigation {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMainContentTemplate();
+    return createNavigationTemplate();
   }
 
   getElement() {
