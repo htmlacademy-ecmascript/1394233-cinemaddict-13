@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
-import {limitDescription} from "../utils.js";
+import {limitDescription, createElement} from "../utils.js";
 
-export const createCardFilmTemplate = (film) => {
+const createCardFilmTemplate = (film) => {
   const {poster, title, rating, genre, description, productionYear, duration, comments, isWatchList, isWatched, isFavourite} = film;
 
   const year = dayjs(productionYear).format(`YYYY`);
@@ -26,3 +26,26 @@ export const createCardFilmTemplate = (film) => {
   </div>
 </article>`;
 };
+
+export default class CardFilm {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCardFilmTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

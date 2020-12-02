@@ -1,19 +1,19 @@
 import {getRandomInteger, renderTemplate, renderElement, RenderPosition} from "./utils.js";
-import UserRangView from "./view/user-rang.js";
-import ShowMoreButtonView from "./view/show-more-btn.js";
 
+import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
 import FilterView from "./view/site-menu.js";
 import StatsLinkView from "./view/stats-link.js";
 import SortView from "./view/sort.js";
 import MainContentView from "./view/main-content.js";
 import FilmsListView from "./view/films-list.js";
-import {createCardFilmTemplate} from "./view/card.js";
-
+import CardFilmView from "./view/card.js";
+import ShowMoreButtonView from "./view/show-more-btn.js";
 import TopRatedListView from "./view/top-rated.js";
 import MostCommentedListView from "./view/most-comment.js";
-import {createSiteStatisticTemplate} from "./view/statistics.js";
+import SiteStatisticView from "./view/statistics.js";
 import {createPopupTemplate} from "./view/popup.js";
+
 import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
 import {generateRandomComment} from "./moks/comments.js";
@@ -58,6 +58,10 @@ renderElement(filmsNode, new FilmsListView().getElement(), RenderPosition.BEFORE
 const filmsListNode = filmsNode.querySelector(`.films-list`);
 const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
 
+for (let i = 1; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP + 1); i++) {
+  renderElement(filmsContainerNode, new CardFilmView(films[i]).getElement(), RenderPosition.BEFOREEND);
+}
+
 if (films.length > FILMS_AMOUNT_PER_STEP) {
   let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
   const showMoreButtonComponent = new ShowMoreButtonView();
@@ -68,7 +72,7 @@ if (films.length > FILMS_AMOUNT_PER_STEP) {
     evt.preventDefault();
 
     films.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
-    .forEach((filmsElems) => renderTemplate(filmsContainerNode, createCardFilmTemplate(filmsElems), `beforeend`));
+    .forEach((filmsElems) => renderElement(filmsContainerNode, new CardFilmView(filmsElems).getElement(), RenderPosition.BEFOREEND));
 
     renderedFilmCount += FILMS_AMOUNT_PER_STEP;
 
@@ -77,10 +81,6 @@ if (films.length > FILMS_AMOUNT_PER_STEP) {
       showMoreButtonComponent.removeElement();
     }
   });
-}
-
-for (let i = 1; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP + 1); i++) {
-  renderTemplate(filmsContainerNode, createCardFilmTemplate(films[i]), `beforeend`);
 }
 
 renderElement(filmsNode, new TopRatedListView().getElement(), RenderPosition.BEFOREEND);
@@ -92,14 +92,14 @@ const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-commen
 const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
 
 sortByComments(films).slice(0, 2).forEach((film) => {
-  renderTemplate(mostCommentedFilmsContainerNode, createCardFilmTemplate(film), `beforeend`);
+  renderElement(mostCommentedFilmsContainerNode, new CardFilmView(film).getElement(), RenderPosition.BEFOREEND);
 });
 
 sortByRating(films).slice(0, 2).forEach((film) => {
-  renderTemplate(topRatedFilmsContainerNode, createCardFilmTemplate(film), `beforeend`);
+  renderElement(topRatedFilmsContainerNode, new CardFilmView(film).getElement(), RenderPosition.BEFOREEND);
 });
 
-renderTemplate(statisticNode, createSiteStatisticTemplate(films.length), `beforeend`);
+renderElement(statisticNode, new SiteStatisticView(films.length).getElement(), RenderPosition.BEFOREEND);
 
 renderTemplate(siteFooterNode, createPopupTemplate(films[0]), `afterend`);
 
