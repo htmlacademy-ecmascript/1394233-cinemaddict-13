@@ -64,7 +64,9 @@ const renderFilm = (filmListElement, film) => {
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 
-  const openPopup = () => {
+  const openPopup = (evt) => {
+    evt.preventDefault();
+
     render(siteBodyNode, popupComponent.getElement(), RenderPosition.BEFOREEND);
     siteBodyNode.classList.add(`hide-overflow`);
 
