@@ -81,6 +81,7 @@ const renderFilm = (filmListElement, film) => {
   filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, openPopup);
 };
 
+
 for (let i = 0; i < Math.min(films.length, FILMS_AMOUNT_PER_STEP); i++) {
   renderFilm(filmsContainerNode, films[i]);
 }
