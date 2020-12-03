@@ -19,7 +19,7 @@ import {generateFilm} from "./moks/film.js";
 import {generateFilter} from "./moks/filter.js";
 import {generateRandomComment} from "./moks/comments.js";
 
-const FILMS_AMOUNT = 0;
+const FILMS_AMOUNT = 20;
 const FILMS_AMOUNT_PER_STEP = 5;
 
 const ComentsAmmount = {
@@ -130,7 +130,6 @@ render(siteMainNode, sortComponent.getElement(), RenderPosition.BEFOREEND);
 render(siteMainNode, new MainContentView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsNode = siteMainNode.querySelector(`.films`);
-
 render(filmsNode, new FilmsListView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsListNode = filmsNode.querySelector(`.films-list`);
