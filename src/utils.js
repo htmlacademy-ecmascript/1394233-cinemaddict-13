@@ -3,6 +3,11 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
+export const KeyboardKeys = {
+  ESCAPE: `Escape`,
+  ENTER: `Enter`
+};
+
 export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:

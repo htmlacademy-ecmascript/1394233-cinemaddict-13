@@ -1,4 +1,4 @@
-import {getRandomInteger, render, RenderPosition} from "./utils.js";
+import {getRandomInteger, render, RenderPosition, KeyboardKeys} from "./utils.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
@@ -64,16 +64,24 @@ const renderFilm = (filmListElement, film) => {
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 
+  const closePopup = () => {
+    siteBodyNode.removeChild(popupComponent.getElement());
+    siteBodyNode.classList.remove(`hide-overflow`);
+    document.removeEventListener(`keydown`, onPopupEscPress);
+  };
+
   const openPopup = (evt) => {
     evt.preventDefault();
-
     siteBodyNode.appendChild(popupComponent.getElement());
     siteBodyNode.classList.add(`hide-overflow`);
+    document.addEventListener(`keydown`, onPopupEscPress);
+    popupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closePopup);
+  };
 
-    popupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
-      siteBodyNode.removeChild(popupComponent.getElement());
-      siteBodyNode.classList.remove(`hide-overflow`);
-    });
+  const onPopupEscPress = (evt) => {
+    if (evt.key === KeyboardKeys.ESCAPE) {
+      closePopup();
+    }
   };
 
   filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, openPopup);
