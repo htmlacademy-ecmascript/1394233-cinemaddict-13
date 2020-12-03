@@ -53,3 +53,6 @@ export const generateRandomItem = (array) => {
 
   return array[randomIndex];
 };
+
+export const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
+export const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
