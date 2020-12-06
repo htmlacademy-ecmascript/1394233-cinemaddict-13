@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import AbstractView from "./abstract.js";
 import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
-import {limitDescription} from "../utils.js";
+import {limitDescription} from "../utils/common.js";
 
 const createCardFilmTemplate = (film) => {
   const {poster, title, rating, genre, description, productionYear, duration, comments, isWatchList, isWatched, isFavourite} = film;

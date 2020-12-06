@@ -1,4 +1,5 @@
-import {getRandomInteger, render, RenderPosition, KeyboardKeys, sortByRating, sortByComments} from "./utils.js";
+import {getRandomInteger, KeyboardKeys, sortByRating, sortByComments} from "./utils/common.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";

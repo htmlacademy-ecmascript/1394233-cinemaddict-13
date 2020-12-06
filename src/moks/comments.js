@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {nanoid} from "nanoid";
-import {getRandomInteger, generateRandomItem} from "../utils.js";
+import {getRandomInteger, generateRandomItem} from "../utils/common.js";
 
 const COMMENTS = [
   `Interesting setting and a good cast`,
