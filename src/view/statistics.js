@@ -1,26 +1,12 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-const createSiteStatisticTemplate = (statistic) => `<p>${statistic} movies inside</p>`;
-
-export default class SiteStatistic {
+export default class SiteStatistic extends AbstractView {
   constructor(statistic) {
-    this._element = null;
+    super();
     this._statistic = statistic;
   }
 
   getTemplate() {
-    return createSiteStatisticTemplate(this._statistic);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return `<p>${this._statistic} movies inside</p>`;
   }
 }

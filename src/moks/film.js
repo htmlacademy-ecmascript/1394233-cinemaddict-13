@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomIntegerDecimal, generateRandomItem} from "../utils.js";
+import {getRandomInteger, getRandomIntegerDecimal, generateRandomItem} from "../utils/common.js";
 
 const TITLES = [
   `The Dance of Life`,
