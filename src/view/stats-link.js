@@ -1,26 +1,7 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-
-const createStatsLinkTemplate = () => `<a href="#stats" class="main-navigation__additional">Stats</a>`;
-
-export default class StatsLink {
-  constructor() {
-    this._element = null;
-  }
-
+export default class StatsLink extends AbstractView {
   getTemplate() {
-    return createStatsLinkTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return `<a href="#stats" class="main-navigation__additional">Stats</a>`;
   }
 }

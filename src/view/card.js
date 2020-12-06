@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
+import AbstractView from "./abstract.js";
 import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
-import {limitDescription, createElement} from "../utils.js";
+import {limitDescription} from "../utils.js";
 
 const createCardFilmTemplate = (film) => {
   const {poster, title, rating, genre, description, productionYear, duration, comments, isWatchList, isWatched, isFavourite} = film;
@@ -27,25 +28,13 @@ const createCardFilmTemplate = (film) => {
 </article>`;
 };
 
-export default class CardFilm {
+export default class CardFilm extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createCardFilmTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
