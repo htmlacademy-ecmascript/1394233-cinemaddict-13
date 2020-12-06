@@ -39,12 +39,11 @@ const renderFilm = (filmListElement, film) => {
     document.removeEventListener(`keydown`, onPopupEscPress);
   };
 
-  const openPopup = (evt) => {
-    evt.preventDefault();
+  const openPopup = () => {
     siteBodyNode.appendChild(popupComponent.getElement());
     siteBodyNode.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, onPopupEscPress);
-    popupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closePopup);
+    popupComponent.setCloseButtonClickHandler(closePopup);
   };
 
   const onPopupEscPress = (evt) => {
@@ -53,9 +52,9 @@ const renderFilm = (filmListElement, film) => {
     }
   };
 
-  filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, openPopup);
-  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, openPopup);
-  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, openPopup);
+  filmComponent.setPosterClickHandler(openPopup);
+  filmComponent.setCommentsClickHandler(openPopup);
+  filmComponent.setTitleClickHandler(openPopup);
 };
 
 const renderFilmsList = (filmListContainer, filmsItems) => {
@@ -84,9 +83,7 @@ const renderFilmsList = (filmListContainer, filmsItems) => {
 
     render(filmsListNode, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-
+    showMoreButtonComponent.setClickHandler(() => {
       filmsItems.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
       .forEach((filmsElems) => renderFilm(filmListContainer, filmsElems));
 
