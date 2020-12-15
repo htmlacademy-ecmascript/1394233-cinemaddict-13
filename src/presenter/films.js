@@ -8,14 +8,20 @@ import FilmsListView from "./view/films-list.js";
 import NoFilmView from "./view/no-film.js";
 import CardFilmView from "./view/card.js";
 import ShowMoreButtonView from "./view/show-more-btn.js";
-import TopRatedListView from "./view/top-rated.js";
-import MostCommentedListView from "./view/most-comment.js";
 import PopupView from "./view/popup.js";
 
-import {KeyboardKeys} from "./utils/common.js";
+import {generateRandomComment} from "./moks/comments.js";
+
+import {FilmListTitles} from "./consts.js";
+import {getRandomInteger, KeyboardKeys, sortByRating, sortByComments} from "./utils/common.js";
 import {render, RenderPosition, addElement, remove, removeElement} from "../utils/render.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
+
+const ComentsAmmount = {
+  MIN: 1,
+  MAX: 5,
+};
 
 export default class Films {
   constructor(filmsContainer) {
@@ -26,13 +32,12 @@ export default class Films {
     this._sortComponent = new SortView();
     this._filter = new FilterView();
     this._statsLink = new StatsLinkView();
-    this._filmsBoardComponent = new FilmsBoardView();
+    this._filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
     this._filmsListComponent = new FilmsListView();
     this._noFilmComponent = new NoFilmView();
-    this._cardFilmComponent = new CardFilmView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
-    this._topRatedListComponent = new TopRatedListView();
-    this._mostCommentedListComponent = new MostCommentedListView();
+    this._topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
+    this._mostCommentedListComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
   }
 
   init(filmList) {
@@ -95,14 +100,21 @@ export default class Films {
     .forEach((filmsItem) => this._renderFilm(filmsItem));
   }
 
-  _renderFilmsList(filmListContainer, filmsItems) {
-    if (filmsItems.length === 0) {
+  _renderFilmsList() {
+    if (this._filmList.length === 0) {
       this._renderNoFilms();
       remove(this._renderSort());
       return;
     }
 
+    for (let film of this._filmList) {
+      film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
+    }
+
     this._renderFilms(0, Math.min(this._filmList.length, FILMS_AMOUNT_PER_STEP));
+
+    this._renderTopRatedList();
+    this._renderMostCommentedList();
 
     if (this._filmList.length > FILMS_AMOUNT_PER_STEP) {
       this._renderShowMoreButton();
@@ -110,32 +122,43 @@ export default class Films {
   }
 
   _renderNoFilms() {
-    render(this._filmsListComponent, this._renderNoFilms(), RenderPosition.BEFOREEND);
+    render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
   }
 
   _renderShowMoreButton() {
     let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
-    const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(this._filmsListComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
+    render(this._filmsListComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.setClickHandler(() => {
+    this._showMoreButtonComponent.setClickHandler(() => {
       this._filmList.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
       .forEach((filmsElements) => this._renderFilm(filmsElements));
 
       renderedFilmCount += FILMS_AMOUNT_PER_STEP;
 
       if (renderedFilmCount >= this._filmList.length) {
-        remove(showMoreButtonComponent);
+        remove(this.showMoreButtonComponent);
       }
     });
   }
 
   _renderTopRatedList() {
-    // отрисовываем топ по рейтингу
+    const topRatedFilmsListComponent = new FilmsListView();
+    render(this._mainContentComponent, this._topRatedFilmsBoardComponent, RenderPosition.BEFOREEND);
+    render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
+
+    sortByRating(this._filmList).slice(0, 2).forEach((film) => {
+      this._renderFilm(topRatedFilmsListComponent, film);
+    });
   }
 
   _renderMostCommentedList() {
-    // отрисовываем топ по комментариям
+    const mostCommentedListComponent = new FilmsListView();
+    render(this._mainContentComponent, this._mostCommentedListBoardComponent, RenderPosition.BEFOREEND);
+    render(this._mostCommentedListBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
+
+    sortByComments(this._filmList).slice(0, 2).forEach((film) => {
+      this._renderFilm(mostCommentedListComponent, film);
+    });
   }
 }

@@ -65,8 +65,6 @@ const renderFilmsList = (filmListContainer, filmsItems) => {
     return;
   }
 
-  render(siteHeaderNode, new UserRangView(), RenderPosition.BEFOREEND);
-
   for (let film of filmsItems) {
     film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
   }
@@ -117,6 +115,7 @@ const siteMainNode = document.querySelector(`.main`);
 const siteBodyNode = document.querySelector(`body`);
 const statisticNode = document.querySelector(`.footer__statistics`);
 
+render(siteHeaderNode, new UserRangView(), RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 render(navigationComponent, new FilterView(filters), RenderPosition.BEFOREEND);
