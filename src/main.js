@@ -1,5 +1,6 @@
 import {getRandomInteger, KeyboardKeys, sortByRating, sortByComments} from "./utils/common.js";
 import {render, RenderPosition, remove, addElement, removeElement} from "./utils/render.js";
+import {FilmListTitles} from "./consts.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
@@ -7,12 +8,11 @@ import FilterView from "./view/site-menu.js";
 import StatsLinkView from "./view/stats-link.js";
 import SortView from "./view/sort.js";
 import MainContentView from "./view/main-content.js";
+import FilmsBoardView from "./view/films-board.js";
 import FilmsListView from "./view/films-list.js";
 import NoFilmView from "./view/no-film.js";
 import CardFilmView from "./view/card.js";
 import ShowMoreButtonView from "./view/show-more-btn.js";
-import TopRatedListView from "./view/top-rated.js";
-import MostCommentedListView from "./view/most-comment.js";
 import SiteStatisticView from "./view/statistics.js";
 import PopupView from "./view/popup.js";
 
@@ -71,18 +71,24 @@ const renderFilmsList = (filmListContainer, filmsItems) => {
     film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
   }
 
-  for (let i = 0; i < Math.min(filmsItems.length, FILMS_AMOUNT_PER_STEP); i++) {
-    renderFilm(filmListContainer, filmsItems[i]);
-  }
+  filmsItems
+    .slice(0, Math.min(filmsItems.length, FILMS_AMOUNT_PER_STEP))
+    .forEach((filmsItem) => renderFilm(filmListContainer, filmsItem));
 
-  render(filmsNode, new TopRatedListView(), RenderPosition.BEFOREEND);
-  render(filmsNode, new MostCommentedListView(), RenderPosition.BEFOREEND);
+  const topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
+  const topRatedFilmsListComponent = new FilmsListView();
+  const mostCommentedListBoardComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
+  const mostCommentedListComponent = new FilmsListView();
+  render(mainContentComponent, topRatedFilmsBoardComponent, RenderPosition.BEFOREEND);
+  render(topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
+  render(mainContentComponent, mostCommentedListBoardComponent, RenderPosition.BEFOREEND);
+  render(mostCommentedListBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
   if (filmsItems.length > FILMS_AMOUNT_PER_STEP) {
     let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
     const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(filmsListNode, showMoreButtonComponent, RenderPosition.BEFOREEND);
+    render(filmsBoardComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
     showMoreButtonComponent.setClickHandler(() => {
       filmsItems.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
@@ -95,17 +101,11 @@ const renderFilmsList = (filmListContainer, filmsItems) => {
       }
     });
   }
-
-  const topRatedFilmsNode = filmsNode.querySelector(`.films-list--top-rated`);
-  const topRatedFilmsContainerNode = topRatedFilmsNode.querySelector(`.films-list__container`);
-  const mostCommentedFilmsNode = filmsNode.querySelector(`.films-list--most-comment`);
-  const mostCommentedFilmsContainerNode = mostCommentedFilmsNode.querySelector(`.films-list__container`);
-
   sortByComments(filmsItems).slice(0, 2).forEach((film) => {
-    renderFilm(mostCommentedFilmsContainerNode, film);
+    renderFilm(mostCommentedListComponent, film);
   });
   sortByRating(filmsItems).slice(0, 2).forEach((film) => {
-    renderFilm(topRatedFilmsContainerNode, film);
+    renderFilm(topRatedFilmsListComponent, film);
   });
 };
 
@@ -120,17 +120,17 @@ const statisticNode = document.querySelector(`.footer__statistics`);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 render(navigationComponent, new FilterView(filters), RenderPosition.BEFOREEND);
-render(navigationComponent, new StatsLinkView(filters), RenderPosition.BEFOREEND);
+render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
 
 const sortComponent = new SortView();
 render(siteMainNode, sortComponent, RenderPosition.BEFOREEND);
-render(siteMainNode, new MainContentView(), RenderPosition.BEFOREEND);
+const mainContentComponent = new MainContentView();
+render(siteMainNode, mainContentComponent, RenderPosition.BEFOREEND);
 
-const filmsNode = siteMainNode.querySelector(`.films`);
-render(filmsNode, new FilmsListView(), RenderPosition.BEFOREEND);
+const filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
+const filmsListComponent = new FilmsListView();
+render(mainContentComponent, filmsBoardComponent, RenderPosition.BEFOREEND);
+render(filmsBoardComponent, filmsListComponent, RenderPosition.BEFOREEND);
 
-const filmsListNode = filmsNode.querySelector(`.films-list`);
-const filmsContainerNode = filmsNode.querySelector(`.films-list__container`);
-
-renderFilmsList(filmsContainerNode, films);
+renderFilmsList(filmsListComponent, films);
 render(statisticNode, new SiteStatisticView(films.length), RenderPosition.BEFOREEND);
