@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {FilmListTitles} from "../consts.js"
+import {FilmListTitles} from "../consts.js";
 
 export default class FilmsBoard extends AbstractView {
   constructor(title) {

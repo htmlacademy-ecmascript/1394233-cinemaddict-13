@@ -5,12 +5,15 @@ import {KeyboardKeys} from "../utils/common.js";
 import {render, RenderPosition, addElement, removeElement} from "../utils/render.js";
 
 export default class Film {
-  contructor(filmListContainer, siteBody) {
+  constructor(filmListContainer, siteBody) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
 
     this._filmComponent = null;
     this._popupComponent = null;
+
+    this._handleClick = this._handleClick.bind(this);
+    this._onPopupEscPress = this._onPopupEscPress.bind(this);
   }
 
   init(film) {
@@ -18,11 +21,10 @@ export default class Film {
 
     this._filmComponent = new CardFilmView(this._film);
     this._popupComponent = new PopupView(this._film);
-    console.log(this._filmComponent);
-    console.log(this._filmListContainer);
-    this._handlePosterClick = this._handlePosterClick.bind(this);
-    this._handleCommentsClick = this._handleCommentsClick.bind(this);
-    this._handleTitleClick = this._handleTitleClick.bind(this);
+
+    this._filmComponent.setPosterClickHandler(this._handleClick);
+    this._filmComponent.setCommentsClickHandler(this._handleClick);
+    this._filmComponent.setTitleClickHandler(this._handleClick);
 
     render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
   }
@@ -42,19 +44,12 @@ export default class Film {
 
   _onPopupEscPress(evt) {
     if (evt.key === KeyboardKeys.ESCAPE) {
+      evt.preventDefault();
       this._closePopup();
     }
   }
 
-  _handlePosterClick() {
-    this._openPopup();
-  }
-
-  _handleCommentsClick() {
-    this._openPopup();
-  }
-
-  _handleTitleClick() {
+  _handleClick() {
     this._openPopup();
   }
 }
