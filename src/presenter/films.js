@@ -6,15 +6,14 @@ import MainContentView from "../view/main-content.js";
 import FilmsBoardView from "../view/films-board.js";
 import FilmsListView from "../view/films-list.js";
 import NoFilmView from "../view/no-film.js";
-import CardFilmView from "../view/card.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
-import PopupView from "../view/popup.js";
+import FilmPresenter from "./film.js";
 
 import {generateRandomComment} from "../moks/comments.js";
 
 import {FilmListTitles} from "../consts.js";
-import {getRandomInteger, KeyboardKeys, sortByRating, sortByComments} from "../utils/common.js";
-import {render, RenderPosition, addElement, remove, removeElement} from "../utils/render.js";
+import {getRandomInteger, sortByRating, sortByComments} from "../utils/common.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
@@ -69,39 +68,14 @@ export default class Films {
   // }
 
   _renderFilm(filmListElement, film) {
-    const filmComponent = new CardFilmView(film);
-    const popupComponent = new PopupView(film);
-
-    render(filmListElement, filmComponent, RenderPosition.BEFOREEND);
-
-    const closePopup = () => {
-      removeElement(this._siteBody, popupComponent);
-      this._siteBody.classList.remove(`hide-overflow`);
-      document.removeEventListener(`keydown`, onPopupEscPress);
-    };
-
-    const openPopup = () => {
-      addElement(this._siteBody, popupComponent);
-      this._siteBody.classList.add(`hide-overflow`);
-      document.addEventListener(`keydown`, onPopupEscPress);
-      popupComponent.setCloseButtonClickHandler(closePopup);
-    };
-
-    const onPopupEscPress = (evt) => {
-      if (evt.key === KeyboardKeys.ESCAPE) {
-        closePopup();
-      }
-    };
-
-    filmComponent.setPosterClickHandler(openPopup);
-    filmComponent.setCommentsClickHandler(openPopup);
-    filmComponent.setTitleClickHandler(openPopup);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody);
+    filmPresenter.init(film);
   }
 
   _renderFilms(from, to) {
     this._filmList
     .slice(from, to)
-    .forEach((filmsItem) => this._renderFilm(this._filmsListComponent, filmsItem));
+    .forEach((filmItem) => this._renderFilm(this._filmsListComponent, filmItem));
   }
 
   _renderFilmsList() {
