@@ -27,6 +27,7 @@ export default class Films {
   constructor(filmsContainer, siteBody) {
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
+    this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
 
     // this._navigationComponent = new NavigationView();
     this._mainContentComponent = new MainContentView();
@@ -39,6 +40,8 @@ export default class Films {
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
     this._mostCommentedBoardComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
+
+    this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
   init(filmList) {
@@ -112,9 +115,9 @@ export default class Films {
       film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
     }
 
-    this._renderFilms(0, Math.min(this._filmList.length, FILMS_AMOUNT_PER_STEP));
+    this._renderFilms(0, Math.min(this._filmList.length, this._renderFilmsAmount));
 
-    if (this._filmList.length > FILMS_AMOUNT_PER_STEP) {
+    if (this._filmList.length > this._renderFilmsAmount) {
       this._renderShowMoreButton();
     }
 
@@ -126,21 +129,18 @@ export default class Films {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
   }
 
+  _handleShowMoreButtonClick() {
+    this._filmList.slice(this._renderFilmsAmount, this._renderFilmsAmount + FILMS_AMOUNT_PER_STEP).forEach((filmsElements) => this._renderFilm(this._filmsListComponent, filmsElements));
+    this._renderFilmsAmount += FILMS_AMOUNT_PER_STEP;
+
+    if (this._renderFilmsAmount >= this._filmList.length) {
+      remove(this._showMoreButtonComponent);
+    }
+  }
+
   _renderShowMoreButton() {
-    let renderedFilmCount = FILMS_AMOUNT_PER_STEP;
-
     render(this._filmsBoardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    this._showMoreButtonComponent.setClickHandler(() => {
-      this._filmList.slice(renderedFilmCount, renderedFilmCount + FILMS_AMOUNT_PER_STEP)
-      .forEach((filmsElements) => this._renderFilm(this._filmsListComponent, filmsElements));
-
-      renderedFilmCount += FILMS_AMOUNT_PER_STEP;
-
-      if (renderedFilmCount >= this._filmList.length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+    this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
   }
 
   _renderTopRatedList() {
