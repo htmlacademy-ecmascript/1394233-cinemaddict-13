@@ -1,4 +1,3 @@
-// import NavigationView from "../view/navigation.js";
 import FilterView from "../view/site-menu.js";
 import StatsLinkView from "../view/stats-link.js";
 import SortView from "../view/sort.js";
@@ -12,7 +11,7 @@ import FilmPresenter from "./film.js";
 import {generateRandomComment} from "../moks/comments.js";
 
 import {FilmListTitles} from "../consts.js";
-import {getRandomInteger, sortByRating, sortByComments} from "../utils/common.js";
+import {getRandomInteger, sortByRating, sortByComments, updateItem} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
@@ -27,8 +26,8 @@ export default class Films {
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
+    this._filmPresenter = {};
 
-    // this._navigationComponent = new NavigationView();
     this._mainContentComponent = new MainContentView();
     this._sortComponent = new SortView();
     this._filter = new FilterView();
@@ -40,13 +39,13 @@ export default class Films {
     this._topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
     this._mostCommentedBoardComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
 
+    this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
   init(filmList) {
     this._filmList = filmList.slice();
 
-    // render(this._filmsContainer, this._navigationComponent, RenderPosition.BEFOREEND);
     this._renderSort();
     render(this._filmsContainer, this._mainContentComponent, RenderPosition.BEFOREEND);
     render(this._mainContentComponent, this._filmsBoardComponent, RenderPosition.BEFOREEND);
@@ -59,17 +58,10 @@ export default class Films {
     render(this._filmsContainer, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  // _renderFilter() {
-  //   render(this._navigationComponent, this._filter, RenderPosition.BEFOREEND);
-  // }
-
-  // _renderStats() {
-  //   render(this._navigationComponent, this._statsLink, RenderPosition.BEFOREEND);
-  // }
-
   _renderFilm(filmListElement, film) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleFilmChange);
     filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(from, to) {
@@ -101,6 +93,11 @@ export default class Films {
 
   _renderNoFilms() {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
+  }
+
+  _handleFilmChange(updatedFilm) {
+    this._filmList = updateItem(this._filmList, updatedFilm);
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _handleShowMoreButtonClick() {
