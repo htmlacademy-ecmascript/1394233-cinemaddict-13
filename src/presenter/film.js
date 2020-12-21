@@ -22,7 +22,7 @@ export default class Film {
   }
 
   init(film) {
-    // debugger;
+    console.log(film);
     this._film = film;
 
     const prevFilmComponent = this._filmComponent;
@@ -50,7 +50,7 @@ export default class Film {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._siteBody.contains(prevFilmComponent.getElement())) {
+    if (this._siteBody.contains(prevPopupComponent.getElement())) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
