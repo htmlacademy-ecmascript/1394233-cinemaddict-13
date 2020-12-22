@@ -4,14 +4,21 @@ import PopupView from "../view/popup.js";
 import {KeyboardKeys} from "../utils/common.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
 
+const Mode = {
+  POPUP_CLOSED: `CLOSED`,
+  POPUP_OPEN: `OPEN`
+};
+
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData) {
+  constructor(filmListContainer, siteBody, changeData, changeMode) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._filmComponent = null;
     this._popupComponent = null;
+    this._mode = Mode.POPUP_CLOSED;
 
     this._handleOpenClick = this._handleOpenClick.bind(this);
     this._onPopupEscPress = this._onPopupEscPress.bind(this);
@@ -22,7 +29,6 @@ export default class Film {
   }
 
   init(film) {
-    console.log(film);
     this._film = film;
 
     const prevFilmComponent = this._filmComponent;
@@ -50,18 +56,27 @@ export default class Film {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._siteBody.contains(prevPopupComponent.getElement())) {
+    if (this._mode === Mode.POPUP_OPEN) {
       replace(this._popupComponent, prevPopupComponent);
+      this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
     }
 
     remove(prevFilmComponent);
     remove(prevPopupComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.POPUP_CLOSED) {
+      this._closePopup();
+      this._siteBody.classList.add(`hide-overflow`);
+    }
+  }
+
   _closePopup() {
     removeElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupEscPress);
+    this._mode = Mode.POPUP_CLOSED;
   }
 
   _openPopup() {
@@ -69,6 +84,8 @@ export default class Film {
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
     this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
+    this._changeMode();
+    this._mode = Mode.POPUP_OPEN;
   }
 
   _onPopupEscPress(evt) {

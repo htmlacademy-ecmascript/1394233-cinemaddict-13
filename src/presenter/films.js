@@ -39,6 +39,7 @@ export default class Films {
     this._topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
     this._mostCommentedBoardComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
 
+    this._handleModeChange = this._handleModeChange.bind(this);
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
@@ -59,7 +60,7 @@ export default class Films {
   }
 
   _renderFilm(filmListElement, film) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleFilmChange);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -93,6 +94,12 @@ export default class Films {
 
   _renderNoFilms() {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handleFilmChange(updatedFilm) {
