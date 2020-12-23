@@ -80,11 +80,11 @@ export default class Film {
   }
 
   _openPopup() {
+    this._changeMode();
     addElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
     this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
-    this._changeMode();
     this._mode = Mode.POPUP_OPEN;
   }
 

@@ -27,6 +27,8 @@ export default class Films {
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
     this._filmPresenter = {};
+    this._topRatedFilmPresenter = {};
+    this._mostCommentedFilmPresenter = {};
 
     this._mainContentComponent = new MainContentView();
     this._sortComponent = new SortView();
@@ -59,16 +61,16 @@ export default class Films {
     render(this._filmsContainer, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderFilm(filmListElement, film) {
+  _renderFilm(filmListElement, film, presenter) {
     const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
-    this._filmPresenter[film.id] = filmPresenter;
+    presenter[film.id] = filmPresenter;
   }
 
   _renderFilms(from, to) {
     this._filmList
     .slice(from, to)
-    .forEach((filmItem) => this._renderFilm(this._filmsListComponent, filmItem));
+    .forEach((filmItem) => this._renderFilm(this._filmsListComponent, filmItem, this._filmPresenter));
   }
 
   _renderFilmsList() {
@@ -104,11 +106,19 @@ export default class Films {
 
   _handleFilmChange(updatedFilm) {
     this._filmList = updateItem(this._filmList, updatedFilm);
-    this._filmPresenter[updatedFilm.id].init(updatedFilm);
+    this._updatePresenter(this._filmPresenter, updatedFilm);
+    this._updatePresenter(this._topRatedFilmPresenter, updatedFilm);
+    this._updatePresenter(this._mostCommentedFilmPresenter, updatedFilm);
+  }
+
+  _updatePresenter(presenter, updatedFilm) {
+    if (presenter.hasOwnProperty(updatedFilm.id)) {
+      presenter[updatedFilm.id].init(updatedFilm);
+    }
   }
 
   _handleShowMoreButtonClick() {
-    this._filmList.slice(this._renderFilmsAmount, this._renderFilmsAmount + FILMS_AMOUNT_PER_STEP).forEach((filmsElements) => this._renderFilm(this._filmsListComponent, filmsElements));
+    this._filmList.slice(this._renderFilmsAmount, this._renderFilmsAmount + FILMS_AMOUNT_PER_STEP).forEach((filmsElements) => this._renderFilm(this._filmsListComponent, filmsElements, this._filmPresenter));
     this._renderFilmsAmount += FILMS_AMOUNT_PER_STEP;
 
     if (this._renderFilmsAmount >= this._filmList.length) {
@@ -127,7 +137,7 @@ export default class Films {
     render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
 
     sortByRating(this._filmList).slice(0, 2).forEach((film) => {
-      this._renderFilm(topRatedFilmsListComponent, film);
+      this._renderFilm(topRatedFilmsListComponent, film, this._topRatedFilmPresenter);
     });
   }
 
@@ -137,7 +147,7 @@ export default class Films {
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
     sortByComments(this._filmList).slice(0, 2).forEach((film) => {
-      this._renderFilm(mostCommentedListComponent, film);
+      this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
     });
   }
 }
