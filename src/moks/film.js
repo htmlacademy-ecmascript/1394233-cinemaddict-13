@@ -1,3 +1,4 @@
+import {nanoid} from "nanoid";
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomIntegerDecimal, generateRandomItem} from "../utils/common.js";
 
@@ -122,6 +123,7 @@ const generateScreenWriters = () => new Array(getRandomInteger(1, 2)).fill().map
 const getRandomBooleanValue = () => Boolean(getRandomInteger(0, 1));
 
 export const generateFilm = () => ({
+  id: nanoid(),
   poster: generateRandomItem(POSTERS),
   title: generateRandomItem(TITLES),
   originalTitle: `Original: ${generateRandomItem(TITLES)}`,
