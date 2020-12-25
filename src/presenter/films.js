@@ -1,5 +1,3 @@
-import FilterView from "../view/site-menu.js";
-import StatsLinkView from "../view/stats-link.js";
 import SortView from "../view/sort.js";
 import MainContentView from "../view/main-content.js";
 import FilmsBoardView from "../view/films-board.js";
@@ -16,7 +14,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
-const ComentsAmmount = {
+const CommentsAmount = {
   MIN: 1,
   MAX: 5,
 };
@@ -32,8 +30,6 @@ export default class Films {
 
     this._mainContentComponent = new MainContentView();
     this._sortComponent = new SortView();
-    this._filter = new FilterView();
-    this._statsLink = new StatsLinkView();
     this._filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
     this._filmsListComponent = new FilmsListView();
     this._noFilmComponent = new NoFilmView();
@@ -81,7 +77,7 @@ export default class Films {
     }
 
     for (let film of this._filmList) {
-      film.comments = new Array(getRandomInteger(ComentsAmmount.MIN, ComentsAmmount.MAX)).fill(``).map(generateRandomComment);
+      film.comments = new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment);
     }
 
     this._renderFilms(0, Math.min(this._filmList.length, this._renderFilmsAmount));
