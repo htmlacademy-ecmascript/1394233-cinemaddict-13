@@ -10,7 +10,7 @@ import {generateRandomComment} from "../moks/comments.js";
 
 import {FilmListTitles, SortType} from "../consts.js";
 import {getRandomInteger, sortByRating, sortingByRating, sortByComments, sortByDate, updateItem} from "../utils/common.js";
-import {render, RenderPosition, remove, removeElement} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
