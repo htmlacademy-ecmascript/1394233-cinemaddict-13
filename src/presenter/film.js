@@ -65,6 +65,11 @@ export default class Film {
     remove(prevPopupComponent);
   }
 
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._popupComponent);
+  }
+
   resetView() {
     if (this._mode !== Mode.POPUP_CLOSED) {
       this._closePopup();

@@ -6,3 +6,11 @@ export const FilmListTitles = {
   TOP_RATED: `Top rated`,
   ALL: `All movies. Upcoming`
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
+
+export const ACTIVE_SORT_CLASS = `sort__button--active`;
