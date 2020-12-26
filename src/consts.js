@@ -12,3 +12,5 @@ export const SortType = {
   DATE: `date`,
   RATING: `rating`
 };
+
+export const ACTIVE_SORT_CLASS = `sort__button--active`;

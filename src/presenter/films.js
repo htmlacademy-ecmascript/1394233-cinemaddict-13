@@ -55,7 +55,7 @@ export default class Films {
     render(this._mainContentComponent, this._filmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._filmsBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
 
-    this._renderFilmsList();
+    this._renderFilmsList(true);
   }
 
   _sortFilms(sortType) {
@@ -99,7 +99,7 @@ export default class Films {
     .forEach((filmItem) => this._renderFilm(this._filmsListComponent, filmItem, this._filmPresenter));
   }
 
-  _renderFilmsList() {
+  _renderFilmsList(firstRenderExtraList) {
     if (this._filmList.length === 0) {
       this._renderNoFilms();
       remove(this._sortComponent);
@@ -116,8 +116,10 @@ export default class Films {
       this._renderShowMoreButton();
     }
 
-    this._renderTopRatedList();
-    this._renderMostCommentedList();
+    if (firstRenderExtraList) {
+      this._renderTopRatedList();
+      this._renderMostCommentedList();
+    }
   }
 
   _renderNoFilms() {
@@ -141,6 +143,7 @@ export default class Films {
 
   _handleFilmChange(updatedFilm) {
     this._filmList = updateItem(this._filmList, updatedFilm);
+    this._sourcedFilmList = updateItem(this._sourcedFilmList, updatedFilm);
     this._updatePresenter(this._filmPresenter, updatedFilm);
     this._updatePresenter(this._topRatedFilmPresenter, updatedFilm);
     this._updatePresenter(this._mostCommentedFilmPresenter, updatedFilm);
@@ -172,9 +175,7 @@ export default class Films {
     render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
 
     sortByRating(this._filmList).slice(0, MAXIMUM_EXTRA_FILMS).forEach((film) => {
-      if (Object.keys(this._topRatedFilmPresenter).length < MAXIMUM_EXTRA_FILMS) {
-        this._renderFilm(topRatedFilmsListComponent, film, this._topRatedFilmPresenter);
-      }
+      this._renderFilm(topRatedFilmsListComponent, film, this._topRatedFilmPresenter);
     });
   }
 
@@ -184,9 +185,7 @@ export default class Films {
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
     sortByComments(this._filmList).slice(0, MAXIMUM_EXTRA_FILMS).forEach((film) => {
-      if (Object.keys(this._mostCommentedFilmPresenter).length < MAXIMUM_EXTRA_FILMS) {
-        this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
-      }
+      this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
     });
   }
 }
