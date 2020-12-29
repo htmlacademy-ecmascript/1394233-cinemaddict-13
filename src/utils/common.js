@@ -31,12 +31,8 @@ export const generateRandomItem = (array) => {
 
 export const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
 export const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
-export const sortingByRating = (a, b) => {
-  return b.rating - a.rating;
-};
-export const sortByDate = (filmA, filmB) => {
-  return dayjs(filmB.productionYear).diff(dayjs(filmA.productionYear));
-};
+export const sortingByRating = (a, b) => b.rating - a.rating;
+export const sortByDate = (filmA, filmB) => dayjs(filmB.productionYear).diff(dayjs(filmA.productionYear));
 
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);

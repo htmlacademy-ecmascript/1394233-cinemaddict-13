@@ -30,9 +30,9 @@ export default class Sort extends AbstractView {
 
     if (evt.target.tagName !== `A`) {
       return;
-    } else {
-      evt.target.classList.add(ACTIVE_SORT_CLASS);
     }
+
+    evt.target.classList.add(ACTIVE_SORT_CLASS);
 
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
