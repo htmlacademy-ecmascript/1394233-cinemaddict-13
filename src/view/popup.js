@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
-import AbstractView from "./abstract.js";
+import smartView from "./smart.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
 const createCommentTemplate = ({emoji, text, author, date}) => {
 
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
+    <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
   </span>
   <div>
     <p class="film-details__comment-text">${text}</p>
@@ -19,21 +19,22 @@ const createCommentTemplate = ({emoji, text, author, date}) => {
 </li>`;
 };
 
-const createGenreTemplate = (elem) => {
-  return `<span class="film-details__genre">${elem}</span>`;
-};
+const createEmojiLableTemplate = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`;
+
+const createGenreTemplate = (elem) => `<span class="film-details__genre">${elem}</span>`;
 
 const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` `);
 
 const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
 const createPopupTemplate = (film) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments, emojiLabel} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);
 
   const comentsNodeTemplate = createCommentsTemplate(comments);
+  const emojiLableTemplate = createEmojiLableTemplate(emojiLabel);
   const genresNodeTemplate = createGenresTemplate(genre);
 
   return `<section class="film-details">
@@ -120,10 +121,13 @@ const createPopupTemplate = (film) => {
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">
+            ${emojiLabel ? emojiLableTemplate : ``}
+          </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">
+            </textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -154,18 +158,38 @@ const createPopupTemplate = (film) => {
 </section>`;
 };
 
-export default class Popup extends AbstractView {
+export default class Popup extends smartView {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = Popup.parseFilmToData(film);
     this._clickHandler = this._clickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favouriteClickHandler = this._favouriteClickHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._emojiClickHandler = this._emojiChangeHandler.bind(this);
+
+    this.getElement()
+      .querySelector(`.film-details__comment-input`)
+      .addEventListener(`input`, this._commentInputHandler);
+    this.getElement()
+      .querySelector(`.film-details__emoji-list`)
+      .addEventListener(`input`, this._emojiChangeHandler);
   }
 
   getTemplate() {
-    return createPopupTemplate(this._film);
+    // console.log(this._data);
+    return createPopupTemplate(this._data);
+  }
+
+  static parseFilmToData(film) {
+    return Object.assign(
+        {},
+        film,
+        {
+          emojiLabel: null,
+        }
+    );
   }
 
   _clickHandler(evt) {
@@ -186,6 +210,23 @@ export default class Popup extends AbstractView {
   _favouriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favouriteClick();
+  }
+
+  _commentInputHandler(evt) {
+    evt.preventDefault();
+
+  }
+
+  _emojiChangeHandler(evt) {
+    evt.preventDefault();
+
+    const emojiValue = evt.target.value;
+
+    if (evt.target.classList.contains(`film-details__emoji-item`)) {
+      this.updateData({
+        emojiLabel: emojiValue,
+      });
+    }
   }
 
   setCloseButtonClickHandler(callback) {
