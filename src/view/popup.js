@@ -220,6 +220,10 @@ export default class Popup extends smartView {
     const popupScrollTop = this.getElement().scrollTop;
 
     if (evt.target.classList.contains(`film-details__emoji-item`)) {
+      if (this._data.emojiLabel === evt.target.value) {
+        return;
+      }
+
       this.updateData({
         emojiLabel: evt.target.value,
       });
@@ -235,6 +239,12 @@ export default class Popup extends smartView {
     this.getElement()
       .querySelector(`.film-details__comment-input`)
       .addEventListener(`input`, this._newCommentInputHandler);
+  }
+
+  reset(film) {
+    this.updateData(
+        Popup.parseFilmToData(film)
+    );
   }
 
   restoreHandlers() {
