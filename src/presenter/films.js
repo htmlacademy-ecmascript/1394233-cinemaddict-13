@@ -99,7 +99,7 @@ export default class Films {
     .forEach((filmItem) => this._renderFilm(this._filmsListComponent, filmItem, this._filmPresenter));
   }
 
-  _renderFilmsList(booleanСheck) {
+  _renderFilmsList(firstRenderExtraList) {
     if (this._filmList.length === 0) {
       this._renderNoFilms();
       remove(this._sortComponent);
@@ -116,7 +116,7 @@ export default class Films {
       this._renderShowMoreButton();
     }
 
-    if (booleanСheck) {
+    if (firstRenderExtraList) {
       this._renderTopRatedList();
       this._renderMostCommentedList();
     }

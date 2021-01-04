@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import smartView from "./smart.js";
+import SmartView from "./smart.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 
 const createCommentTemplate = ({emoji, text, author, date}) => {
@@ -157,7 +157,7 @@ const createPopupTemplate = (film) => {
 </section>`;
 };
 
-export default class Popup extends smartView {
+export default class Popup extends SmartView {
   constructor(film) {
     super();
     this._data = Popup.parseFilmToData(film);
@@ -175,15 +175,18 @@ export default class Popup extends smartView {
     return createPopupTemplate(this._data);
   }
 
-  static parseFilmToData(film) {
-    return Object.assign(
-        {},
-        film,
-        {
-          emojiLabel: null,
-          newComment: null
-        }
+  reset(film) {
+    this.updateData(
+        Popup.parseFilmToData(film)
     );
+  }
+
+  restoreHandlers() {
+    this.setCloseButtonClickHandler(this._callback.click);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavouriteClickHandler(this._callback.favouriteClick);
+    this._setInnerHandlers();
   }
 
   _clickHandler(evt) {
@@ -241,20 +244,6 @@ export default class Popup extends smartView {
       .addEventListener(`input`, this._newCommentInputHandler);
   }
 
-  reset(film) {
-    this.updateData(
-        Popup.parseFilmToData(film)
-    );
-  }
-
-  restoreHandlers() {
-    this.setCloseButtonClickHandler(this._callback.click);
-    this.setWatchListClickHandler(this._callback.watchListClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavouriteClickHandler(this._callback.favouriteClick);
-    this._setInnerHandlers();
-  }
-
   setCloseButtonClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
@@ -273,5 +262,16 @@ export default class Popup extends smartView {
   setFavouriteClickHandler(callback) {
     this._callback.favouriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favouriteClickHandler);
+  }
+
+  static parseFilmToData(film) {
+    return Object.assign(
+        {},
+        film,
+        {
+          emojiLabel: null,
+          newComment: null
+        }
+    );
   }
 }
