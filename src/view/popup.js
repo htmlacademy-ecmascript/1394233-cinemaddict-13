@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import SmartView from "./smart.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
+import {createElement} from "../utils/render.js";
 
 dayjs.extend(relativeTime);
 
@@ -31,13 +32,12 @@ const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` 
 const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
 const createPopupTemplate = (film) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments, emojiLabel, newComment} = film;
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);
 
   const commentsNodeTemplate = createCommentsTemplate(comments);
-  const emojiLableTemplate = createEmojiLableTemplate(emojiLabel);
   const genresNodeTemplate = createGenresTemplate(genre);
 
   return `<section class="film-details">
@@ -49,7 +49,6 @@ const createPopupTemplate = (film) => {
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
-
           <p class="film-details__age">${ageRating}</p>
         </div>
 
@@ -124,31 +123,29 @@ const createPopupTemplate = (film) => {
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label">
-            ${emojiLabel ? emojiLableTemplate : ``}
-          </div>
+          <div class="film-details__add-emoji-label"></div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ``}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${emojiLabel === `smile` ? `checked` : ``}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
             <label class="film-details__emoji-label" for="emoji-smile">
               <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${emojiLabel === `sleeping` ? `checked` : ``}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
             <label class="film-details__emoji-label" for="emoji-sleeping">
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${emojiLabel === `puke` ? `checked` : ``}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
             <label class="film-details__emoji-label" for="emoji-puke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${emojiLabel === `angry` ? `checked` : ``}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
             <label class="film-details__emoji-label" for="emoji-angry">
               <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
             </label>
@@ -233,6 +230,15 @@ export default class Popup extends SmartView {
       this.updateData({
         emojiLabel: evt.target.value,
       }, true);
+
+      const placeForEmojiNode = this.getElement().querySelector(`.film-details__add-emoji-label`);
+      const emojiLabel = createElement(createEmojiLableTemplate(evt.target.value));
+      const currentEmojiLabel = placeForEmojiNode.querySelector(`img`);
+
+      if (currentEmojiLabel) {
+        placeForEmojiNode.removeChild(currentEmojiLabel);
+      }
+      placeForEmojiNode.appendChild(emojiLabel);
 
       this.getElement().scrollTop = popupScrollTop;
     }
