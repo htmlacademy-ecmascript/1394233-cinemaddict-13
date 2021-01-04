@@ -24,7 +24,7 @@ const createCommentTemplate = ({emoji, text, author, date}) => {
 
 const createEmojiLableTemplate = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`;
 
-const createGenreTemplate = (elem) => `<span class="film-details__genre">${elem}</span>`;
+const createGenreTemplate = (element) => `<span class="film-details__genre">${element}</span>`;
 
 const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` `);
 
