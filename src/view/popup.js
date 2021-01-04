@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import SmartView from "./smart.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
+
+dayjs.extend(relativeTime);
 
 const createCommentTemplate = ({emoji, text, author, date}) => {
 
@@ -12,7 +15,7 @@ const createCommentTemplate = ({emoji, text, author, date}) => {
     <p class="film-details__comment-text">${text}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${dayjs(date).format(`YYYY/MM/DD HH:mm`)}</span>
+      <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>
@@ -229,7 +232,7 @@ export default class Popup extends SmartView {
 
       this.updateData({
         emojiLabel: evt.target.value,
-      });
+      }, true);
 
       this.getElement().scrollTop = popupScrollTop;
     }
