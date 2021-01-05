@@ -22,7 +22,8 @@ const CommentsAmount = {
 const MAXIMUM_EXTRA_FILMS = 2;
 
 export default class Films {
-  constructor(filmsContainer, siteBody) {
+  constructor(filmsContainer, siteBody, filmsModel) {
+    this._filmsModel = filmsModel;
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
@@ -56,6 +57,10 @@ export default class Films {
     render(this._filmsBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
 
     this._renderFilmsList(true);
+  }
+
+  _getFilmss() {
+    return this._filmsModel.getFilms();
   }
 
   _sortFilms(sortType) {
