@@ -2,6 +2,7 @@ import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
 
 import {KeyboardKeys} from "../utils/common.js";
+import {UserAction, UpdateType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
 
 const Mode = {
@@ -111,6 +112,8 @@ export default class Film {
 
   _handleWatchListClick() {
     this._changeData(
+        UserAction.IS_WATCH_LIST,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,
@@ -123,6 +126,8 @@ export default class Film {
 
   _handleWatchedClick() {
     this._changeData(
+        UserAction.IS_WATCHED,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,
@@ -135,6 +140,8 @@ export default class Film {
 
   _handleFavouriteClick() {
     this._changeData(
+        UserAction.IS_FAVOURITES,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,

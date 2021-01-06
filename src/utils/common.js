@@ -33,17 +33,3 @@ export const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a
 export const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
 export const sortingByRating = (a, b) => b.rating - a.rating;
 export const sortByDate = (filmA, filmB) => dayjs(filmB.productionYear).diff(dayjs(filmA.productionYear));
-
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};

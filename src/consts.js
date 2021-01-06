@@ -14,3 +14,15 @@ export const SortType = {
 };
 
 export const ACTIVE_SORT_CLASS = `sort__button--active`;
+
+export const UserAction = {
+  IS_WATCH_LIST: `IS_WATCH_LIST`,
+  IS_WATCHED: `IS_WATCHED`,
+  IS_FAVOURITES: `IS_FAVOURITES`
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
