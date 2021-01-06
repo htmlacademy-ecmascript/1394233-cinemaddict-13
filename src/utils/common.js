@@ -21,7 +21,7 @@ export const getRandomIntegerDecimal = (a = 0, b = 1) => {
 
 export const limitDescription = (descriptionText, maxSymbols) => descriptionText.length > maxSymbols ? `${descriptionText.substring(0, maxSymbols - 1)}...` : `${descriptionText}`;
 
-export const upperFirst = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
+// export const upperFirst = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
 
 export const generateRandomItem = (array) => {
   const randomIndex = getRandomInteger(0, array.length - 1);

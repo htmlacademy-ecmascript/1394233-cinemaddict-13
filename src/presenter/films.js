@@ -5,10 +5,12 @@ import FilmsListView from "../view/films-list.js";
 import NoFilmView from "../view/no-film.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
 import FilmPresenter from "./film.js";
+// import FilterPresenter from "./filter.js";
 
 import {generateRandomComment} from "../moks/comments.js";
 
 import {FilmListTitles, SortType, UpdateType, UserAction} from "../consts.js";
+import {filter} from "../utils/filter.js";
 import {getRandomInteger, sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 
@@ -22,12 +24,14 @@ const CommentsAmount = {
 const MAXIMUM_EXTRA_FILMS = 2;
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter) {
     this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
     this._filmPresenter = {};
+    this._filterPresenter = filterPresenter;
     this._topRatedFilmPresenter = {};
     this._mostCommentedFilmPresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -49,6 +53,7 @@ export default class Films {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -61,13 +66,17 @@ export default class Films {
   }
 
   _getFilms() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._filmsModel.getFilms();
+    const filtredFilms = filter[filterType](films);
+
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._filmsModel.getFilms().slice().sort(sortByDate);
+        return filtredFilms.sort(sortByDate);
       case SortType.RATING:
-        return this._filmsModel.getFilms().slice().sort(sortingByRating);
+        return filtredFilms.sort(sortingByRating);
     }
-    return this._filmsModel.getFilms();
+    return filtredFilms;
   }
 
   _handleSortTypeChange(sortType) {
@@ -186,22 +195,21 @@ export default class Films {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._filmPresenter[data.id].init(data);
 
         this._updatePresenter(this._filmPresenter, data);
         this._updatePresenter(this._topRatedFilmPresenter, data);
         this._updatePresenter(this._mostCommentedFilmPresenter, data);
+
+        this._filterPresenter.init();
         break;
       case UpdateType.MINOR:
-        this._clearFilms();
-        this._renderFilms();
-        // - обновить список (например, когда задача ушла в архив)
+        this._clearFilmList();
+        this._renderFilmsList();
         break;
       case UpdateType.MAJOR:
-        this._clearFilms({resetRenderFilmsAmount: true, resetSortType: true});
-        this._renderFilms();
-        // - обновить всю доску (например, при переключении фильтра)
+        this._clearFilmList({resetRenderFilmsAmount: true, resetSortType: true});
+        this._renderFilmsList();
         break;
     }
   }
