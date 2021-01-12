@@ -201,7 +201,6 @@ export default class Films {
         this._updatePresenter(this._topRatedFilmPresenter, data);
         this._updatePresenter(this._mostCommentedFilmPresenter, data);
 
-        this._filterPresenter.init();
         break;
       case UpdateType.MINOR:
         this._clearFilmList();
