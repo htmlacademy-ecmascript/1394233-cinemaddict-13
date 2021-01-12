@@ -112,7 +112,7 @@ export default class Film {
 
   _handleWatchListClick() {
     this._changeData(
-        UserAction.IS_WATCH_LIST,
+        UserAction.UPDATE_FILM,
         UpdateType.PATCH,
         Object.assign(
             {},
@@ -126,7 +126,7 @@ export default class Film {
 
   _handleWatchedClick() {
     this._changeData(
-        UserAction.IS_WATCHED,
+        UserAction.UPDATE_FILM,
         UpdateType.PATCH,
         Object.assign(
             {},
@@ -140,7 +140,7 @@ export default class Film {
 
   _handleFavouriteClick() {
     this._changeData(
-        UserAction.IS_FAVOURITES,
+        UserAction.UPDATE_FILM,
         UpdateType.PATCH,
         Object.assign(
             {},

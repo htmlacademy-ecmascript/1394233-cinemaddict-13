@@ -180,7 +180,7 @@ export default class Films {
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
-      case UserAction.IS_WATCH_LIST:
+      case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.IS_WATCHED:
@@ -195,12 +195,9 @@ export default class Films {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(data);
-
         this._updatePresenter(this._filmPresenter, data);
         this._updatePresenter(this._topRatedFilmPresenter, data);
         this._updatePresenter(this._mostCommentedFilmPresenter, data);
-
         break;
       case UpdateType.MINOR:
         this._clearFilmList();
