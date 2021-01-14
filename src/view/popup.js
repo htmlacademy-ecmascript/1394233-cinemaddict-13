@@ -31,8 +31,8 @@ const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` 
 
 const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
-const createPopupTemplate = (film) => {
-  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, comments} = film;
+const createPopupTemplate = (film, comments) => {
+  const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);
@@ -158,9 +158,10 @@ const createPopupTemplate = (film) => {
 };
 
 export default class Popup extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._data = Popup.parseFilmToData(film);
+    this._comments = comments;
     this._clickHandler = this._clickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -172,7 +173,7 @@ export default class Popup extends SmartView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._data);
+    return createPopupTemplate(this._data, this._comments);
   }
 
   reset(film) {

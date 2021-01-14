@@ -11,7 +11,7 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData, changeMode) {
+  constructor(filmListContainer, siteBody, changeData, changeMode, comments) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
@@ -20,6 +20,7 @@ export default class Film {
     this._filmComponent = null;
     this._popupComponent = null;
     this._mode = Mode.POPUP_CLOSED;
+    this._comments = comments._comments.slice();
 
     this._handleOpenClick = this._handleOpenClick.bind(this);
     this._onPopupEscPress = this._onPopupEscPress.bind(this);
@@ -35,8 +36,8 @@ export default class Film {
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
 
-    this._filmComponent = new CardFilmView(this._film);
-    this._popupComponent = new PopupView(this._film);
+    this._filmComponent = new CardFilmView(this._film, this._comments);
+    this._popupComponent = new PopupView(this._film, this._comments);
 
     this._filmComponent.setPosterClickHandler(this._handleOpenClick);
     this._filmComponent.setCommentsClickHandler(this._handleOpenClick);

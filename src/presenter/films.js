@@ -5,7 +5,8 @@ import FilmsListView from "../view/films-list.js";
 import NoFilmView from "../view/no-film.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
 import FilmPresenter from "./film.js";
-// import FilterPresenter from "./filter.js";
+import CommentsModel from "../model/comments.js";
+
 
 import {generateRandomComment} from "../moks/comments.js";
 
@@ -24,9 +25,10 @@ const CommentsAmount = {
 const MAXIMUM_EXTRA_FILMS = 2;
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, commentsModel, filterPresenter) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._commentsModel = commentsModel;
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
@@ -35,6 +37,7 @@ export default class Films {
     this._topRatedFilmPresenter = {};
     this._mostCommentedFilmPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._comments = {};
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -62,12 +65,19 @@ export default class Films {
     render(this._mainContentComponent, this._filmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._filmsBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
 
+    for (let film of this._getFilms()) {
+      const commentsModel = new CommentsModel();
+      commentsModel.setComments(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
+      this._comments[film.id] = commentsModel;
+      film.comments = commentsModel._comments.length;
+    }
+
     this._renderFilmsList(true);
   }
 
   _getFilms() {
     const filterType = this._filterModel.getFilter();
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.getFilms().slice();
     const filtredFilms = filter[filterType](films);
 
     switch (this._currentSortType) {
@@ -76,6 +86,7 @@ export default class Films {
       case SortType.RATING:
         return filtredFilms.sort(sortingByRating);
     }
+
     return filtredFilms;
   }
 
@@ -101,12 +112,12 @@ export default class Films {
   }
 
   _renderFilm(filmListElement, film, presenter) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id]);
     filmPresenter.init(film);
     presenter[film.id] = filmPresenter;
   }
 
-  _clearBoard({resetRenderFilmsAmount = false, resetSortType = false} = {}) {
+  _clearFilmList({resetRenderFilmsAmount = false, resetSortType = false} = {}) {
     const filmAmount = this._getFilms().length;
 
     Object
@@ -114,8 +125,10 @@ export default class Films {
       .forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
 
-    remove(this._sortComponent);
-    remove(this._renderNoFilms);
+    // remove(this._sortComponent);
+    if (this._noFilmComponent) {
+      remove(this._noFilmComponent);
+    }
     remove(this._showMoreButtonComponent);
 
     if (resetRenderFilmsAmount) {
@@ -129,6 +142,15 @@ export default class Films {
     }
   }
 
+  // _clearFilmList() {
+  //   Object
+  //     .values(this._filmPresenter)
+  //     .forEach((presenter) => presenter.destroy());
+  //   this._filmPresenter = {};
+  //   this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
+  //   remove(this._showMoreButtonComponent);
+  // }
+
   _renderFilms(films) {
     films.forEach((film) => this._renderFilm(this._filmsListComponent, film, this._filmPresenter));
   }
@@ -141,10 +163,6 @@ export default class Films {
       this._renderNoFilms();
       remove(this._sortComponent);
       return;
-    }
-
-    for (let film of this._getFilms()) {
-      film.comments = new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment);
     }
 
     this._renderFilms(films);
@@ -163,15 +181,6 @@ export default class Films {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearFilmList() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
-    remove(this._showMoreButtonComponent);
-  }
-
   _handleModeChange() {
     Object
       .values(this._filmPresenter)
@@ -183,21 +192,21 @@ export default class Films {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.IS_WATCHED:
-        this._filmsModel.updateFilm(updateType, update);
+      case UserAction.DELETE_COMMENT:
+        this._commentsModel.deleteComment(updateType, update);
         break;
-      case UserAction.IS_FAVOURITES:
-        this._filmsModel.updateFilm(updateType, update);
-        break;
+      // case UserAction.IS_FAVOURITES:
+      //   this._filmsModel.updateFilm(updateType, update);
+      //   break;
     }
   }
 
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._updatePresenter(this._filmPresenter, data);
-        this._updatePresenter(this._topRatedFilmPresenter, data);
-        this._updatePresenter(this._mostCommentedFilmPresenter, data);
+        this._updateFilmPresenter(this._filmPresenter, data);
+        this._updateFilmPresenter(this._topRatedFilmPresenter, data);
+        this._updateFilmPresenter(this._mostCommentedFilmPresenter, data);
         break;
       case UpdateType.MINOR:
         this._clearFilmList();
@@ -210,9 +219,9 @@ export default class Films {
     }
   }
 
-  _updatePresenter(presenter, updatedFilm) {
-    if (presenter.hasOwnProperty(updatedFilm.id)) {
-      presenter[updatedFilm.id].init(updatedFilm);
+  _updateFilmPresenter(presenter, data) {
+    if (presenter.hasOwnProperty(data.id)) {
+      presenter[data.id].init(data);
     }
   }
 
