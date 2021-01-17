@@ -20,7 +20,7 @@ export default class Film {
     this._filmComponent = null;
     this._popupComponent = null;
     this._mode = Mode.POPUP_CLOSED;
-    this._comments = comments._comments.slice();
+    this._comments = comments;
 
     this._handleOpenClick = this._handleOpenClick.bind(this);
     this._onPopupEscPress = this._onPopupEscPress.bind(this);
@@ -28,13 +28,14 @@ export default class Film {
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavouriteClick = this._handleFavouriteClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
   }
 
   init(film) {
     this._film = film;
 
     const prevFilmComponent = this._filmComponent;
-    const prevPopupComponent = this._popupComponent;
+    let prevPopupComponent = this._popupComponent;
 
     this._filmComponent = new CardFilmView(this._film, this._comments);
     this._popupComponent = new PopupView(this._film, this._comments);
@@ -48,6 +49,7 @@ export default class Film {
     this._popupComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavouriteClickHandler(this._handleFavouriteClick);
+    this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -150,6 +152,15 @@ export default class Film {
               isFavourite: !this._film.isFavourite
             }
         )
+    );
+  }
+
+  _handleDeleteCommentClick(id) {
+    this._changeData(
+        UserAction.DELETE_COMMENT,
+        UpdateType.PATCH,
+        this._film,
+        id
     );
   }
 }

@@ -25,10 +25,9 @@ const CommentsAmount = {
 const MAXIMUM_EXTRA_FILMS = 2;
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, commentsModel, filterPresenter) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
-    this._commentsModel = commentsModel;
     this._filmsContainer = filmsContainer;
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
@@ -67,9 +66,10 @@ export default class Films {
 
     for (let film of this._getFilms()) {
       const commentsModel = new CommentsModel();
+      commentsModel.addObserver(this._handleModelEvent);
       commentsModel.setComments(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
       this._comments[film.id] = commentsModel;
-      film.comments = commentsModel._comments.length;
+      film.comments = this._comments[film.id].length;
     }
 
     this._renderFilmsList(true);
@@ -142,15 +142,6 @@ export default class Films {
     }
   }
 
-  // _clearFilmList() {
-  //   Object
-  //     .values(this._filmPresenter)
-  //     .forEach((presenter) => presenter.destroy());
-  //   this._filmPresenter = {};
-  //   this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
-  //   remove(this._showMoreButtonComponent);
-  // }
-
   _renderFilms(films) {
     films.forEach((film) => this._renderFilm(this._filmsListComponent, film, this._filmPresenter));
   }
@@ -187,13 +178,13 @@ export default class Films {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, id) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update);
+        this._comments[update.id].deleteComment(updateType, id, update);
         break;
       // case UserAction.IS_FAVOURITES:
       //   this._filmsModel.updateFilm(updateType, update);

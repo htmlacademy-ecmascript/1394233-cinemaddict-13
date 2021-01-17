@@ -6,9 +6,8 @@ import {createElement} from "../utils/render.js";
 
 dayjs.extend(relativeTime);
 
-const createCommentTemplate = ({emoji, text, author, date}) => {
-
-  return `<li class="film-details__comment">
+const createCommentTemplate = ({emoji, text, author, date, id}) => {
+  return `<li class="film-details__comment" data-id="">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
   </span>
@@ -17,7 +16,7 @@ const createCommentTemplate = ({emoji, text, author, date}) => {
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
-      <button class="film-details__comment-delete">Delete</button>
+      <button class="film-details__comment-delete" data-id="${id}">Delete</button>
     </p>
   </div>
 </li>`;
@@ -166,6 +165,7 @@ export default class Popup extends SmartView {
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favouriteClickHandler = this._favouriteClickHandler.bind(this);
+    this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._newCommentInputHandler = this._newCommentInputHandler.bind(this);
 
@@ -173,7 +173,7 @@ export default class Popup extends SmartView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._data, this._comments);
+    return createPopupTemplate(this._data, this._comments.getComments());
   }
 
   reset(film) {
@@ -187,6 +187,7 @@ export default class Popup extends SmartView {
     this.setWatchListClickHandler(this._callback.watchListClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavouriteClickHandler(this._callback.favouriteClick);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
     this._setInnerHandlers();
   }
 
@@ -245,6 +246,20 @@ export default class Popup extends SmartView {
     }
   }
 
+  _deleteCommentClickHandler(evt) {
+    evt.preventDefault();
+
+    const popupScrollTop = this.getElement().scrollTop;
+
+    this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`));
+
+    this.getElement().scrollTop = popupScrollTop;
+    // const commentElement = evt.target.closest(`.film-details__comment`);
+    // const parent = commentElement.parentNode;
+    // parent.removeChild(commentElement);
+    // this.getElement().querySelector(`.film-details__comments-count`).textContent = this._comments.getComments().length;
+  }
+
   _setInnerHandlers() {
     this.getElement()
       .querySelector(`.film-details__emoji-list`)
@@ -272,6 +287,14 @@ export default class Popup extends SmartView {
   setFavouriteClickHandler(callback) {
     this._callback.favouriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favouriteClickHandler);
+  }
+
+  setDeleteCommentClickHandler(callback) {
+    this._callback.deleteCommentClick = callback;
+    const commentsElement = this.getElement().querySelectorAll(`.film-details__comment`);
+    commentsElement.forEach((element) => {
+      element.querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteCommentClickHandler);
+    });
   }
 
   static parseFilmToData(film) {
