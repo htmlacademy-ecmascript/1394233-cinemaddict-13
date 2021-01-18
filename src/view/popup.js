@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import he from "he";
+
 import SmartView from "./smart.js";
 import {nanoid} from "nanoid";
 import {KeyboardKeys} from "../utils/common.js";
@@ -14,7 +16,7 @@ const createCommentTemplate = ({emoji, text, author, date, id}) => {
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
   </span>
   <div>
-    <p class="film-details__comment-text">${text}</p>
+    <p class="film-details__comment-text">${he.encode(text)}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
@@ -197,10 +199,6 @@ export default class Popup extends SmartView {
     this._setInnerHandlers();
   }
 
-  moveScrollDown() {
-    this.getElement().scrollTop = this.getElement().scrollHeight;
-  }
-
   _clickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
@@ -258,7 +256,9 @@ export default class Popup extends SmartView {
 
   _deleteCommentClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`));
+    this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`), this._data);
+    this._data.comments = this._comments.getComments().length;
+    // console.log(this._data.comments);
   }
 
   _formSubmitHandler(evt) {
@@ -276,7 +276,9 @@ export default class Popup extends SmartView {
       newComment.author = `Artem Vafin`;
       newComment.id = nanoid();
 
-      this._callback.formSubmit(newComment);
+      this._data.comments = this._comments.getComments().length;
+
+      this._callback.formSubmit(newComment, this._data);
 
       this._data.emojiLabel = null;
       this._data.newComment = null;
