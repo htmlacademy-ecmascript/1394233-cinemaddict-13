@@ -178,17 +178,17 @@ export default class Films {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleViewAction(actionType, updateType, update, id) {
+  _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._comments[update.id].deleteComment(updateType, id, update);
+        this._comments[update.id].deleteComment(updateType, comment, update);
         break;
-      // case UserAction.IS_FAVOURITES:
-      //   this._filmsModel.updateFilm(updateType, update);
-      //   break;
+      case UserAction.ADD_COMMENT:
+        this._comments[update.id].addComment(updateType, comment, update);
+        break;
     }
   }
 

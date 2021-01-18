@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import SmartView from "./smart.js";
+import {nanoid} from "nanoid";
+import {KeyboardKeys} from "../utils/common.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 import {createElement} from "../utils/render.js";
 
@@ -161,13 +163,16 @@ export default class Popup extends SmartView {
     super();
     this._data = Popup.parseFilmToData(film);
     this._comments = comments;
+    this._localData = {};
+    this._popupScrollTop = 0;
     this._clickHandler = this._clickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favouriteClickHandler = this._favouriteClickHandler.bind(this);
     this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
-    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._newCommentInputHandler = this._newCommentInputHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -188,7 +193,12 @@ export default class Popup extends SmartView {
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavouriteClickHandler(this._callback.favouriteClick);
     this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
     this._setInnerHandlers();
+  }
+
+  moveScrollDown() {
+    this.getElement().scrollTop = this.getElement().scrollHeight;
   }
 
   _clickHandler(evt) {
@@ -242,22 +252,35 @@ export default class Popup extends SmartView {
       }
       placeForEmojiNode.appendChild(emojiLabel);
 
-      this.getElement().scrollTop = popupScrollTop;
+      this.getElement().scrollTo(0, popupScrollTop);
     }
   }
 
   _deleteCommentClickHandler(evt) {
     evt.preventDefault();
-
-    const popupScrollTop = this.getElement().scrollTop;
-
     this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`));
+  }
 
-    this.getElement().scrollTop = popupScrollTop;
-    // const commentElement = evt.target.closest(`.film-details__comment`);
-    // const parent = commentElement.parentNode;
-    // parent.removeChild(commentElement);
-    // this.getElement().querySelector(`.film-details__comments-count`).textContent = this._comments.getComments().length;
+  _formSubmitHandler(evt) {
+    if (evt.ctrlKey && evt.key === KeyboardKeys.ENTER) {
+      const newComment = {
+        emoji: this._data.emojiLabel,
+        text: this._data.newComment
+      };
+
+      if (newComment.emoji === `` || newComment.text === `` || newComment.emoji === null || newComment.text === null) {
+        return;
+      }
+
+      newComment.date = new Date();
+      newComment.author = `Artem Vafin`;
+      newComment.id = nanoid();
+
+      this._callback.formSubmit(newComment);
+
+      this._data.emojiLabel = null;
+      this._data.newComment = null;
+    }
   }
 
   _setInnerHandlers() {
@@ -297,6 +320,11 @@ export default class Popup extends SmartView {
     });
   }
 
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    document.addEventListener(`keydown`, this._formSubmitHandler);
+  }
+
   static parseFilmToData(film) {
     return Object.assign(
         {},
@@ -308,3 +336,4 @@ export default class Popup extends SmartView {
     );
   }
 }
+

@@ -1,6 +1,6 @@
 import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
-
+// import {nanoid} from "nanoid";
 import {KeyboardKeys} from "../utils/common.js";
 import {UserAction, UpdateType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
@@ -29,6 +29,7 @@ export default class Film {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavouriteClick = this._handleFavouriteClick.bind(this);
     this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
   init(film) {
@@ -63,6 +64,7 @@ export default class Film {
     if (this._mode === Mode.POPUP_OPEN) {
       replace(this._popupComponent, prevPopupComponent);
       this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
+      this._popupComponent.setFormSubmitHandler(this._handleFormSubmit);
     }
 
     remove(prevFilmComponent);
@@ -95,6 +97,7 @@ export default class Film {
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
     this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
+    this._popupComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._mode = Mode.POPUP_OPEN;
   }
 
@@ -111,6 +114,15 @@ export default class Film {
 
   _handleCloseClick() {
     this._closePopup();
+  }
+
+  _handleFormSubmit(newComment) {
+    this._changeData(
+        UserAction.ADD_COMMENT,
+        UpdateType.PATCH,
+        this._film,
+        newComment
+    );
   }
 
   _handleWatchListClick() {
