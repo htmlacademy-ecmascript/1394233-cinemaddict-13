@@ -69,7 +69,7 @@ export default class Films {
       commentsModel.addObserver(this._handleModelEvent);
       commentsModel.setComments(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
       this._comments[film.id] = commentsModel;
-      film.comments = this._comments[film.id].length;
+      film.comments = this._comments[film.id].getComments().length;
     }
 
     this._renderFilmsList(true);
@@ -142,6 +142,13 @@ export default class Films {
     }
   }
 
+  _clearMostCommentedList() {
+    Object
+      .values(this._mostCommentedFilmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._mostCommentedFilmPresenter = {};
+  }
+
   _renderFilms(films) {
     films.forEach((film) => this._renderFilm(this._filmsListComponent, film, this._filmPresenter));
   }
@@ -182,12 +189,20 @@ export default class Films {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
+        this._clearMostCommentedList();
+        this._renderMostCommentedList();
         break;
       case UserAction.DELETE_COMMENT:
-        this._comments[update.id].deleteComment(updateType, comment, update);
+        this._filmsModel.updateFilm(updateType, update);
+        this._comments[update.id].deleteComment(updateType, update, comment);
+        this._clearMostCommentedList();
+        this._renderMostCommentedList();
         break;
       case UserAction.ADD_COMMENT:
-        this._comments[update.id].addComment(updateType, comment, update);
+        this._comments[update.id].addComment(updateType, update, comment);
+        this._filmsModel.updateFilm(updateType, update);
+        this._clearMostCommentedList();
+        this._renderMostCommentedList();
         break;
     }
   }
@@ -252,9 +267,14 @@ export default class Films {
 
   _renderMostCommentedList() {
     const mostCommentedListComponent = new FilmsListView();
+    if (this._mostCommentedBoardComponent) {
+      remove(this._mostCommentedBoardComponent);
+    }
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
+    // console.log(sortByComments(this._getFilms()));
+    // console.log(this._getFilms());
     sortByComments(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS).forEach((film) => {
       this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
     });

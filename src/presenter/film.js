@@ -36,7 +36,7 @@ export default class Film {
     this._film = film;
 
     const prevFilmComponent = this._filmComponent;
-    let prevPopupComponent = this._popupComponent;
+    const prevPopupComponent = this._popupComponent;
 
     this._filmComponent = new CardFilmView(this._film, this._comments);
     this._popupComponent = new PopupView(this._film, this._comments);
@@ -167,11 +167,11 @@ export default class Film {
     );
   }
 
-  _handleDeleteCommentClick(id) {
+  _handleDeleteCommentClick(id, data) {
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.PATCH,
-        this._film,
+        data,
         id
     );
   }
