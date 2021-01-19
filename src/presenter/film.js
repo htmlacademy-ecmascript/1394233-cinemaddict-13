@@ -51,6 +51,7 @@ export default class Film {
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavouriteClickHandler(this._handleFavouriteClick);
     this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
+    this._popupComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -64,7 +65,10 @@ export default class Film {
     if (this._mode === Mode.POPUP_OPEN) {
       replace(this._popupComponent, prevPopupComponent);
       this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
-      this._popupComponent.setFormSubmitHandler(this._handleFormSubmit);
+      this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
+      // this._popupComponent.setWatchListClickHandler(this._handleWatchListClick);
+      // this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
+      // this._popupComponent.setFavouriteClickHandler(this._handleFavouriteClick);
     }
 
     remove(prevFilmComponent);
@@ -120,7 +124,13 @@ export default class Film {
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
-        this._film,
+        Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments + 1
+            }
+        ),
         newComment
     );
   }
@@ -167,11 +177,17 @@ export default class Film {
     );
   }
 
-  _handleDeleteCommentClick(id, data) {
+  _handleDeleteCommentClick(id) {
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.PATCH,
-        data,
+        Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments - 1
+            }
+        ),
         id
     );
   }

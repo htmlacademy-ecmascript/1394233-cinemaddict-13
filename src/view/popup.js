@@ -163,10 +163,9 @@ const createPopupTemplate = (film, comments) => {
 export default class Popup extends SmartView {
   constructor(film, comments) {
     super();
-    this._data = Popup.parseFilmToData(film);
+    this._film = film;
+    this._data = Popup.parseFilmToData(this._film);
     this._comments = comments;
-    this._localData = {};
-    this._popupScrollTop = 0;
     this._clickHandler = this._clickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -256,9 +255,7 @@ export default class Popup extends SmartView {
 
   _deleteCommentClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`), this._data);
-    this._data.comments = this._comments.getComments().length;
-    // console.log(this._data.comments);
+    this._callback.deleteCommentClick(evt.target.getAttribute(`data-id`));
   }
 
   _formSubmitHandler(evt) {
@@ -276,9 +273,7 @@ export default class Popup extends SmartView {
       newComment.author = `Artem Vafin`;
       newComment.id = nanoid();
 
-      this._data.comments = this._comments.getComments().length;
-
-      this._callback.formSubmit(newComment, this._data);
+      this._callback.formSubmit(newComment);
 
       this._data.emojiLabel = null;
       this._data.newComment = null;

@@ -32,9 +32,9 @@ export default class Films {
     this._siteBody = siteBody;
     this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
     this._filmPresenter = {};
-    this._filterPresenter = filterPresenter;
     this._topRatedFilmPresenter = {};
     this._mostCommentedFilmPresenter = {};
+    this._filterPresenter = filterPresenter;
     this._currentSortType = SortType.DEFAULT;
     this._comments = {};
 
@@ -125,11 +125,12 @@ export default class Films {
       .forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
 
-    // remove(this._sortComponent);
     if (this._noFilmComponent) {
       remove(this._noFilmComponent);
     }
-    remove(this._showMoreButtonComponent);
+    if (this._showMoreButtonComponent) {
+      remove(this._showMoreButtonComponent);
+    }
 
     if (resetRenderFilmsAmount) {
       this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
@@ -189,20 +190,14 @@ export default class Films {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
-        this._clearMostCommentedList();
-        this._renderMostCommentedList();
         break;
       case UserAction.DELETE_COMMENT:
+        this._comments[update.id].deleteComment(comment);
         this._filmsModel.updateFilm(updateType, update);
-        this._comments[update.id].deleteComment(updateType, update, comment);
-        this._clearMostCommentedList();
-        this._renderMostCommentedList();
         break;
       case UserAction.ADD_COMMENT:
-        this._comments[update.id].addComment(updateType, update, comment);
+        this._comments[update.id].addComment(comment);
         this._filmsModel.updateFilm(updateType, update);
-        this._clearMostCommentedList();
-        this._renderMostCommentedList();
         break;
     }
   }
@@ -213,6 +208,7 @@ export default class Films {
         this._updateFilmPresenter(this._filmPresenter, data);
         this._updateFilmPresenter(this._topRatedFilmPresenter, data);
         this._updateFilmPresenter(this._mostCommentedFilmPresenter, data);
+        this._renderMostCommentedList();
         break;
       case UpdateType.MINOR:
         this._clearFilmList();
@@ -273,8 +269,6 @@ export default class Films {
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
-    // console.log(sortByComments(this._getFilms()));
-    // console.log(this._getFilms());
     sortByComments(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS).forEach((film) => {
       this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
     });
