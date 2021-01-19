@@ -21,7 +21,7 @@ export const getRandomIntegerDecimal = (a = 0, b = 1) => {
 
 export const limitDescription = (descriptionText, maxSymbols) => descriptionText.length > maxSymbols ? `${descriptionText.substring(0, maxSymbols - 1)}...` : `${descriptionText}`;
 
-export const upperFirst = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
+// export const upperFirst = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
 
 export const generateRandomItem = (array) => {
   const randomIndex = getRandomInteger(0, array.length - 1);
@@ -30,20 +30,6 @@ export const generateRandomItem = (array) => {
 };
 
 export const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a.rating);
-export const sortByComments = (items) => items.slice().sort((a, b) => b.comments.length - a.comments.length);
+export const sortByComments = (items) => items.slice().sort((a, b) => b.comments - a.comments);
 export const sortingByRating = (a, b) => b.rating - a.rating;
 export const sortByDate = (filmA, filmB) => dayjs(filmB.productionYear).diff(dayjs(filmA.productionYear));
-
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};

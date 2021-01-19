@@ -3,8 +3,8 @@ import AbstractView from "./abstract.js";
 import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
 import {limitDescription} from "../utils/common.js";
 
-const createCardFilmTemplate = (film) => {
-  const {poster, title, rating, genre, description, productionYear, duration, comments, isWatchList, isWatched, isFavourite} = film;
+const createCardFilmTemplate = (film, comments) => {
+  const {poster, title, rating, genre, description, productionYear, duration, isWatchList, isWatched, isFavourite} = film;
 
   const year = dayjs(productionYear).format(`YYYY`);
   const durationFilm = dayjs(duration).format(`H[h] m[m]`);
@@ -29,9 +29,10 @@ const createCardFilmTemplate = (film) => {
 };
 
 export default class CardFilm extends AbstractView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments.getComments();
     this._openPopupHandler = this._openPopupHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -39,7 +40,7 @@ export default class CardFilm extends AbstractView {
   }
 
   getTemplate() {
-    return createCardFilmTemplate(this._film);
+    return createCardFilmTemplate(this._film, this._comments);
   }
 
   _openPopupHandler(evt) {
