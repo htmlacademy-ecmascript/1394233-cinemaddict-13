@@ -1,6 +1,5 @@
 import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
-// import {nanoid} from "nanoid";
 import {KeyboardKeys} from "../utils/common.js";
 import {UserAction, UpdateType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
@@ -66,9 +65,6 @@ export default class Film {
       replace(this._popupComponent, prevPopupComponent);
       this._popupComponent.setCloseButtonClickHandler(this._handleCloseClick);
       this._popupComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
-      // this._popupComponent.setWatchListClickHandler(this._handleWatchListClick);
-      // this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
-      // this._popupComponent.setFavouriteClickHandler(this._handleFavouriteClick);
     }
 
     remove(prevFilmComponent);

@@ -66,7 +66,6 @@ export default class Films {
 
     for (let film of this._getFilms()) {
       const commentsModel = new CommentsModel();
-      commentsModel.addObserver(this._handleModelEvent);
       commentsModel.setComments(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
       this._comments[film.id] = commentsModel;
       film.comments = this._comments[film.id].getComments().length;
