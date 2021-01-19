@@ -11,7 +11,7 @@ import FilterModel from "./model/filter.js";
 
 import {generateFilm} from "./moks/film.js";
 
-const FILMS_AMOUNT = 5;
+const FILMS_AMOUNT = 20;
 
 const films = new Array(FILMS_AMOUNT).fill(``).map(generateFilm);
 
