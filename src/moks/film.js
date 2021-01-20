@@ -108,12 +108,10 @@ const generateDate = () => {
 };
 
 const generateTime = () => {
-  const maxHour = 2;
-  const maxMinute = 59;
-  const hour = getRandomInteger(0, maxHour);
+  const maxMinute = 180;
   const minute = getRandomInteger(0, maxMinute);
 
-  return dayjs().hour(0).minute(0).add(hour, `hour`).add(minute, `minute`).toDate();
+  return minute;
 };
 
 const generateDescription = () => new Array(getRandomInteger(1, 5)).fill().map(generateRandomDescription);

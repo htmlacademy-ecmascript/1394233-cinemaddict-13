@@ -7,7 +7,7 @@ const createCardFilmTemplate = (film, comments) => {
   const {poster, title, rating, genre, description, productionYear, duration, isWatchList, isWatched, isFavourite} = film;
 
   const year = dayjs(productionYear).format(`YYYY`);
-  const durationFilm = dayjs(duration).format(`H[h] m[m]`);
+  const durationFilm = `${Math.trunc(duration / 60)}h ${duration % 60}m`;
 
   return `<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
