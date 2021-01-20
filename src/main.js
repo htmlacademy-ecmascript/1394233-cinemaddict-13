@@ -3,6 +3,7 @@ import {render, RenderPosition} from "./utils/render.js";
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
 import StatsLinkView from "./view/stats-link.js";
+import StatsView from "./view/stats.js";
 import SiteStatisticView from "./view/statistics.js";
 import FilmsPresenter from "./presenter/films.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -36,5 +37,8 @@ filterPresenter.init();
 render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
 
 filmsPresenter.init();
+
+render(siteMainNode, new StatsView(), RenderPosition.BEFOREEND);
+
 
 render(statisticNode, new SiteStatisticView(films.length), RenderPosition.BEFOREEND);
