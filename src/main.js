@@ -10,6 +10,7 @@ import FilterPresenter from "./presenter/filter.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
+import {FilterType} from "./consts.js";
 import {generateFilm} from "./moks/film.js";
 
 const FILMS_AMOUNT = 20;
@@ -32,13 +33,30 @@ const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
 const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter);
+const statsComponent = new StatsView();
+
+const handleNavigationMenuClick = (navigationItem) => {
+  console.log(`click`);
+  switch (navigationItem) {
+    case FilterType.STATS:
+      filmsPresenter.hide();
+      statsComponent.show();
+      break;
+    default:
+      console.log(`click another`);
+      filmsPresenter.show();
+      statsComponent.hide();
+      break;
+  }
+};
+
+navigationComponent.setNavigationClickHandler(handleNavigationMenuClick);
 
 filterPresenter.init();
-render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
+// render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
 
 filmsPresenter.init();
 
-render(siteMainNode, new StatsView(), RenderPosition.BEFOREEND);
-
+render(siteMainNode, statsComponent, RenderPosition.BEFOREEND);
 
 render(statisticNode, new SiteStatisticView(films.length), RenderPosition.BEFOREEND);

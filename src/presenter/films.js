@@ -74,6 +74,16 @@ export default class Films {
     this._renderFilmsList(true);
   }
 
+  show() {
+    this._mainContentComponent.getElement().classList.remove(`hidden`);
+    this._sortComponent.getElement().classList.remove(`hidden`);
+  }
+
+  hide() {
+    this._mainContentComponent.getElement().classList.add(`hidden`);
+    this._sortComponent.getElement().classList.add(`hidden`);
+  }
+
   _getFilms() {
     const filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms().slice();

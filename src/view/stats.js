@@ -6,7 +6,7 @@ export default class Stats extends AbstractView {
   }
 
   getTemplate() {
-    return `<section class="statistic">
+    return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
