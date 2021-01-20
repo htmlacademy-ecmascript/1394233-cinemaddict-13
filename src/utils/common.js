@@ -33,3 +33,8 @@ export const sortByRating = (items) => items.slice().sort((a, b) => b.rating - a
 export const sortByComments = (items) => items.slice().sort((a, b) => b.comments - a.comments);
 export const sortingByRating = (a, b) => b.rating - a.rating;
 export const sortByDate = (filmA, filmB) => dayjs(filmB.productionYear).diff(dayjs(filmA.productionYear));
+
+export const getMaxKey = (object) => {
+  const maxValue = Math.max.apply(null, Object.values(object));
+  return Object.keys(object).filter((element) => object[element] === maxValue);
+};

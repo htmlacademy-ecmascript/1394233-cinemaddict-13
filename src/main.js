@@ -32,7 +32,7 @@ const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
 const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter);
-const statsComponent = new StatsView();
+const statsComponent = new StatsView(filmsModel);
 
 const handleNavigationMenuClick = (navigationItem) => {
   switch (navigationItem) {
