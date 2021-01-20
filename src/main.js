@@ -2,7 +2,6 @@ import {render, RenderPosition} from "./utils/render.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
-import StatsLinkView from "./view/stats-link.js";
 import StatsView from "./view/stats.js";
 import SiteStatisticView from "./view/statistics.js";
 import FilmsPresenter from "./presenter/films.js";
@@ -36,14 +35,12 @@ const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel
 const statsComponent = new StatsView();
 
 const handleNavigationMenuClick = (navigationItem) => {
-  console.log(`click`);
   switch (navigationItem) {
     case FilterType.STATS:
       filmsPresenter.hide();
       statsComponent.show();
       break;
     default:
-      console.log(`click another`);
       filmsPresenter.show();
       statsComponent.hide();
       break;

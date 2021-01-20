@@ -75,13 +75,15 @@ export default class Films {
   }
 
   show() {
-    this._mainContentComponent.getElement().classList.remove(`hidden`);
-    this._sortComponent.getElement().classList.remove(`hidden`);
+    this._mainContentComponent.show();
+    this._sortComponent.show();
   }
 
   hide() {
-    this._mainContentComponent.getElement().classList.add(`hidden`);
-    this._sortComponent.getElement().classList.add(`hidden`);
+    this._mainContentComponent.hide();
+    this._sortComponent.hide();
+    this._handleSortTypeChange(SortType.DEFAULT);
+    this._sortComponent.setActiveSortButton(SortType.DEFAULT);
   }
 
   _getFilms() {
