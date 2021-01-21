@@ -96,13 +96,10 @@ const generateRandomGenre = () => GENRES[getRandomInteger(0, GENRES.length - 1)]
 const generateRandomActor = () => ACTORS[getRandomInteger(0, ACTORS.length - 1)];
 const generateRandomScreenWriter = () => SCREENWRITERS[getRandomInteger(0, SCREENWRITERS.length - 1)];
 
-const generateDate = () => {
-  const maxDaysGap = 30;
-  const maxYearsGap = 40;
-  const maxMonthsGap = 12;
-  const daysGap = getRandomInteger(-maxDaysGap, 0);
-  const yearsGap = getRandomInteger(-maxYearsGap, 0);
-  const monthsGap = getRandomInteger(-maxMonthsGap, 0);
+const generateDate = (maxDays, maxYears, maxMonths) => {
+  const daysGap = getRandomInteger(-maxDays, 0);
+  const yearsGap = getRandomInteger(-maxYears, 0);
+  const monthsGap = getRandomInteger(-maxMonths, 0);
 
   return dayjs().add(daysGap, `day`).add(yearsGap, `year`).add(monthsGap, `month`).toDate();
 };
@@ -129,7 +126,7 @@ export const generateFilm = () => ({
   director: generateRandomItem(DIRECTORS),
   screenwriter: generateScreenWriters(),
   cast: generateActors(),
-  productionYear: generateDate(),
+  productionYear: generateDate(30, 40, 12),
   duration: generateTime(),
   country: generateRandomItem(COUNTRIES),
   genre: generateGenre(),
@@ -139,4 +136,5 @@ export const generateFilm = () => ({
   isWatchList: getRandomBooleanValue(),
   isWatched: getRandomBooleanValue(),
   isFavourite: getRandomBooleanValue(),
+  watchedDate: generateDate(30, 1, 12)
 });

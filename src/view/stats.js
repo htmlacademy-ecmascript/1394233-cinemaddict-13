@@ -13,7 +13,10 @@ const getDuration = (films) => {
     totalDuration = totalDuration + element.duration;
   });
 
-  return totalDuration;
+  return {
+    hour: Math.trunc(totalDuration / 60),
+    minutes: totalDuration % 60,
+  };
 };
 
 const getGenresStats = (films) => {
@@ -31,7 +34,9 @@ const getGenresStats = (films) => {
 };
 
 
-const createStatisticsTemplate = (films) => {
+const createStatisticsTemplate = (films, totalDuration) => {
+  const {hour, minutes} = totalDuration;
+
   return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
@@ -65,7 +70,7 @@ const createStatisticsTemplate = (films) => {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${Math.trunc(getDuration(films) / 60)}<span class="statistic__item-description">h</span>${Math.trunc(getDuration(films) % 60)}<span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${hour}<span class="statistic__item-description">h</span>${minutes}<span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
@@ -87,7 +92,7 @@ export default class Stats extends SmartView {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films);
+    return createStatisticsTemplate(this._films, getDuration(this._films));
   }
 
   getStatistic() {
