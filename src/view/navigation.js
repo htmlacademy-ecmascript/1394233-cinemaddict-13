@@ -27,7 +27,19 @@ export default class Navigation extends AbstractView {
       return;
     }
 
-    statsButtonElement.classList.toggle(`main-navigation__additional--active`);
+    if (evt.target.dataset.filterType !== FilterType.STATS && isActive) {
+      evt.target.classList.add(`main-navigation__item--active`);
+      statsButtonElement.classList.remove(`main-navigation__additional--active`);
+      this._callback.navigationClick(evt.target.dataset.filterType);
+      return;
+    }
+
+    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((element) => {
+      if (element.classList.contains(`main-navigation__item--active`)) {
+        element.classList.remove(`main-navigation__item--active`);
+      }
+    });
+    statsButtonElement.classList.add(`main-navigation__additional--active`);
 
     this._callback.navigationClick(evt.target.dataset.filterType);
   }

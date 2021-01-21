@@ -77,7 +77,6 @@ export default class Films {
   show() {
     this._mainContentComponent.show();
     this._sortComponent.show();
-
   }
 
   hide() {
