@@ -1,4 +1,7 @@
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
+import Chart from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
 import {getMaxKey} from "../utils/common.js";
 
 import SmartView from "./smart.js";
@@ -13,7 +16,7 @@ const getDuration = (films) => {
   return totalDuration;
 };
 
-const topGenre = (films) => {
+const getGenresStats = (films) => {
   let results = {};
 
   films.forEach((element) => {
@@ -24,8 +27,9 @@ const topGenre = (films) => {
     }
   });
 
-  return getMaxKey(results);
+  return results;
 };
+
 
 const createStatisticsTemplate = (films) => {
   return `<section class="statistic hidden">
@@ -65,7 +69,7 @@ const createStatisticsTemplate = (films) => {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${topGenre(films)}</p>
+        <p class="statistic__item-text">${getMaxKey(getGenresStats(films))}</p>
       </li>
     </ul>
 
@@ -84,5 +88,80 @@ export default class Stats extends SmartView {
 
   getTemplate() {
     return createStatisticsTemplate(this._films);
+  }
+
+  getStatistic() {
+    const labels = [];
+    const counts = [];
+
+    Object
+      .entries(getGenresStats(this._films))
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([label, count]) => {
+        labels.push(label);
+        counts.push(count);
+      });
+
+    const BAR_HEIGHT = 50;
+    const statisticCtx = document.querySelector(`.statistic__chart`);
+
+    statisticCtx.height = BAR_HEIGHT * Object.entries(getGenresStats(this._films)).length;
+
+    return new Chart(statisticCtx, {
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels,
+        datasets: [{
+          data: counts,
+          backgroundColor: `#ffe800`,
+          hoverBackgroundColor: `#ffe800`,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: 20
+            },
+            color: `#ffffff`,
+            anchor: `start`,
+            align: `start`,
+            offset: 40,
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: `#ffffff`,
+              padding: 100,
+              fontSize: 20
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: 24
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false
+        }
+      }
+    });
   }
 }

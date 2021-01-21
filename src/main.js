@@ -39,6 +39,7 @@ const handleNavigationMenuClick = (navigationItem) => {
     case FilterType.STATS:
       filmsPresenter.hide();
       statsComponent.show();
+      statsComponent.getStatistic();
       break;
     default:
       filmsPresenter.show();
