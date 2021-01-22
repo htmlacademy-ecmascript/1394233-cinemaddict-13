@@ -94,39 +94,12 @@ export default class Stats extends AbstractView {
     const labels = [];
     const counts = [];
 
-    let watchedFilms = null;
-
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-
-    switch (statisticType) {
-      case StatsType.ALL:
-        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
-        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
-        updateLabelData(labels, counts, watchedFilms);
-        break;
-      case StatsType.TODAY:
-        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
-        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
-        updateLabelData(labels, counts, watchedFilms);
-        break;
-      case StatsType.WEEK:
-        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
-        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
-        updateLabelData(labels, counts, watchedFilms);
-        break;
-      case StatsType.MONTH:
-        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
-        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
-        updateLabelData(labels, counts, watchedFilms);
-        break;
-      case StatsType.YEAR:
-        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
-        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
-        updateLabelData(labels, counts, watchedFilms);
-        break;
-    }
+    const watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
+    replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+    updateLabelData(labels, counts, watchedFilms);
 
     const BAR_HEIGHT = 50;
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
