@@ -34,7 +34,10 @@ export const FilterType = {
   STATS: `stats`
 };
 
-export const MenuItem = {
-  FILMS: `FILMS`,
-  STATS: `STATS`
+export const StatsType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
 };

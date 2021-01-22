@@ -1,10 +1,16 @@
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import {getMaxKey} from "../utils/common.js";
+import {StatsType} from "../consts.js";
 
 import SmartView from "./smart.js";
+
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrBefore);
 
 const getDuration = (films) => {
   let totalDuration = 0;
@@ -33,9 +39,15 @@ const getGenresStats = (films) => {
   return results;
 };
 
+const PeriodsForStatistic = {
+  DAY: 1,
+  WEEK: 6,
+  MONTH: 31,
+  YEAR: 365
+};
 
-const createStatisticsTemplate = (films, totalDuration) => {
-  const {hour, minutes} = totalDuration;
+const createStatisticsTemplate = (films) => {
+  const {hour, minutes} = getDuration(films);
 
   return `<section class="statistic hidden">
     <p class="statistic__rank">
@@ -89,23 +101,84 @@ export default class Stats extends SmartView {
   constructor(filmsModel) {
     super();
     this._films = filmsModel.getFilms();
+
+    this._statisticTypeChangeHandler = this._statisticTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films, getDuration(this._films));
+    return createStatisticsTemplate(this._films);
   }
 
-  getStatistic() {
+  getStatistic(statisticType) {
     const labels = [];
     const counts = [];
 
-    Object
-      .entries(getGenresStats(this._films))
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([label, count]) => {
-        labels.push(label);
-        counts.push(count);
-      });
+    const dateFrom = (daysToFull) => {
+      return dayjs().subtract(daysToFull, `day`).toDate();
+    };
+
+    const dateTo = dayjs().toDate();
+
+    switch (statisticType) {
+      case StatsType.ALL:
+        const allTimeWatchedFilms = this._films.slice();
+        Object
+          .entries(getGenresStats(allTimeWatchedFilms))
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([label, count]) => {
+            labels.push(label);
+            counts.push(count);
+          });
+        break;
+      case StatsType.TODAY:
+        const todayWatchedFilms = this._films.slice().filter((element) => {
+          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo);
+        });
+        Object
+          .entries(getGenresStats(todayWatchedFilms))
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([label, count]) => {
+            labels.push(label);
+            counts.push(count);
+          });
+        break;
+      case StatsType.WEEK:
+        const weekWatchedFilms = this._films.slice().filter((element) => {
+          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo);
+        });
+        Object
+          .entries(getGenresStats(weekWatchedFilms))
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([label, count]) => {
+            labels.push(label);
+            counts.push(count);
+          });
+        break;
+      case StatsType.MONTH:
+        const monthWatchedFilms = this._films.slice().filter((element) => {
+          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo);
+        });
+        Object
+          .entries(getGenresStats(monthWatchedFilms))
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([label, count]) => {
+            labels.push(label);
+            counts.push(count);
+          });
+        break;
+      case StatsType.YEAR:
+        const yearWatchedFilms = this._films.slice().filter((element) => {
+          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo);
+        });
+        Object
+          .entries(getGenresStats(yearWatchedFilms))
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([label, count]) => {
+            labels.push(label);
+            counts.push(count);
+          });
+        break;
+    }
 
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
@@ -168,5 +241,15 @@ export default class Stats extends SmartView {
         }
       }
     });
+  }
+
+  _statisticTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this._callback.statisticTypeChange(evt.target.value);
+  }
+
+  setStatisticTypeChangeHandler(callback) {
+    this._callback.statisticTypeChange = callback;
+    this.getElement().addEventListener(`change`, this._statisticTypeChangeHandler);
   }
 }

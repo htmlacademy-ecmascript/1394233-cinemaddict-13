@@ -1,4 +1,4 @@
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
@@ -9,7 +9,7 @@ import FilterPresenter from "./presenter/filter.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
-import {FilterType} from "./consts.js";
+import {FilterType, StatsType} from "./consts.js";
 import {generateFilm} from "./moks/film.js";
 
 const FILMS_AMOUNT = 20;
@@ -39,7 +39,7 @@ const handleNavigationMenuClick = (navigationItem) => {
     case FilterType.STATS:
       filmsPresenter.hide();
       statsComponent.show();
-      statsComponent.getStatistic();
+      statsComponent.getStatistic(StatsType.ALL);
       break;
     default:
       filmsPresenter.show();
@@ -48,7 +48,28 @@ const handleNavigationMenuClick = (navigationItem) => {
   }
 };
 
+const handleStatisticTypeChange = (statisticType) => {
+  switch (statisticType) {
+    case StatsType.ALL:
+      statsComponent.getStatistic(StatsType.ALL);
+      break;
+    case StatsType.TODAY:
+      statsComponent.getStatistic(StatsType.TODAY);
+      break;
+    case StatsType.WEEK:
+      statsComponent.getStatistic(StatsType.WEEK);
+      break;
+    case StatsType.MONTH:
+      statsComponent.getStatistic(StatsType.MONTH);
+      break;
+    case StatsType.YEAR:
+      statsComponent.getStatistic(StatsType.YEAR);
+      break;
+  }
+};
+
 navigationComponent.setNavigationClickHandler(handleNavigationMenuClick);
+statsComponent.setStatisticTypeChangeHandler(handleStatisticTypeChange);
 
 filterPresenter.init();
 // render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
