@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
@@ -8,10 +7,9 @@ import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
 import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData} from "../utils/stats.js";
 
-import SmartView from "./smart.js";
+import AbstractView from "./abstract.js";
 
 dayjs.extend(isBetween);
-dayjs.extend(isSameOrBefore);
 
 const createStatisticDataTemplate = (films) => {
   const {hour, minutes} = getDuration(films);
@@ -27,7 +25,7 @@ const createStatisticDataTemplate = (films) => {
   </li>
   <li class="statistic__text-item">
     <h4 class="statistic__item-title">Top genre</h4>
-    <p class="statistic__item-text">${getMaxKey(getGenresStats(films))}</p>
+    <p class="statistic__item-text">${getMaxKey(getGenresStats(films)).join(`, `)}</p>
   </li>
   </ul>`;
 };
@@ -70,10 +68,20 @@ const createStatisticsTemplate = () => {
     </section>`;
 };
 
-export default class Stats extends SmartView {
+const dateTo = dayjs().toDate();
+
+const getStatisticsDataForPeriod = {
+  [StatsType.ALL]: (films) => films,
+  [StatsType.TODAY]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo)),
+  [StatsType.WEEK]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo)),
+  [StatsType.MONTH]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo)),
+  [StatsType.YEAR]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo))
+};
+
+export default class Stats extends AbstractView {
   constructor(filmsModel) {
     super();
-    this._films = filmsModel.getFilms();
+    this._films = filmsModel.get();
 
     this._statisticTypeChangeHandler = this._statisticTypeChangeHandler.bind(this);
   }
@@ -91,39 +99,30 @@ export default class Stats extends SmartView {
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    const dateTo = dayjs().toDate();
 
     switch (statisticType) {
       case StatsType.ALL:
-        watchedFilms = this._films.slice();
+        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
         replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
         updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.TODAY:
-        watchedFilms = this._films.slice().filter((element) => {
-          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo);
-        });
+        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
         replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
         updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.WEEK:
-        watchedFilms = this._films.slice().filter((element) => {
-          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo);
-        });
+        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
         replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
         updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.MONTH:
-        watchedFilms = this._films.slice().filter((element) => {
-          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo);
-        });
+        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
         replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
         updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.YEAR:
-        watchedFilms = this._films.slice().filter((element) => {
-          return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo);
-        });
+        watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
         replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
         updateLabelData(labels, counts, watchedFilms);
         break;

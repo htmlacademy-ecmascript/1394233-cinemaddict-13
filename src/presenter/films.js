@@ -66,9 +66,9 @@ export default class Films {
 
     for (let film of this._getFilms()) {
       const commentsModel = new CommentsModel();
-      commentsModel.setComments(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
+      commentsModel.set(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
       this._comments[film.id] = commentsModel;
-      film.comments = this._comments[film.id].getComments().length;
+      film.comments = this._comments[film.id].get().length;
     }
 
     this._renderFilmsList(true);
@@ -87,8 +87,8 @@ export default class Films {
   }
 
   _getFilms() {
-    const filterType = this._filterModel.getFilter();
-    const films = this._filmsModel.getFilms().slice();
+    const filterType = this._filterModel.get();
+    const films = this._filmsModel.get().slice();
     const filtredFilms = filter[filterType](films);
 
     switch (this._currentSortType) {
@@ -143,11 +143,7 @@ export default class Films {
       remove(this._showMoreButtonComponent);
     }
 
-    if (resetRenderFilmsAmount) {
-      this._renderFilmsAmount = FILMS_AMOUNT_PER_STEP;
-    } else {
-      this._renderFilmsAmount = Math.min(filmAmount, this._renderFilmsAmount);
-    }
+    this._renderFilmsAmount = resetRenderFilmsAmount ? FILMS_AMOUNT_PER_STEP : Math.min(filmAmount, this._renderFilmsAmount);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
@@ -203,11 +199,11 @@ export default class Films {
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._comments[update.id].deleteComment(comment);
+        this._comments[update.id].delete(comment);
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this._comments[update.id].addComment(comment);
+        this._comments[update.id].add(comment);
         this._filmsModel.updateFilm(updateType, update);
         break;
     }

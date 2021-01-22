@@ -14,7 +14,7 @@ export default class SiteMenu extends AbstractView {
   constructor(films) {
     super();
 
-    this._watchedFilms = films.getFilms().length;
+    this._watchedFilms = films.get().length;
   }
 
   getTemplate() {

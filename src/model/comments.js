@@ -6,15 +6,15 @@ export default class Comments extends Observer {
     this._comments = [];
   }
 
-  setComments(comments) {
+  set(comments) {
     this._comments = comments.slice();
   }
 
-  getComments() {
+  get() {
     return this._comments;
   }
 
-  deleteComment(commentId) {
+  delete(commentId) {
     const index = this._comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
@@ -27,7 +27,7 @@ export default class Comments extends Observer {
     ];
   }
 
-  addComment(newComment) {
+  add(newComment) {
     this._comments = [
       newComment,
       ...this._comments

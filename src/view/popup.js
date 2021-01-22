@@ -179,7 +179,7 @@ export default class Popup extends SmartView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._data, this._comments.getComments());
+    return createPopupTemplate(this._data, this._comments.get());
   }
 
   reset(film) {

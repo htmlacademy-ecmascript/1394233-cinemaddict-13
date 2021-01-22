@@ -17,7 +17,7 @@ const FILMS_AMOUNT = 20;
 const films = new Array(FILMS_AMOUNT).fill(``).map(generateFilm);
 
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
+filmsModel.set(films);
 
 
 const filterModel = new FilterModel();
