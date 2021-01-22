@@ -41,3 +41,10 @@ export const StatsType = {
   MONTH: `month`,
   YEAR: `year`
 };
+
+export const PeriodsForStatistic = {
+  DAY: 1,
+  WEEK: 6,
+  MONTH: 31,
+  YEAR: 365
+};

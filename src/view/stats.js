@@ -5,7 +5,8 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import {getMaxKey} from "../utils/common.js";
-import {StatsType} from "../consts.js";
+import {StatsType, PeriodsForStatistic} from "../consts.js";
+import {createElement} from "../utils/render.js";
 
 import SmartView from "./smart.js";
 
@@ -39,16 +40,32 @@ const getGenresStats = (films) => {
   return results;
 };
 
-const PeriodsForStatistic = {
-  DAY: 1,
-  WEEK: 6,
-  MONTH: 31,
-  YEAR: 365
-};
-
-const createStatisticsTemplate = (films) => {
+const createStatisticDataTemplate = (films) => {
   const {hour, minutes} = getDuration(films);
 
+  return `<ul class="statistic__text-list">
+  <li class="statistic__text-item">
+    <h4 class="statistic__item-title">You watched</h4>
+    <p class="statistic__item-text">${films.length} <span class="statistic__item-description">movies</span></p>
+  </li>
+  <li class="statistic__text-item">
+    <h4 class="statistic__item-title">Total duration</h4>
+    <p class="statistic__item-text">${hour}<span class="statistic__item-description">h</span>${minutes}<span class="statistic__item-description">m</span></p>
+  </li>
+  <li class="statistic__text-item">
+    <h4 class="statistic__item-title">Top genre</h4>
+    <p class="statistic__item-text">${getMaxKey(getGenresStats(films))}</p>
+  </li>
+  </ul>`;
+};
+
+const createChartDataTemplate = () => {
+  return `<div class="statistic__chart-wrap">
+  <canvas class="statistic__chart" width="1000"></canvas>
+  </div>`;
+};
+
+const createStatisticsTemplate = () => {
   return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
@@ -75,25 +92,6 @@ const createStatisticsTemplate = (films) => {
       <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
 
-    <ul class="statistic__text-list">
-      <li class="statistic__text-item">
-        <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${films.length} <span class="statistic__item-description">movies</span></p>
-      </li>
-      <li class="statistic__text-item">
-        <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${hour}<span class="statistic__item-description">h</span>${minutes}<span class="statistic__item-description">m</span></p>
-      </li>
-      <li class="statistic__text-item">
-        <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${getMaxKey(getGenresStats(films))}</p>
-      </li>
-    </ul>
-
-    <div class="statistic__chart-wrap">
-      <canvas class="statistic__chart" width="1000"></canvas>
-    </div>
-
     </section>`;
 };
 
@@ -113,6 +111,14 @@ export default class Stats extends SmartView {
     const labels = [];
     const counts = [];
 
+    let watchedFilms = null;
+
+    const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
+    const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
+
+    let statisticElement = null;
+    let chartElement = null;
+
     const dateFrom = (daysToFull) => {
       return dayjs().subtract(daysToFull, `day`).toDate();
     };
@@ -121,9 +127,17 @@ export default class Stats extends SmartView {
 
     switch (statisticType) {
       case StatsType.ALL:
-        const allTimeWatchedFilms = this._films.slice();
+        watchedFilms = this._films.slice();
+        if (statisticDataElement && statisticChartElement) {
+          this.getElement().removeChild(statisticDataElement);
+          this.getElement().removeChild(statisticChartElement);
+        }
+        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
+        chartElement = createElement(createChartDataTemplate());
+        this.getElement().appendChild(statisticElement);
+        this.getElement().appendChild(chartElement);
         Object
-          .entries(getGenresStats(allTimeWatchedFilms))
+          .entries(getGenresStats(watchedFilms))
           .sort((a, b) => b[1] - a[1])
           .forEach(([label, count]) => {
             labels.push(label);
@@ -131,11 +145,19 @@ export default class Stats extends SmartView {
           });
         break;
       case StatsType.TODAY:
-        const todayWatchedFilms = this._films.slice().filter((element) => {
+        watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo);
         });
+        if (statisticDataElement && statisticChartElement) {
+          this.getElement().removeChild(statisticDataElement);
+          this.getElement().removeChild(statisticChartElement);
+        }
+        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
+        chartElement = createElement(createChartDataTemplate());
+        this.getElement().appendChild(statisticElement);
+        this.getElement().appendChild(chartElement);
         Object
-          .entries(getGenresStats(todayWatchedFilms))
+          .entries(getGenresStats(watchedFilms))
           .sort((a, b) => b[1] - a[1])
           .forEach(([label, count]) => {
             labels.push(label);
@@ -143,11 +165,19 @@ export default class Stats extends SmartView {
           });
         break;
       case StatsType.WEEK:
-        const weekWatchedFilms = this._films.slice().filter((element) => {
+        watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo);
         });
+        if (statisticDataElement && statisticChartElement) {
+          this.getElement().removeChild(statisticDataElement);
+          this.getElement().removeChild(statisticChartElement);
+        }
+        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
+        chartElement = createElement(createChartDataTemplate());
+        this.getElement().appendChild(statisticElement);
+        this.getElement().appendChild(chartElement);
         Object
-          .entries(getGenresStats(weekWatchedFilms))
+          .entries(getGenresStats(watchedFilms))
           .sort((a, b) => b[1] - a[1])
           .forEach(([label, count]) => {
             labels.push(label);
@@ -155,11 +185,19 @@ export default class Stats extends SmartView {
           });
         break;
       case StatsType.MONTH:
-        const monthWatchedFilms = this._films.slice().filter((element) => {
+        watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo);
         });
+        if (statisticDataElement && statisticChartElement) {
+          this.getElement().removeChild(statisticDataElement);
+          this.getElement().removeChild(statisticChartElement);
+        }
+        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
+        chartElement = createElement(createChartDataTemplate());
+        this.getElement().appendChild(statisticElement);
+        this.getElement().appendChild(chartElement);
         Object
-          .entries(getGenresStats(monthWatchedFilms))
+          .entries(getGenresStats(watchedFilms))
           .sort((a, b) => b[1] - a[1])
           .forEach(([label, count]) => {
             labels.push(label);
@@ -167,11 +205,19 @@ export default class Stats extends SmartView {
           });
         break;
       case StatsType.YEAR:
-        const yearWatchedFilms = this._films.slice().filter((element) => {
+        watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo);
         });
+        if (statisticDataElement && statisticChartElement) {
+          this.getElement().removeChild(statisticDataElement);
+          this.getElement().removeChild(statisticChartElement);
+        }
+        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
+        chartElement = createElement(createChartDataTemplate());
+        this.getElement().appendChild(statisticElement);
+        this.getElement().appendChild(chartElement);
         Object
-          .entries(getGenresStats(yearWatchedFilms))
+          .entries(getGenresStats(watchedFilms))
           .sort((a, b) => b[1] - a[1])
           .forEach(([label, count]) => {
             labels.push(label);
@@ -183,7 +229,7 @@ export default class Stats extends SmartView {
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
 
-    statisticCtx.height = BAR_HEIGHT * Object.entries(getGenresStats(this._films)).length;
+    statisticCtx.height = BAR_HEIGHT * Object.entries(getGenresStats(watchedFilms)).length;
 
     return new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
