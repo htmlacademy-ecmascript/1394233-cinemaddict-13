@@ -4,41 +4,14 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-import {getMaxKey} from "../utils/common.js";
 import {StatsType, PeriodsForStatistic} from "../consts.js";
-import {createElement} from "../utils/render.js";
+import {getMaxKey} from "../utils/common.js";
+import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData} from "../utils/stats.js";
 
 import SmartView from "./smart.js";
 
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrBefore);
-
-const getDuration = (films) => {
-  let totalDuration = 0;
-
-  films.forEach((element) => {
-    totalDuration = totalDuration + element.duration;
-  });
-
-  return {
-    hour: Math.trunc(totalDuration / 60),
-    minutes: totalDuration % 60,
-  };
-};
-
-const getGenresStats = (films) => {
-  let results = {};
-
-  films.forEach((element) => {
-    if (results.hasOwnProperty(element.genre[0])) {
-      results[element.genre[0]]++;
-    } else {
-      results[element.genre[0]] = 1;
-    }
-  });
-
-  return results;
-};
 
 const createStatisticDataTemplate = (films) => {
   const {hour, minutes} = getDuration(films);
@@ -116,118 +89,46 @@ export default class Stats extends SmartView {
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    let statisticElement = null;
-    let chartElement = null;
-
-    const dateFrom = (daysToFull) => {
-      return dayjs().subtract(daysToFull, `day`).toDate();
-    };
-
     const dateTo = dayjs().toDate();
 
     switch (statisticType) {
       case StatsType.ALL:
         watchedFilms = this._films.slice();
-        if (statisticDataElement && statisticChartElement) {
-          this.getElement().removeChild(statisticDataElement);
-          this.getElement().removeChild(statisticChartElement);
-        }
-        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
-        chartElement = createElement(createChartDataTemplate());
-        this.getElement().appendChild(statisticElement);
-        this.getElement().appendChild(chartElement);
-        Object
-          .entries(getGenresStats(watchedFilms))
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([label, count]) => {
-            labels.push(label);
-            counts.push(count);
-          });
+        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+        updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.TODAY:
         watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo);
         });
-        if (statisticDataElement && statisticChartElement) {
-          this.getElement().removeChild(statisticDataElement);
-          this.getElement().removeChild(statisticChartElement);
-        }
-        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
-        chartElement = createElement(createChartDataTemplate());
-        this.getElement().appendChild(statisticElement);
-        this.getElement().appendChild(chartElement);
-        Object
-          .entries(getGenresStats(watchedFilms))
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([label, count]) => {
-            labels.push(label);
-            counts.push(count);
-          });
+        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+        updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.WEEK:
         watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo);
         });
-        if (statisticDataElement && statisticChartElement) {
-          this.getElement().removeChild(statisticDataElement);
-          this.getElement().removeChild(statisticChartElement);
-        }
-        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
-        chartElement = createElement(createChartDataTemplate());
-        this.getElement().appendChild(statisticElement);
-        this.getElement().appendChild(chartElement);
-        Object
-          .entries(getGenresStats(watchedFilms))
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([label, count]) => {
-            labels.push(label);
-            counts.push(count);
-          });
+        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+        updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.MONTH:
         watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo);
         });
-        if (statisticDataElement && statisticChartElement) {
-          this.getElement().removeChild(statisticDataElement);
-          this.getElement().removeChild(statisticChartElement);
-        }
-        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
-        chartElement = createElement(createChartDataTemplate());
-        this.getElement().appendChild(statisticElement);
-        this.getElement().appendChild(chartElement);
-        Object
-          .entries(getGenresStats(watchedFilms))
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([label, count]) => {
-            labels.push(label);
-            counts.push(count);
-          });
+        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+        updateLabelData(labels, counts, watchedFilms);
         break;
       case StatsType.YEAR:
         watchedFilms = this._films.slice().filter((element) => {
           return dayjs(element.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo);
         });
-        if (statisticDataElement && statisticChartElement) {
-          this.getElement().removeChild(statisticDataElement);
-          this.getElement().removeChild(statisticChartElement);
-        }
-        statisticElement = createElement(createStatisticDataTemplate(watchedFilms));
-        chartElement = createElement(createChartDataTemplate());
-        this.getElement().appendChild(statisticElement);
-        this.getElement().appendChild(chartElement);
-        Object
-          .entries(getGenresStats(watchedFilms))
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([label, count]) => {
-            labels.push(label);
-            counts.push(count);
-          });
+        replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
+        updateLabelData(labels, counts, watchedFilms);
         break;
     }
 
     const BAR_HEIGHT = 50;
-    const statisticCtx = document.querySelector(`.statistic__chart`);
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
 
     statisticCtx.height = BAR_HEIGHT * Object.entries(getGenresStats(watchedFilms)).length;
 

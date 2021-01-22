@@ -1,4 +1,4 @@
-import {render, RenderPosition, remove} from "./utils/render.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 import UserRangView from "./view/user-rang.js";
 import NavigationView from "./view/navigation.js";
