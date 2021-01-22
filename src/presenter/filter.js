@@ -20,7 +20,7 @@ export default class Filter {
   }
 
   init() {
-    this._currentFilter = this._filterModel.getFilter();
+    this._currentFilter = this._filterModel.get();
 
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
@@ -29,7 +29,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 
@@ -46,11 +46,11 @@ export default class Filter {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this._filterModel.set(UpdateType.MAJOR, filterType);
   }
 
   _getFilters() {
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     return [
       {

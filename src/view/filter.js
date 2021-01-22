@@ -20,7 +20,6 @@ const createFilterTemplate = (filterItems, currentFilterType) => {
   </div>`;
 };
 
-
 export default class Filter extends AbstractView {
   constructor(filters, currentFilterType) {
     super();
@@ -36,6 +35,11 @@ export default class Filter extends AbstractView {
 
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
+
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
     this._callback.filterTypeChange(evt.target.dataset.filterType);
   }
 

@@ -21,6 +21,17 @@ export default class Sort extends AbstractView {
     return createSortTemplate();
   }
 
+  setActiveSortButton(defaultSortType) {
+    const defaultSortButtonElement = this.getElement().querySelector(`[data-sort-type="${defaultSortType}"]`);
+
+    this.getElement().querySelectorAll(`.sort__button`).forEach((element) => {
+      if (element.dataset.sortType !== defaultSortType && element.classList.contains(`sort__button--active`)) {
+        element.classList.remove(`sort__button--active`);
+        defaultSortButtonElement.classList.add(`sort__button--active`);
+      }
+    });
+  }
+
   _sortTypeChangeHandler(evt) {
     evt.currentTarget.querySelectorAll(`A`).forEach((element) => {
       if (element.classList.contains(ACTIVE_SORT_CLASS)) {

@@ -38,7 +38,7 @@ const createPopupTemplate = (film, comments) => {
   const {poster, title, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
-  const durationFilm = dayjs(duration).format(`H[h] m[m]`);
+  const durationFilm = `${Math.trunc(duration / 60)}h ${duration % 60}m`;
 
   const commentsNodeTemplate = createCommentsTemplate(comments);
   const genresNodeTemplate = createGenresTemplate(genre);
@@ -179,7 +179,7 @@ export default class Popup extends SmartView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._data, this._comments.getComments());
+    return createPopupTemplate(this._data, this._comments.get());
   }
 
   reset(film) {

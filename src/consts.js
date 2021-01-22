@@ -31,4 +31,35 @@ export const FilterType = {
   WATCH_LIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
+  STATS: `stats`
+};
+
+export const StatsType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export const PeriodsForStatistic = {
+  DAY: 1,
+  WEEK: 6,
+  MONTH: 31,
+  YEAR: 365
+};
+
+export const UserRanks = {
+  NOVICE: {
+    watched: 1,
+    rank: `Novice`
+  },
+  FAN: {
+    watched: 11,
+    rank: `Fan`
+  },
+  MOVIE_BUFF: {
+    watched: 21,
+    rank: `Movie Buff`
+  }
 };
