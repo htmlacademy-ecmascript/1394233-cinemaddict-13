@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 
 import {createElement} from "../utils/render.js";
+import {UserRanks} from "../consts.js";
 
 export const getDuration = (films) => {
   let totalDuration = 0;
@@ -53,4 +54,15 @@ export const updateLabelData = (labelsArray, countsArray, films) => {
     labelsArray.push(label);
     countsArray.push(count);
   });
+};
+
+export const getUserRank = (watchedFilms) => {
+  if (watchedFilms >= UserRanks.NOVICE.watched && watchedFilms < UserRanks.FAN.watched) {
+    return UserRanks.NOVICE.rank;
+  } else if (watchedFilms >= UserRanks.FAN.watched && watchedFilms < UserRanks.MOVIE_BUFF.watched) {
+    return UserRanks.FAN.rank;
+  } else if (watchedFilms >= UserRanks.MOVIE_BUFF.watched) {
+    return UserRanks.MOVIE_BUFF.rank;
+  }
+  return ``;
 };

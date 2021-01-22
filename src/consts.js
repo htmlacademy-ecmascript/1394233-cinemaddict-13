@@ -48,3 +48,18 @@ export const PeriodsForStatistic = {
   MONTH: 31,
   YEAR: 365
 };
+
+export const UserRanks = {
+  NOVICE: {
+    watched: 1,
+    rank: `Novice`
+  },
+  FAN: {
+    watched: 11,
+    rank: `Fan`
+  },
+  MOVIE_BUFF: {
+    watched: 21,
+    rank: `Movie Buff`
+  }
+};

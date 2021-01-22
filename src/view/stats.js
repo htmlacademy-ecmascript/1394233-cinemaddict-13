@@ -39,11 +39,13 @@ const createChartDataTemplate = () => {
 };
 
 const createStatisticsTemplate = () => {
+  const userRank = document.querySelector(`.profile__rating`).textContent;
+
   return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Movie Buff</span>
+      <span class="statistic__rank-label">${userRank}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

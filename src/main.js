@@ -1,6 +1,6 @@
 import {render, RenderPosition} from "./utils/render.js";
 
-import UserRangView from "./view/user-rang.js";
+import UserRangView from "./view/user-rank.js";
 import NavigationView from "./view/navigation.js";
 import StatsView from "./view/stats.js";
 import SiteStatisticView from "./view/statistics.js";
@@ -27,7 +27,7 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
-render(siteHeaderNode, new UserRangView(), RenderPosition.BEFOREEND);
+render(siteHeaderNode, new UserRangView(filmsModel), RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
