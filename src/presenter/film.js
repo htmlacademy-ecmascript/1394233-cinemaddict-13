@@ -10,11 +10,12 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData, changeMode, comments) {
+  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._renderMostCommentedFilms = renderMostCommentedFilms;
 
     this._filmComponent = null;
     this._popupComponent = null;
@@ -88,11 +89,12 @@ export default class Film {
     removeElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupEscPress);
+    this._renderMostCommentedFilms();
     this._mode = Mode.POPUP_CLOSED;
   }
 
   _openPopup() {
-    this._changeMode();
+    this._changeMode(this);
     addElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);

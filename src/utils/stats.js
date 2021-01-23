@@ -17,22 +17,29 @@ export const getDuration = (films) => {
 };
 
 export const getGenresStats = (films) => {
-  let results = {};
+  const results = {};
 
-  films.forEach((element) => {
-    if (results.hasOwnProperty(element.genre[0])) {
-      results[element.genre[0]]++;
-    } else {
-      results[element.genre[0]] = 1;
-    }
-  });
+  films.reduce((acc, film) => acc.concat(film.genre), [])
+    .forEach((genre) => {
+      if (results[genre]) {
+        results[genre]++;
+        return;
+      }
+      results[genre] = 1;
+    });
+
+  // films.forEach((element) => {
+  //   if (results.hasOwnProperty(element.genre[0])) {
+  //     results[element.genre[0]]++;
+  //   } else {
+  //     results[element.genre[0]] = 1;
+  //   }
+  // });
 
   return results;
 };
 
-export const dateFrom = (daysToFull) => {
-  return dayjs().subtract(daysToFull, `day`).toDate();
-};
+export const dateFrom = (daysToFull) => dayjs().subtract(daysToFull, `day`).toDate();
 
 export const replaceStatsElements = (parent, textDataElement, chartElement, statisticDataTemplate, chartDataTemplate) => {
   if (textDataElement && chartElement) {

@@ -27,7 +27,7 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
-render(siteHeaderNode, new UserRangView(filmsModel), RenderPosition.BEFOREEND);
+render(siteHeaderNode, new UserRangView(filmsModel.get().length), RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
@@ -72,8 +72,6 @@ navigationComponent.setNavigationClickHandler(handleNavigationMenuClick);
 statsComponent.setStatisticTypeChangeHandler(handleStatisticTypeChange);
 
 filterPresenter.init();
-// render(navigationComponent, new StatsLinkView(), RenderPosition.BEFOREEND);
-
 filmsPresenter.init();
 
 render(siteMainNode, statsComponent, RenderPosition.BEFOREEND);

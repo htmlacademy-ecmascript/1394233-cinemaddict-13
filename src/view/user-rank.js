@@ -3,21 +3,21 @@ import AbstractView from "./abstract.js";
 import {getUserRank} from "../utils/stats.js";
 
 
-const createUserRangTemplate = (films) => {
+const createUserRangTemplate = (amountWatchedfilms) => {
   return `<section class="header__profile profile">
-  <p class="profile__rating">${getUserRank(films)}</p>
+  <p class="profile__rating">${getUserRank(amountWatchedfilms)}</p>
   <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
 </section>`;
 };
 
 export default class SiteMenu extends AbstractView {
-  constructor(films) {
+  constructor(amountWatchedfilms) {
     super();
 
-    this._watchedFilms = films.get().length;
+    this._amountWatchedfilms = amountWatchedfilms;
   }
 
   getTemplate() {
-    return createUserRangTemplate(this._watchedFilms);
+    return createUserRangTemplate(this._amountWatchedfilms);
   }
 }

@@ -53,6 +53,7 @@ export default class Films {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._renderMostCommentedList = this._renderMostCommentedList.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -122,10 +123,10 @@ export default class Films {
 
   }
 
-  _renderFilm(filmListElement, film, presenter) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id]);
+  _renderFilm(filmListElement, film, presenterStore) {
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList);
     filmPresenter.init(film);
-    presenter[film.id] = filmPresenter;
+    presenterStore[film.id] = filmPresenter;
   }
 
   _clearFilmList({resetRenderFilmsAmount = false, resetSortType = false} = {}) {
@@ -187,10 +188,16 @@ export default class Films {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
   }
 
-  _handleModeChange() {
+  _modeChange(presenterStore) {
     Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.resetView());
+    .values(presenterStore)
+    .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleModeChange() {
+    this._modeChange(this._filmPresenter);
+    this._modeChange(this._topRatedFilmPresenter);
+    this._modeChange(this._mostCommentedFilmPresenter);
   }
 
   _handleViewAction(actionType, updateType, update, comment) {
@@ -215,7 +222,6 @@ export default class Films {
         this._updateFilmPresenter(this._filmPresenter, data);
         this._updateFilmPresenter(this._topRatedFilmPresenter, data);
         this._updateFilmPresenter(this._mostCommentedFilmPresenter, data);
-        this._renderMostCommentedList();
         break;
       case UpdateType.MINOR:
         this._clearFilmList();
@@ -270,9 +276,11 @@ export default class Films {
 
   _renderMostCommentedList() {
     const mostCommentedListComponent = new FilmsListView();
+
     if (this._mostCommentedBoardComponent) {
       remove(this._mostCommentedBoardComponent);
     }
+
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
