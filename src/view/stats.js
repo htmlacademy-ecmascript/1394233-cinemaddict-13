@@ -5,7 +5,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
-import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData} from "../utils/stats.js";
+import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank} from "../utils/stats.js";
 
 import AbstractView from "./abstract.js";
 
@@ -36,14 +36,12 @@ const createChartDataTemplate = () => {
   </div>`;
 };
 
-const createStatisticsTemplate = () => {
-  const userRank = document.querySelector(`.profile__rating`).textContent;
-
+const createStatisticsTemplate = (userRank) => {
   return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${userRank}</span>
+      <span class="statistic__rank-label">${getUserRank(userRank)}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -87,13 +85,12 @@ export default class Stats extends AbstractView {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films);
+    return createStatisticsTemplate(this._films.length);
   }
 
   getStatistic(statisticType) {
     const labels = [];
     const counts = [];
-
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 

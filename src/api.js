@@ -1,3 +1,5 @@
+import FilmsModel from "./model/films.js";
+
 const Method = {
   GET: `GET`,
   PUT: `PUT`
@@ -15,18 +17,25 @@ export default class Api {
   }
 
   getFilms() {
-    return this._load({url: `tasks`})
+    return this._load({url: `movies`})
+      .then(Api.toJSON)
+      .then((films) => films.map(FilmsModel.adaptToClient));
+  }
+
+  getComments(filmID) {
+    return this._load({url: `comments/${filmID}`})
       .then(Api.toJSON);
   }
 
-  updateFilms(task) {
+  updateFilm(film) {
     return this._load({
-      url: `tasks/${task.id}`,
+      url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(task),
+      body: JSON.stringify(FilmsModel.adaptToServer(film)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(FilmsModel.adaptToClient);
   }
 
   _load({

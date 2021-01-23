@@ -3,6 +3,7 @@ import MainContentView from "../view/main-content.js";
 import FilmsBoardView from "../view/films-board.js";
 import FilmsListView from "../view/films-list.js";
 import NoFilmView from "../view/no-film.js";
+import LoadingView from "../view/loading.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
 import FilmPresenter from "./film.js";
 import CommentsModel from "../model/comments.js";
@@ -14,6 +15,7 @@ import {FilmListTitles, SortType, UpdateType, UserAction} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import {getRandomInteger, sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
+import Api from "../api.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
@@ -23,6 +25,11 @@ const CommentsAmount = {
 };
 
 const MAXIMUM_EXTRA_FILMS = 2;
+
+const AUTHORIZATION = `Basic ewi13asdkxz`;
+const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+
+const api = new Api(END_POINT, AUTHORIZATION);
 
 export default class Films {
   constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter) {
@@ -37,6 +44,7 @@ export default class Films {
     this._filterPresenter = filterPresenter;
     this._currentSortType = SortType.DEFAULT;
     this._comments = {};
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -47,6 +55,7 @@ export default class Films {
     this._noFilmComponent = new NoFilmView();
     this._topRatedFilmsBoardComponent = new FilmsBoardView(FilmListTitles.TOP_RATED);
     this._mostCommentedBoardComponent = new FilmsBoardView(FilmListTitles.MOST_COMMENTED);
+    this._loadingComponent = new LoadingView();
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -64,13 +73,6 @@ export default class Films {
     render(this._filmsContainer, this._mainContentComponent, RenderPosition.BEFOREEND);
     render(this._mainContentComponent, this._filmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._filmsBoardComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
-
-    for (let film of this._getFilms()) {
-      const commentsModel = new CommentsModel();
-      commentsModel.set(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
-      this._comments[film.id] = commentsModel;
-      film.comments = this._comments[film.id].get().length;
-    }
 
     this._renderFilmsList(true);
   }
@@ -143,6 +145,9 @@ export default class Films {
     if (this._showMoreButtonComponent) {
       remove(this._showMoreButtonComponent);
     }
+    if (this._loadingComponent) {
+      remove(this._loadingComponent);
+    }
 
     this._renderFilmsAmount = resetRenderFilmsAmount ? FILMS_AMOUNT_PER_STEP : Math.min(filmAmount, this._renderFilmsAmount);
 
@@ -163,9 +168,24 @@ export default class Films {
   }
 
   _renderFilmsList(shouldRenderExtraList) {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
+    for (let film of this._getFilms()) {
+      const commentsModel = new CommentsModel();
+      api.getComments(film.id)
+        .then((comments) => {
+          commentsModel.set(comments);
+        });
+      // commentsModel.set(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
+      this._comments[film.id] = commentsModel;
+      film.comments = this._comments[film.id].get().length;
+    }
+
     const filmAmount = this._getFilms().length;
     const films = this._getFilms().slice(0, Math.min(filmAmount, FILMS_AMOUNT_PER_STEP));
-
     if (filmAmount === 0) {
       this._renderNoFilms();
       remove(this._sortComponent);
@@ -186,6 +206,10 @@ export default class Films {
 
   _renderNoFilms() {
     render(this._filmsListComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderLoading() {
+    render(this._filmsListComponent, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _modeChange(presenterStore) {
@@ -229,6 +253,11 @@ export default class Films {
         break;
       case UpdateType.MAJOR:
         this._clearFilmList({resetRenderFilmsAmount: true, resetSortType: true});
+        this._renderFilmsList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderFilmsList();
         break;
     }
