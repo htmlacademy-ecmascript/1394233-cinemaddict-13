@@ -3,6 +3,7 @@ import PopupView from "../view/popup.js";
 import {KeyboardKeys} from "../utils/common.js";
 import {UserAction, UpdateType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
+import dayjs from "dayjs";
 
 const Mode = {
   POPUP_CLOSED: `CLOSED`,
@@ -156,7 +157,8 @@ export default class Film {
             {},
             this._film,
             {
-              isWatched: !this._film.isWatched
+              isWatched: !this._film.isWatched,
+              watchedDate: this._film.isWatched === false ? dayjs() : null
             }
         )
     );

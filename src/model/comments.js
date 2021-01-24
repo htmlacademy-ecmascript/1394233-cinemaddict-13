@@ -48,7 +48,6 @@ export default class Comments extends Observer {
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedComment.comment;
     delete adaptedComment.emotion;
 
@@ -68,7 +67,6 @@ export default class Comments extends Observer {
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedComment.emoji;
     delete adaptedComment.text;
 

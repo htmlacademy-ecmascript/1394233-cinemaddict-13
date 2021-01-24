@@ -54,11 +54,10 @@ export default class Films extends Observer {
           isWatchList: film.user_details.watchlist,
           isWatched: film.user_details.already_watched,
           isFavourite: film.user_details.favorite,
-          watchedDate: dayjs(film.user_details.watching_date),
+          watchedDate: film.user_details.watching_date === null ? null : dayjs(film.user_details.watching_date),
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedFilm.user_details;
     delete adaptedFilm.film_info;
 
@@ -92,13 +91,12 @@ export default class Films extends Observer {
           "user_details": {
             "watchlist": film.isWatchList,
             "already_watched": film.isWatched,
-            "watching_date": film.watchedDate.toISOString(),
+            "watching_date": film.watchedDate === null ? null : film.watchedDate.toISOString(),
             "favorite": film.isFavourite
           }
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedFilm.isWatched;
     delete adaptedFilm.isFavourite;
     delete adaptedFilm.watchedDate;
