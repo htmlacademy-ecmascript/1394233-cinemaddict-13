@@ -37,6 +37,7 @@ export default class Films extends Observer {
         {},
         film,
         {
+          comments: film.comments,
           poster: film.film_info.poster,
           title: film.film_info.title,
           originalTitle: `Original: ${film.film_info.alternative_title}`,
@@ -54,14 +55,12 @@ export default class Films extends Observer {
           isWatched: film.user_details.already_watched,
           isFavourite: film.user_details.favorite,
           watchedDate: dayjs(film.user_details.watching_date),
-          comments: film.comments
         }
     );
 
     // Ненужные ключи мы удаляем
     delete adaptedFilm.user_details;
     delete adaptedFilm.film_info;
-    delete adaptedFilm.comments;
 
     return adaptedFilm;
   }

@@ -9,20 +9,20 @@ import FilmPresenter from "./film.js";
 import CommentsModel from "../model/comments.js";
 
 
-import {generateRandomComment} from "../moks/comments.js";
+// import {generateRandomComment} from "../moks/comments.js";
 
 import {FilmListTitles, SortType, UpdateType, UserAction} from "../consts.js";
 import {filter} from "../utils/filter.js";
-import {getRandomInteger, sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
+import {sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import Api from "../api.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
-const CommentsAmount = {
-  MIN: 1,
-  MAX: 5,
-};
+// const CommentsAmount = {
+//   MIN: 1,
+//   MAX: 5,
+// };
 
 const MAXIMUM_EXTRA_FILMS = 2;
 
@@ -179,9 +179,7 @@ export default class Films {
         .then((comments) => {
           commentsModel.set(comments);
         });
-      // commentsModel.set(new Array(getRandomInteger(CommentsAmount.MIN, CommentsAmount.MAX)).fill(``).map(generateRandomComment));
       this._comments[film.id] = commentsModel;
-      film.comments = this._comments[film.id].get().length;
     }
 
     const filmAmount = this._getFilms().length;
@@ -258,7 +256,7 @@ export default class Films {
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        this._renderFilmsList();
+        this._renderFilmsList(true);
         break;
     }
   }
