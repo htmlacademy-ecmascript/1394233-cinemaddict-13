@@ -3,8 +3,8 @@ import AbstractView from "./abstract.js";
 import {MAX_SYMBOLS_DESCRIPTION} from "../consts.js";
 import {limitDescription} from "../utils/common.js";
 
-const createCardFilmTemplate = (film, comments) => {
-  const {poster, title, rating, genre, description, productionYear, duration, isWatchList, isWatched, isFavourite} = film;
+const createCardFilmTemplate = (film) => {
+  const {poster, title, rating, genre, description, productionYear, duration, isWatchList, isWatched, isFavourite, comments} = film;
 
   const year = dayjs(productionYear).format(`YYYY`);
   const durationFilm = `${Math.trunc(duration / 60)}h ${duration % 60}m`;
@@ -17,8 +17,8 @@ const createCardFilmTemplate = (film, comments) => {
     <span class="film-card__duration">${durationFilm}</span>
     <span class="film-card__genre">${genre[0]}</span>
   </p>
-  <img src="./images/posters/${poster}" alt="" class="film-card__poster">
-  <p class="film-card__description">${limitDescription(description.join(` `), MAX_SYMBOLS_DESCRIPTION)}</p>
+  <img src="${poster}" alt="" class="film-card__poster">
+  <p class="film-card__description">${limitDescription(description, MAX_SYMBOLS_DESCRIPTION)}</p>
   <a class="film-card__comments">${comments.length} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}" type="button">Add to watchlist</button>
@@ -29,10 +29,9 @@ const createCardFilmTemplate = (film, comments) => {
 };
 
 export default class CardFilm extends AbstractView {
-  constructor(film, comments) {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments.get();
     this._openPopupHandler = this._openPopupHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);

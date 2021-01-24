@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Observer from "../utils/observer.js";
 
 export default class Comments extends Observer {
@@ -32,5 +33,43 @@ export default class Comments extends Observer {
       newComment,
       ...this._comments
     ];
+  }
+
+  static adaptToClient(comment) {
+    const adaptedComment = Object.assign(
+        {},
+        comment,
+        {
+          id: comment.id,
+          text: comment.comment,
+          emoji: comment.emotion,
+          author: comment.author,
+          date: dayjs(comment.date),
+        }
+    );
+
+    delete adaptedComment.comment;
+    delete adaptedComment.emotion;
+
+    return adaptedComment;
+  }
+
+  static adaptToServer(comment) {
+    const adaptedComment = Object.assign(
+        {},
+        comment,
+        {
+          "id": comment.id,
+          "author": comment.author,
+          "comment": comment.text,
+          "date": comment.date.toISOString(),
+          "emotion": comment.emoji
+        }
+    );
+
+    delete adaptedComment.emoji;
+    delete adaptedComment.text;
+
+    return adaptedComment;
   }
 }

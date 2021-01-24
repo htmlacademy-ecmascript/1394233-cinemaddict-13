@@ -3,6 +3,7 @@ import PopupView from "../view/popup.js";
 import {KeyboardKeys} from "../utils/common.js";
 import {UserAction, UpdateType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
+import dayjs from "dayjs";
 
 const Mode = {
   POPUP_CLOSED: `CLOSED`,
@@ -10,11 +11,12 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData, changeMode, comments) {
+  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._renderMostCommentedFilms = renderMostCommentedFilms;
 
     this._filmComponent = null;
     this._popupComponent = null;
@@ -88,11 +90,13 @@ export default class Film {
     removeElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupEscPress);
+    this._renderMostCommentedFilms();
     this._mode = Mode.POPUP_CLOSED;
   }
 
   _openPopup() {
-    this._changeMode();
+    this._changeMode(this);
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
     addElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
@@ -153,7 +157,8 @@ export default class Film {
             {},
             this._film,
             {
-              isWatched: !this._film.isWatched
+              isWatched: !this._film.isWatched,
+              watchedDate: this._film.isWatched === false ? dayjs() : null
             }
         )
     );
