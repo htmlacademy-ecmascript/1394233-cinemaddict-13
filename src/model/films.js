@@ -40,7 +40,7 @@ export default class Films extends Observer {
           comments: film.comments,
           poster: film.film_info.poster,
           title: film.film_info.title,
-          originalTitle: `Original: ${film.film_info.alternative_title}`,
+          originalTitle: film.film_info.alternative_title,
           rating: film.film_info.total_rating,
           director: film.film_info.director,
           screenwriter: film.film_info.writers,
@@ -50,7 +50,7 @@ export default class Films extends Observer {
           country: film.film_info.release.release_country,
           genre: film.film_info.genre,
           description: film.film_info.description,
-          ageRating: `${film.film_info.age_rating}+`,
+          ageRating: film.film_info.age_rating,
           isWatchList: film.user_details.watchlist,
           isWatched: film.user_details.already_watched,
           isFavourite: film.user_details.favorite,
@@ -90,7 +90,7 @@ export default class Films extends Observer {
             "description": film.description
           },
           "user_details": {
-            "watchlist": film.watchlist,
+            "watchlist": film.isWatchList,
             "already_watched": film.isWatched,
             "watching_date": film.watchedDate.toISOString(),
             "favorite": film.isFavourite
@@ -99,10 +99,10 @@ export default class Films extends Observer {
     );
 
     // Ненужные ключи мы удаляем
-    delete adaptedFilm.watchlist;
     delete adaptedFilm.isWatched;
     delete adaptedFilm.isFavourite;
     delete adaptedFilm.watchedDate;
+    delete adaptedFilm.isWatchList;
     delete adaptedFilm.title;
     delete adaptedFilm.originalTitle;
     delete adaptedFilm.rating;

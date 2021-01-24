@@ -15,7 +15,7 @@ import {FilmListTitles, SortType, UpdateType, UserAction} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import {sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
-import Api from "../api.js";
+// import Api from "../api.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
@@ -26,13 +26,8 @@ const FILMS_AMOUNT_PER_STEP = 5;
 
 const MAXIMUM_EXTRA_FILMS = 2;
 
-const AUTHORIZATION = `Basic ewi13asdkxz`;
-const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
-
-const api = new Api(END_POINT, AUTHORIZATION);
-
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
@@ -45,6 +40,7 @@ export default class Films {
     this._currentSortType = SortType.DEFAULT;
     this._comments = {};
     this._isLoading = true;
+    this._api = api;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -175,7 +171,7 @@ export default class Films {
 
     for (let film of this._getFilms()) {
       const commentsModel = new CommentsModel();
-      api.getComments(film.id)
+      this._api.getComments(film.id)
         .then((comments) => {
           commentsModel.set(comments);
         });
@@ -225,7 +221,11 @@ export default class Films {
   _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
+        console.log(update)
+        // this._filmsModel.updateFilm(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.updateFilm(updateType, response);
+        });
         break;
       case UserAction.DELETE_COMMENT:
         this._comments[update.id].delete(comment);
