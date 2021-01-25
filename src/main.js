@@ -65,10 +65,10 @@ api.getFilms()
     statsComponent.setStatisticTypeChangeHandler(handleStatisticTypeChange);
 
     render(siteMainNode, statsComponent, RenderPosition.BEFOREEND);
+  })
+  .catch(() => {
+    filmsModel.set(UpdateType.INIT, []);
   });
-  // .catch(() => {
-  //   filmsModel.set(UpdateType.INIT, []);
-  // });
 
 const filterModel = new FilterModel();
 
