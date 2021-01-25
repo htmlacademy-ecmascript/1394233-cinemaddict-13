@@ -9,6 +9,13 @@ import {createElement} from "../utils/render.js";
 
 dayjs.extend(relativeTime);
 
+const DeleteButtonStatus = {
+  DELETING: `Deleting…`,
+  DELETE: `Delete`
+};
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const createCommentTemplate = ({emoji, text, author, date, id}) => {
   return `<li class="film-details__comment" data-id="">
   <span class="film-details__comment-emoji">
@@ -195,6 +202,23 @@ export default class Popup extends SmartView {
     this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
     this._setInnerHandlers();
+  }
+
+  disabledDeleteCommentElement(commentId) {
+    const deleteButton = this.getElement().querySelector(`[data-id="${commentId}"]`);
+    deleteButton.disabled = true;
+    deleteButton.textContent = DeleteButtonStatus.DELETING;
+  }
+
+  enabledDeleteCommentElement(commentId) {
+    const deleteButton = this.getElement().querySelector(`[data-id="${commentId}"]`);
+    const parent = deleteButton.closest(`.film-details__comment`);
+    parent.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      deleteButton.disabled = false;
+      deleteButton.textContent = DeleteButtonStatus.DELETE;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _clickHandler(evt) {

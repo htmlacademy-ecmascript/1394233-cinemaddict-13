@@ -66,3 +66,10 @@ export const UserRanks = {
     rank: `Movie Buff`
   }
 };
+
+export const CommentElementState = {
+  ADDING: `ADDING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`,
+  ABORTING_DELETING: `ABORTING_DELETING`
+};

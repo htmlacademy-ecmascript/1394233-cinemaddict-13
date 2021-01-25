@@ -1,19 +1,13 @@
 import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
 import {KeyboardKeys} from "../utils/common.js";
-import {UserAction, UpdateType} from "../consts.js";
+import {UserAction, UpdateType, CommentElementState} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
 import dayjs from "dayjs";
 
 const Mode = {
   POPUP_CLOSED: `CLOSED`,
   POPUP_OPEN: `OPEN`
-};
-
-export const CommentState = {
-  ADDING: `ADDING`,
-  DELETING: `DELETING`,
-  ABORTING: `ABORTING`
 };
 
 export default class Film {
@@ -91,7 +85,7 @@ export default class Film {
     }
   }
 
-  setViewState(state) {
+  setViewState(state, commentId) {
     const resetFormState = () => {
       this._popupComponent.updateData({
         commentAdding: false,
@@ -99,18 +93,19 @@ export default class Film {
     };
 
     switch (state) {
-      case CommentState.ADDING:
+      case CommentElementState.ADDING:
         this._popupComponent.updateData({
           commentAdding: true,
         });
         break;
-      case CommentState.DELETING:
-        this._popupComponent.updateData({
-          commentDeleting: true,
-        });
+      case CommentElementState.DELETING:
+        this._popupComponent.disabledDeleteCommentElement(commentId);
         break;
-      case CommentState.ABORTING:
+      case CommentElementState.ABORTING:
         this._popupComponent.shake(resetFormState);
+        break;
+      case CommentElementState.ABORTING_DELETING:
+        this._popupComponent.enabledDeleteCommentElement(commentId);
         break;
     }
   }
