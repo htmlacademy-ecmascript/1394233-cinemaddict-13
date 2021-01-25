@@ -10,6 +10,12 @@ const Mode = {
   POPUP_OPEN: `OPEN`
 };
 
+export const CommentState = {
+  ADDING: `ADDING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 export default class Film {
   constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms) {
     this._filmListContainer = filmListContainer;
@@ -82,6 +88,30 @@ export default class Film {
     if (this._mode !== Mode.POPUP_CLOSED) {
       this._closePopup();
       this._siteBody.classList.add(`hide-overflow`);
+    }
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._popupComponent.updateData({
+        commentAdding: false,
+      });
+    };
+
+    switch (state) {
+      case CommentState.ADDING:
+        this._popupComponent.updateData({
+          commentAdding: true,
+        });
+        break;
+      case CommentState.DELETING:
+        this._popupComponent.updateData({
+          commentDeleting: true,
+        });
+        break;
+      case CommentState.ABORTING:
+        this._popupComponent.shake(resetFormState);
+        break;
     }
   }
 

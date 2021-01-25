@@ -5,7 +5,7 @@ import FilmsListView from "../view/films-list.js";
 import NoFilmView from "../view/no-film.js";
 import LoadingView from "../view/loading.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
-import FilmPresenter from "./film.js";
+import FilmPresenter, {CommentState as FilmPresenterViewState} from "./film.js";
 import FilmsModel from "../model/films.js";
 import CommentsModel from "../model/comments.js";
 
@@ -227,11 +227,14 @@ export default class Films {
         });
         break;
       case UserAction.ADD_COMMENT:
+        this._filmPresenter[update.id].setViewState(FilmPresenterViewState.ADDING);
         this._api.addComment(comment, update.id).then((response) => {
           const updateFilm = FilmsModel.adaptToClient(response.movie);
           const updatedComments = response.comments.map(CommentsModel.adaptToClient);
           this._comments[update.id].add(updatedComments);
           this._filmsModel.updateFilm(updateType, updateFilm);
+        }).catch(() => {
+          this._filmPresenter[update.id].setViewState(FilmPresenterViewState.ABORTING);
         });
         break;
     }

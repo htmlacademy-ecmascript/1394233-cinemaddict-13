@@ -3,7 +3,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import he from "he";
 
 import SmartView from "./smart.js";
-// import {nanoid} from "nanoid";
 import {KeyboardKeys} from "../utils/common.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 import {createElement} from "../utils/render.js";
@@ -35,7 +34,7 @@ const createGenresTemplate = (genres) => genres.map(createGenreTemplate).join(` 
 const createCommentsTemplate = (comments) => comments.map(createCommentTemplate).join(` `);
 
 const createPopupTemplate = (film, comments) => {
-  const {poster, title, originalTitle, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite} = film;
+  const {poster, title, originalTitle, rating, genre, description, productionYear, duration, director, cast, screenwriter, country, ageRating, isWatchList, isWatched, isFavourite, commentAdding} = film;
 
   const productionDate = dayjs(productionYear).format(`D MMMM YYYY`);
   const durationFilm = `${Math.trunc(duration / 60)}h ${duration % 60}m`;
@@ -129,26 +128,26 @@ const createPopupTemplate = (film, comments) => {
           <div class="film-details__add-emoji-label"></div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"  ${!commentAdding ? `` : `disabled`}></textarea>
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${!commentAdding ? `` : `disabled`}>
             <label class="film-details__emoji-label" for="emoji-smile">
               <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${!commentAdding ? `` : `disabled`}>
             <label class="film-details__emoji-label" for="emoji-sleeping">
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${!commentAdding ? `` : `disabled`}>
             <label class="film-details__emoji-label" for="emoji-puke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${!commentAdding ? `` : `disabled`}>
             <label class="film-details__emoji-label" for="emoji-angry">
               <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
             </label>
@@ -270,8 +269,6 @@ export default class Popup extends SmartView {
       }
 
       newComment.date = new Date();
-      // newComment.author = `Artem Vafin`;
-      // newComment.id = nanoid();
 
       this._callback.formSubmit(newComment);
 
@@ -328,7 +325,8 @@ export default class Popup extends SmartView {
         film,
         {
           emojiLabel: null,
-          newComment: null
+          newComment: null,
+          commentAdding: false
         }
     );
   }
