@@ -215,7 +215,7 @@ export default class Popup extends SmartView {
     const parent = deleteButton.closest(`.film-details__comment`);
     parent.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
-      this.getElement().style.animation = ``;
+      parent.style.animation = ``;
       deleteButton.disabled = false;
       deleteButton.textContent = DeleteButtonStatus.DELETE;
     }, SHAKE_ANIMATION_TIMEOUT);
