@@ -17,7 +17,9 @@ export const ACTIVE_SORT_CLASS = `sort__button--active`;
 
 export const UserAction = {
   UPDATE_FILM: `UPDATE_FILM`,
-  DELETE_COMMENT: `DELETE_COMMENT`
+  LOCAL_UPDATE_FILM: `LOCAL_UPDATE_FILM`,
+  DELETE_COMMENT: `DELETE_COMMENT`,
+  ADD_COMMENT: `ADD_COMMENT`
 };
 
 export const UpdateType = {

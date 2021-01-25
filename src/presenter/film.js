@@ -96,7 +96,7 @@ export default class Film {
 
   _openPopup() {
     this._changeMode(this);
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
+    this._changeData(UserAction.LOCAL_UPDATE_FILM, UpdateType.PATCH, this._film);
     addElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
@@ -158,7 +158,7 @@ export default class Film {
             this._film,
             {
               isWatched: !this._film.isWatched,
-              watchedDate: this._film.isWatched === false ? dayjs() : null
+              watchedDate: !this._film.isWatched ? dayjs() : null
             }
         )
     );

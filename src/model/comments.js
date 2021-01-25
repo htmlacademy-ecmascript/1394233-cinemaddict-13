@@ -29,10 +29,7 @@ export default class Comments extends Observer {
   }
 
   add(newComment) {
-    this._comments = [
-      newComment,
-      ...this._comments
-    ];
+    this._comments = newComment;
   }
 
   static adaptToClient(comment) {
@@ -59,8 +56,6 @@ export default class Comments extends Observer {
         {},
         comment,
         {
-          "id": comment.id,
-          "author": comment.author,
           "comment": comment.text,
           "date": comment.date.toISOString(),
           "emotion": comment.emoji

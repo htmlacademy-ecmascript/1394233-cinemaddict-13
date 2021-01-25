@@ -3,7 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import he from "he";
 
 import SmartView from "./smart.js";
-import {nanoid} from "nanoid";
+// import {nanoid} from "nanoid";
 import {KeyboardKeys} from "../utils/common.js";
 import {AMOUNT_GENRES_FOR_SINGLE_NUMBER} from "../consts.js";
 import {createElement} from "../utils/render.js";
@@ -270,8 +270,8 @@ export default class Popup extends SmartView {
       }
 
       newComment.date = new Date();
-      newComment.author = `Artem Vafin`;
-      newComment.id = nanoid();
+      // newComment.author = `Artem Vafin`;
+      // newComment.id = nanoid();
 
       this._callback.formSubmit(newComment);
 
