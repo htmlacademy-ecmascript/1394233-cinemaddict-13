@@ -124,13 +124,7 @@ export default class Film {
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
-        Object.assign(
-            {},
-            this._film,
-            {
-              comments: this._film.comments + 1
-            }
-        ),
+        this._film,
         newComment
     );
   }
@@ -186,7 +180,7 @@ export default class Film {
             {},
             this._film,
             {
-              comments: this._film.comments - 1
+              comments: this._film.comments.filter((item) => item !== id)
             }
         ),
         id
