@@ -1,7 +1,7 @@
 import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
 import {KeyboardKeys} from "../utils/common.js";
-import {UserAction, UpdateType} from "../consts.js";
+import {UserAction, UpdateType, CommentElementState} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
 import dayjs from "dayjs";
 
@@ -85,6 +85,31 @@ export default class Film {
     }
   }
 
+  setViewState(state, commentId) {
+    const resetFormState = () => {
+      this._popupComponent.updateData({
+        commentAdding: false,
+      });
+    };
+
+    switch (state) {
+      case CommentElementState.ADDING:
+        this._popupComponent.updateData({
+          commentAdding: true,
+        });
+        break;
+      case CommentElementState.DELETING:
+        this._popupComponent.disabledDeleteCommentElement(commentId);
+        break;
+      case CommentElementState.ABORTING:
+        this._popupComponent.shake(resetFormState);
+        break;
+      case CommentElementState.ABORTING_DELETING:
+        this._popupComponent.enabledDeleteCommentElement(commentId);
+        break;
+    }
+  }
+
   _closePopup() {
     this._popupComponent.reset(this._film);
     removeElement(this._siteBody, this._popupComponent);
@@ -96,7 +121,7 @@ export default class Film {
 
   _openPopup() {
     this._changeMode(this);
-    this._changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, this._film);
+    this._changeData(UserAction.LOCAL_UPDATE_FILM, UpdateType.PATCH, this._film);
     addElement(this._siteBody, this._popupComponent);
     this._siteBody.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._onPopupEscPress);
@@ -124,13 +149,7 @@ export default class Film {
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
-        Object.assign(
-            {},
-            this._film,
-            {
-              comments: this._film.comments + 1
-            }
-        ),
+        this._film,
         newComment
     );
   }
@@ -158,7 +177,7 @@ export default class Film {
             this._film,
             {
               isWatched: !this._film.isWatched,
-              watchedDate: this._film.isWatched === false ? dayjs() : null
+              watchedDate: !this._film.isWatched ? dayjs() : null
             }
         )
     );
@@ -186,7 +205,7 @@ export default class Film {
             {},
             this._film,
             {
-              comments: this._film.comments - 1
+              comments: this._film.comments.filter((item) => item !== id)
             }
         ),
         id

@@ -6,9 +6,10 @@ import NoFilmView from "../view/no-film.js";
 import LoadingView from "../view/loading.js";
 import ShowMoreButtonView from "../view/show-more-btn.js";
 import FilmPresenter from "./film.js";
+import FilmsModel from "../model/films.js";
 import CommentsModel from "../model/comments.js";
 
-import {FilmListTitles, SortType, UpdateType, UserAction} from "../consts.js";
+import {FilmListTitles, SortType, UpdateType, UserAction, CommentElementState} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import {sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
@@ -216,13 +217,28 @@ export default class Films {
           this._filmsModel.updateFilm(updateType, response);
         });
         break;
-      case UserAction.DELETE_COMMENT:
-        this._comments[update.id].delete(comment);
+      case UserAction.LOCAL_UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
+      case UserAction.DELETE_COMMENT:
+        this._filmPresenter[update.id].setViewState(CommentElementState.DELETING, comment);
+        this._api.deleteComment(comment).then(() => {
+          this._comments[update.id].delete(comment);
+          this._filmsModel.updateFilm(updateType, update);
+        }).catch(() => {
+          this._filmPresenter[update.id].setViewState(CommentElementState.ABORTING_DELETING, comment);
+        });
+        break;
       case UserAction.ADD_COMMENT:
-        this._comments[update.id].add(comment);
-        this._filmsModel.updateFilm(updateType, update);
+        this._filmPresenter[update.id].setViewState(CommentElementState.ADDING);
+        this._api.addComment(comment, update.id).then((response) => {
+          const updateFilm = FilmsModel.adaptToClient(response.movie);
+          const updatedComments = response.comments.map(CommentsModel.adaptToClient);
+          this._comments[update.id].add(updatedComments);
+          this._filmsModel.updateFilm(updateType, updateFilm);
+        }).catch(() => {
+          this._filmPresenter[update.id].setViewState(CommentElementState.ABORTING);
+        });
         break;
     }
   }
