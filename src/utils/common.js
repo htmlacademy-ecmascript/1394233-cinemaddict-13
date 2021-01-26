@@ -37,3 +37,7 @@ export const getMaxKey = (object) => {
   const maxValue = Math.max.apply(null, Object.values(object));
   return Object.keys(object).filter((element) => object[element] === maxValue);
 };
+
+export const isOnline = () => {
+  return window.navigator.onLine;
+};
