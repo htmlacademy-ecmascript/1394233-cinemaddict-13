@@ -10,7 +10,7 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
 import {FilterType, StatsType, UpdateType} from "./consts.js";
-import Api from "./api.js";
+import Api from "./api/api.js";
 
 const AUTHORIZATION = `Basic ewi13asdkxz`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
