@@ -86,3 +86,6 @@ const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel
 filterPresenter.init();
 filmsPresenter.init();
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
