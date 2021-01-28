@@ -222,7 +222,7 @@ export default class Films {
         break;
       case UserAction.DELETE_COMMENT:
         this._filmPresenter[update.id].setViewState(CommentElementState.DELETING, comment);
-        this._api.deleteComment(comment).then(() => {
+        this._api.deleteComment(comment, update.id).then(() => {
           this._comments[update.id].delete(comment);
           this._filmsModel.updateFilm(updateType, update);
         }).catch(() => {

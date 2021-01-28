@@ -32,14 +32,27 @@ export default class Store {
     );
   }
 
-  removeItem(key) {
+  removeCommentItem(filmId, commentId) {
     const store = this.getItems();
 
-    delete store[key];
+    delete store[filmId][commentId];
 
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(store)
+    this.setItem(
+        filmId,
+        store[filmId]
+    );
+  }
+
+  removeCommentItemFromFilms(filmId, commentId) {
+    const store = this.getItems();
+
+    delete store[filmId].comments[commentId];
+
+    store[filmId].comments = store[filmId].comments.filter((item) => item !== commentId);
+
+    this.setItem(
+        filmId,
+        store[filmId]
     );
   }
 }
