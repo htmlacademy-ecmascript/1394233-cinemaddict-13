@@ -210,6 +210,12 @@ export default class Films {
     this._modeChange(this._mostCommentedFilmPresenter);
   }
 
+  _setViewState(presenter, state, comment) {
+    if (presenter) {
+      presenter.setViewState(state, comment);
+    }
+  }
+
   _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -221,23 +227,31 @@ export default class Films {
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._filmPresenter[update.id].setViewState(CommentElementState.DELETING, comment);
+        this._setViewState(this._filmPresenter[update.id], CommentElementState.DELETING, comment);
+        this._setViewState(this._mostCommentedFilmPresenter[update.id], CommentElementState.DELETING, comment);
+        this._setViewState(this._topRatedFilmPresenter[update.id], CommentElementState.DELETING, comment);
         this._api.deleteComment(comment, update.id).then(() => {
           this._comments[update.id].delete(comment);
           this._filmsModel.updateFilm(updateType, update);
         }).catch(() => {
-          this._filmPresenter[update.id].setViewState(CommentElementState.ABORTING_DELETING, comment);
+          this._setViewState(this._filmPresenter[update.id], CommentElementState.ABORTING_DELETING, comment);
+          this._setViewState(this._mostCommentedFilmPresenter[update.id], CommentElementState.ABORTING_DELETING, comment);
+          this._setViewState(this._topRatedFilmPresenter[update.id], CommentElementState.ABORTING_DELETING, comment);
         });
         break;
       case UserAction.ADD_COMMENT:
-        this._filmPresenter[update.id].setViewState(CommentElementState.ADDING);
+        this._setViewState(this._filmPresenter[update.id], CommentElementState.ADDING);
+        this._setViewState(this._mostCommentedFilmPresenter[update.id], CommentElementState.ADDING);
+        this._setViewState(this._topRatedFilmPresenter[update.id], CommentElementState.ADDING);
         this._api.addComment(comment, update.id).then((response) => {
           const updateFilm = FilmsModel.adaptToClient(response.movie);
           const updatedComments = response.comments.map(CommentsModel.adaptToClient);
           this._comments[update.id].add(updatedComments);
           this._filmsModel.updateFilm(updateType, updateFilm);
         }).catch(() => {
-          this._filmPresenter[update.id].setViewState(CommentElementState.ABORTING);
+          this._setViewState(this._filmPresenter[update.id], CommentElementState.ABORTING);
+          this._setViewState(this._mostCommentedFilmPresenter[update.id], CommentElementState.ABORTING);
+          this._setViewState(this._topRatedFilmPresenter[update.id], CommentElementState.ABORTING);
         });
         break;
     }
