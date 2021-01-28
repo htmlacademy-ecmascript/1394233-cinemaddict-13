@@ -315,9 +315,7 @@ export default class Films {
     render(this._mainContentComponent, this._topRatedFilmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
 
-    let sortedFilms = sortByRating(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS);
-
-    sortedFilms = sortedFilms.filter((film) => film.rating > 0);
+    let sortedFilms = sortByRating(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS).filter((film) => film.rating > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {
@@ -340,9 +338,7 @@ export default class Films {
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
-    let sortedFilms = sortByComments(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS);
-
-    sortedFilms = sortedFilms.filter((film) => film.comments.length > 0);
+    let sortedFilms = sortByComments(this._getFilms()).slice(0, MAXIMUM_EXTRA_FILMS).filter((film) => film.comments.length > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {
