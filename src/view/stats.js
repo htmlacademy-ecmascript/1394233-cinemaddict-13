@@ -3,11 +3,11 @@ import isBetween from "dayjs/plugin/isBetween";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+import AbstractView from "./abstract.js";
+
 import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
 import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank} from "../utils/stats.js";
-
-import AbstractView from "./abstract.js";
 
 dayjs.extend(isBetween);
 
