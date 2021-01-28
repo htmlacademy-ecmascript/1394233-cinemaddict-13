@@ -1,8 +1,9 @@
 import CardFilmView from "../view/card.js";
 import PopupView from "../view/popup.js";
-import {KeyboardKeys} from "../utils/common.js";
+import {KeyboardKeys, isOnline} from "../utils/common.js";
 import {UserAction, UpdateType, CommentElementState} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
+import {toast} from "../utils/toast/toast.js";
 import dayjs from "dayjs";
 
 const Mode = {
@@ -146,6 +147,12 @@ export default class Film {
   }
 
   _handleFormSubmit(newComment) {
+    if (!isOnline()) {
+      this._popupComponent.shake();
+      toast(`You can't add comment offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
@@ -198,6 +205,11 @@ export default class Film {
   }
 
   _handleDeleteCommentClick(id) {
+    if (!isOnline()) {
+      toast(`You can't delete comment offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.PATCH,

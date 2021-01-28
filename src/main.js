@@ -1,4 +1,5 @@
 import {render, RenderPosition} from "./utils/render.js";
+import {toast} from "./utils/toast/toast.js";
 
 import UserRangView from "./view/user-rank.js";
 import NavigationView from "./view/navigation.js";
@@ -10,16 +11,30 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
 import {FilterType, StatsType, UpdateType} from "./consts.js";
-import Api from "./api.js";
+import Api from "./api/api.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const AUTHORIZATION = `Basic ewi13asdkxz`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v13`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
+const COMMENTS_STORE_PREFIX = `cinemaddict-comments-localstorage`;
+const COMMENTS_STORE_VER = `v1`;
+const COMMENTS_STORE_NAME = `${COMMENTS_STORE_PREFIX}-${COMMENTS_STORE_VER}`;
+
 const api = new Api(END_POINT, AUTHORIZATION);
+
+const filmsStore = new Store(STORE_NAME, window.localStorage);
+const commentsStore = new Store(COMMENTS_STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, filmsStore, commentsStore);
 
 const filmsModel = new FilmsModel();
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
     render(siteHeaderNode, new UserRangView(filmsModel.get().length), RenderPosition.BEFOREEND);
@@ -80,9 +95,23 @@ const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, api);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider);
 
 
 filterPresenter.init();
 filmsPresenter.init();
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+  toast(`Связь с сетью востановленна. Вы работаете онлайн!`);
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+  toast(`Пропала связьс сетью. Вы работаете офлайн!`);
+});
