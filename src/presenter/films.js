@@ -32,7 +32,6 @@ export default class Films {
     this._filmPresenter = {};
     this._topRatedFilmPresenter = {};
     this._mostCommentedFilmPresenter = {};
-    this._filterPresenter = filterPresenter;
     this._currentSortType = SortType.DEFAULT;
     this._comments = {};
     this._isLoading = true;
@@ -119,7 +118,7 @@ export default class Films {
   }
 
   _renderFilm(filmListElement, film, presenterStore) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList, this._userRangComponent);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList);
     filmPresenter.init(film);
     presenterStore[film.id] = filmPresenter;
   }
@@ -147,13 +146,6 @@ export default class Films {
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
     }
-  }
-
-  _clearMostCommentedList() {
-    Object
-      .values(this._mostCommentedFilmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._mostCommentedFilmPresenter = {};
   }
 
   _renderFilms(films) {
