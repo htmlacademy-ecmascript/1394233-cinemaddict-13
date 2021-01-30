@@ -1,4 +1,4 @@
-import CardFilmView from "../view/card.js";
+import CardView from "../view/card.js";
 import PopupView from "../view/popup.js";
 import {KeyboardKeys, isOnline} from "../utils/common.js";
 import {UserAction, UpdateType, CommentElementState} from "../consts.js";
@@ -40,7 +40,7 @@ export default class Film {
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
 
-    this._filmComponent = new CardFilmView(this._film, this._comments);
+    this._filmComponent = new CardView(this._film, this._comments);
     this._popupComponent = new PopupView(this._film, this._comments);
 
     this._filmComponent.setPosterClickHandler(this._handleOpenClick);

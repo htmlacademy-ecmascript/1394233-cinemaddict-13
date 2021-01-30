@@ -23,7 +23,7 @@ const AmmountExtraFilms = {
 };
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api, userRangComponent) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api, userRankComponent) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
@@ -39,7 +39,7 @@ export default class Films {
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
-    this._userRangComponent = userRangComponent;
+    this._userRankComponent = userRankComponent;
 
     this._mainContentComponent = new MainContentView();
     this._filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
@@ -218,7 +218,7 @@ export default class Films {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
           this._filmsModel.updateFilm(updateType, response);
-          this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
+          this._userRankComponent.changeUserRank(getWatchedFilms(this._filmsModel.get()).length);
         });
         break;
       case UserAction.LOCAL_UPDATE_FILM:
@@ -276,7 +276,7 @@ export default class Films {
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
+        this._userRankComponent.changeUserRank(getWatchedFilms(this._filmsModel.get()).length);
         this._renderFilmsList(true);
         break;
     }

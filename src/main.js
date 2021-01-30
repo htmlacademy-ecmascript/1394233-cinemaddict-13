@@ -1,7 +1,7 @@
 import {render, RenderPosition} from "./utils/render.js";
 import {toast} from "./utils/toast/toast.js";
 
-import UserRangView from "./view/user-rank.js";
+import UserRankView from "./view/user-rank.js";
 import NavigationView from "./view/navigation.js";
 import StatsView from "./view/stats.js";
 import SiteStatisticView from "./view/statistics.js";
@@ -46,7 +46,7 @@ apiWithProvider.getFilms()
       switch (navigationItem) {
         case FilterType.STATS:
           filmsPresenter.hide();
-          statsComponent.changeUserRang(getWatchedFilms(filmsModel.get()).length);
+          statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
           statsComponent.getStatistic(StatsType.ALL);
           break;
@@ -93,12 +93,12 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
-let userRangComponent = new UserRangView(getWatchedFilms(filmsModel.get()).length);
-render(siteHeaderNode, userRangComponent, RenderPosition.BEFOREEND);
+const userRankComponent = new UserRankView(getWatchedFilms(filmsModel.get()).length);
+render(siteHeaderNode, userRankComponent, RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRangComponent);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRankComponent);
 
 
 filterPresenter.init();
