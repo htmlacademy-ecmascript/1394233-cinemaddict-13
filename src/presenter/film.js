@@ -1,7 +1,7 @@
-import CardFilmView from "../view/card.js";
+import CardView from "../view/card.js";
 import PopupView from "../view/popup.js";
 import {KeyboardKeys, isOnline} from "../utils/common.js";
-import {UserAction, UpdateType, CommentElementState} from "../consts.js";
+import {UserAction, UpdateType, CommentElementState, FilterType} from "../consts.js";
 import {render, RenderPosition, addElement, removeElement, replace, remove} from "../utils/render.js";
 import {toast} from "../utils/toast/toast.js";
 import dayjs from "dayjs";
@@ -12,14 +12,14 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms, userRankComponent) {
+  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms, filterModel) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._renderMostCommentedFilms = renderMostCommentedFilms;
+    this._filterModel = filterModel;
 
-    this._userRankComponent = userRankComponent;
     this._filmComponent = null;
     this._popupComponent = null;
     this._mode = Mode.POPUP_CLOSED;
@@ -41,7 +41,7 @@ export default class Film {
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
 
-    this._filmComponent = new CardFilmView(this._film, this._comments);
+    this._filmComponent = new CardView(this._film, this._comments);
     this._popupComponent = new PopupView(this._film, this._comments);
 
     this._filmComponent.setPosterClickHandler(this._handleOpenClick);
@@ -78,6 +78,10 @@ export default class Film {
   destroy() {
     remove(this._filmComponent);
     remove(this._popupComponent);
+  }
+
+  destroyFilmComponent() {
+    remove(this._filmComponent);
   }
 
   resetView() {
@@ -165,21 +169,24 @@ export default class Film {
   _handleWatchListClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,
             {
               isWatchList: !this._film.isWatchList
             }
-        )
+        ),
+        null,
+        this,
+        FilterType.WATCH_LIST
     );
   }
 
   _handleWatchedClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,
@@ -187,21 +194,27 @@ export default class Film {
               isWatched: !this._film.isWatched,
               watchedDate: !this._film.isWatched ? dayjs() : null
             }
-        )
+        ),
+        null,
+        this,
+        FilterType.HISTORY
     );
   }
 
   _handleFavouriteClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._film,
             {
               isFavourite: !this._film.isFavourite
             }
-        )
+        ),
+        null,
+        this,
+        FilterType.FAVORITES
     );
   }
 

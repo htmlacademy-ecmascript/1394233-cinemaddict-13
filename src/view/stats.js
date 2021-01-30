@@ -88,13 +88,13 @@ export default class Stats extends AbstractView {
     return createStatisticsTemplate(this._watchedFilms);
   }
 
-  getStatistic(statisticType) {
+  getStatistic(statisticType, watcheFilms) {
     const labels = [];
     const counts = [];
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    const watchedFilms = getStatisticsDataForPeriod[statisticType](this._watchedFilms);
+    const watchedFilms = getStatisticsDataForPeriod[statisticType](watcheFilms);
     replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
     updateLabelData(labels, counts, watchedFilms);
 
@@ -161,7 +161,7 @@ export default class Stats extends AbstractView {
     });
   }
 
-  changeUserRang(watchedFilms) {
+  changeUserRank(watchedFilms) {
     this.getElement().querySelector(`.statistic__rank-label`).textContent = `${getUserRank(watchedFilms)}`;
   }
 

@@ -1,7 +1,7 @@
 import {render, RenderPosition} from "./utils/render.js";
 import {toast} from "./utils/toast/toast.js";
 
-import UserRangView from "./view/user-rank.js";
+import UserRankView from "./view/user-rank.js";
 import NavigationView from "./view/navigation.js";
 import StatsView from "./view/stats.js";
 import SiteStatisticView from "./view/statistics.js";
@@ -46,9 +46,9 @@ apiWithProvider.getFilms()
       switch (navigationItem) {
         case FilterType.STATS:
           filmsPresenter.hide();
-          statsComponent.changeUserRang(getWatchedFilms(filmsModel.get()).length);
+          statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
-          statsComponent.getStatistic(StatsType.ALL);
+          statsComponent.getStatistic(StatsType.ALL, getWatchedFilms(filmsModel.get()));
           break;
         default:
           filmsPresenter.show();
@@ -93,12 +93,12 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
-let userRangComponent = new UserRangView(getWatchedFilms(filmsModel.get()).length);
-render(siteHeaderNode, userRangComponent, RenderPosition.BEFOREEND);
-const navigationComponent = new NavigationView();
+const userRankComponent = new UserRankView(getWatchedFilms(filmsModel.get()).length);
+render(siteHeaderNode, userRankComponent, RenderPosition.BEFOREEND);
+const navigationComponent = new NavigationView(filterModel);
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRangComponent);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, apiWithProvider, userRankComponent);
 
 
 filterPresenter.init();
@@ -111,10 +111,10 @@ window.addEventListener(`load`, () => {
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
   apiWithProvider.sync();
-  toast(`Связь с сетью востановленна. Вы работаете онлайн!`);
+  toast(`Связь с сетью восстановлена. Вы работаете онлайн!`);
 });
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
-  toast(`Пропала связьс сетью. Вы работаете офлайн!`);
+  toast(`Пропала связь с сетью. Вы работаете офлайн!`);
 });

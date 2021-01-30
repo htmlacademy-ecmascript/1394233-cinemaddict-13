@@ -9,7 +9,7 @@ import FilmPresenter from "./film.js";
 import FilmsModel from "../model/films.js";
 import CommentsModel from "../model/comments.js";
 
-import {FilmListTitles, SortType, UpdateType, UserAction, CommentElementState} from "../consts.js";
+import {FilmListTitles, SortType, UpdateType, UserAction, CommentElementState, FilterType} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import {sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
@@ -17,13 +17,13 @@ import {getWatchedFilms} from "../utils/stats.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
-const AmmountExtraFilms = {
+const AmountExtraFilms = {
   MIN: 0,
   MAX: 2
 };
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api, userRangComponent) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, api, userRankComponent) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
@@ -32,7 +32,6 @@ export default class Films {
     this._filmPresenter = {};
     this._topRatedFilmPresenter = {};
     this._mostCommentedFilmPresenter = {};
-    this._filterPresenter = filterPresenter;
     this._currentSortType = SortType.DEFAULT;
     this._comments = {};
     this._isLoading = true;
@@ -40,7 +39,7 @@ export default class Films {
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
-    this._userRangComponent = userRangComponent;
+    this._userRankComponent = userRankComponent;
 
     this._mainContentComponent = new MainContentView();
     this._filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
@@ -119,7 +118,7 @@ export default class Films {
   }
 
   _renderFilm(filmListElement, film, presenterStore) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList, this._userRangComponent);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList, this._filterModel);
     filmPresenter.init(film);
     presenterStore[film.id] = filmPresenter;
   }
@@ -146,14 +145,8 @@ export default class Films {
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
+      this._sortComponent.setActiveSortButton(SortType.DEFAULT);
     }
-  }
-
-  _clearMostCommentedList() {
-    Object
-      .values(this._mostCommentedFilmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._mostCommentedFilmPresenter = {};
   }
 
   _renderFilms(films) {
@@ -177,12 +170,16 @@ export default class Films {
 
     const filmAmount = this._getFilms().length;
     const films = this._getFilms().slice(0, Math.min(filmAmount, FILMS_AMOUNT_PER_STEP));
+
     if (filmAmount === 0) {
       this._renderNoFilms();
-      remove(this._sortComponent);
+      this._sortComponent.hide();
       return;
     }
 
+    if (this._sortComponent.getElement().classList.contains(`hidden`)) {
+      this._sortComponent.show();
+    }
     this._renderFilms(films);
 
     if (filmAmount > this._renderFilmsAmount) {
@@ -221,12 +218,29 @@ export default class Films {
     }
   }
 
-  _handleViewAction(actionType, updateType, update, comment) {
+  _handleViewAction(actionType, updateType, update, comment, filmPresenter, elementClick) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
           this._filmsModel.updateFilm(updateType, response);
-          this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
+          this._userRankComponent.changeUserRank(getWatchedFilms(this._filmsModel.get()).length);
+          if (this._filterModel.get() !== FilterType.ALL) {
+            let filmsCount;
+            if (this._filterModel.isFavouriteActive() && elementClick === FilterType.FAVORITES) {
+              filmPresenter.destroyFilmComponent();
+              filmsCount = this._filmsModel.getFavouritesFilmsCount();
+            } else if (this._filterModel.isWatchListActive() && elementClick === FilterType.WATCH_LIST) {
+              filmPresenter.destroyFilmComponent();
+              filmsCount = this._filmsModel.getWatchListFilmsCount();
+            } else if (this._filterModel.isHistoryActive() && elementClick === FilterType.HISTORY) {
+              filmPresenter.destroyFilmComponent();
+              filmsCount = this._filmsModel.getWatchedFilmsCount();
+            }
+            if (filmsCount === 0) {
+              this._sortComponent.hide();
+              this._renderNoFilms();
+            }
+          }
         });
         break;
       case UserAction.LOCAL_UPDATE_FILM:
@@ -284,7 +298,7 @@ export default class Films {
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
+        this._userRankComponent.changeUserRank(getWatchedFilms(this._filmsModel.get()).length);
         this._renderFilmsList(true);
         break;
     }
@@ -325,7 +339,7 @@ export default class Films {
     render(this._mainContentComponent, this._topRatedFilmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
 
-    const sortedFilms = sortByRating(this._getFilms()).slice(AmmountExtraFilms.MIN, AmmountExtraFilms.MAX).filter((film) => film.rating > 0);
+    const sortedFilms = sortByRating(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.rating > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {
@@ -348,7 +362,7 @@ export default class Films {
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
-    const sortedFilms = sortByComments(this._getFilms()).slice(AmmountExtraFilms.MIN, AmmountExtraFilms.MAX).filter((film) => film.comments.length > 0);
+    const sortedFilms = sortByComments(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.comments.length > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {

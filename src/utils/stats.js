@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import {createElement} from "../utils/render.js";
+import {createElement} from "./render.js";
 import {UserRanks} from "../consts.js";
 
 export const getDuration = (films) => {
