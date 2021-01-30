@@ -161,6 +161,10 @@ export default class Stats extends AbstractView {
     });
   }
 
+  changeUserRang(watchedFilms) {
+    this.getElement().querySelector(`.statistic__rank-label`).textContent = `${getUserRank(watchedFilms)}`;
+  }
+
   _statisticTypeChangeHandler(evt) {
     evt.preventDefault();
     this._callback.statisticTypeChange(evt.target.value);
