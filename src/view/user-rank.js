@@ -20,4 +20,8 @@ export default class SiteMenu extends AbstractView {
   getTemplate() {
     return createUserRangTemplate(this._films);
   }
+
+  changeUserRang(watchedFilms) {
+    this.getElement().querySelector(`.profile__rating`).textContent = `${getUserRank(watchedFilms)}`;
+  }
 }

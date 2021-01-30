@@ -13,6 +13,7 @@ import {FilmListTitles, SortType, UpdateType, UserAction, CommentElementState} f
 import {filter} from "../utils/filter.js";
 import {sortByRating, sortingByRating, sortByComments, sortByDate} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
+import {getWatchedFilms} from "../utils/stats.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
@@ -22,7 +23,7 @@ const AmmountExtraFilms = {
 };
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api, userRangComponent) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
@@ -39,6 +40,7 @@ export default class Films {
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._userRangComponent = userRangComponent;
 
     this._mainContentComponent = new MainContentView();
     this._filmsBoardComponent = new FilmsBoardView(FilmListTitles.ALL);
@@ -117,7 +119,7 @@ export default class Films {
   }
 
   _renderFilm(filmListElement, film, presenterStore) {
-    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList);
+    const filmPresenter = new FilmPresenter(filmListElement, this._siteBody, this._handleViewAction, this._handleModeChange, this._comments[film.id], this._renderMostCommentedList, this._userRangComponent);
     filmPresenter.init(film);
     presenterStore[film.id] = filmPresenter;
   }
@@ -224,6 +226,7 @@ export default class Films {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
           this._filmsModel.updateFilm(updateType, response);
+          this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
         });
         break;
       case UserAction.LOCAL_UPDATE_FILM:
@@ -268,6 +271,9 @@ export default class Films {
         this._updateFilmPresenter(this._mostCommentedFilmPresenter, data);
         break;
       case UpdateType.MINOR:
+        this._updateFilmPresenter(this._filmPresenter, data);
+        this._updateFilmPresenter(this._topRatedFilmPresenter, data);
+        this._updateFilmPresenter(this._mostCommentedFilmPresenter, data);
         this._clearFilmList();
         this._renderFilmsList();
         break;
@@ -278,6 +284,7 @@ export default class Films {
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
+        this._userRangComponent.changeUserRang(getWatchedFilms(this._filmsModel.get()).length);
         this._renderFilmsList(true);
         break;
     }

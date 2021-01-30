@@ -38,7 +38,6 @@ const filmsModel = new FilmsModel();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
-    render(siteHeaderNode, new UserRangView(getWatchedFilms(filmsModel.get()).length), RenderPosition.BEFOREEND);
     render(statisticNode, new SiteStatisticView(filmsModel.get().length), RenderPosition.BEFOREEND);
 
     const statsComponent = new StatsView(getWatchedFilms(filmsModel.get()));
@@ -93,10 +92,12 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
+let userRangComponent = new UserRangView(getWatchedFilms(filmsModel.get()).length);
+render(siteHeaderNode, userRangComponent, RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRangComponent);
 
 
 filterPresenter.init();

@@ -27,15 +27,6 @@ export const getGenresStats = (films) => {
       }
       results[genre] = 1;
     });
-
-  // films.forEach((element) => {
-  //   if (results.hasOwnProperty(element.genre[0])) {
-  //     results[element.genre[0]]++;
-  //   } else {
-  //     results[element.genre[0]] = 1;
-  //   }
-  // });
-
   return results;
 };
 

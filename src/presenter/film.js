@@ -12,13 +12,14 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms) {
+  constructor(filmListContainer, siteBody, changeData, changeMode, comments, renderMostCommentedFilms, userRankComponent) {
     this._filmListContainer = filmListContainer;
     this._siteBody = siteBody;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._renderMostCommentedFilms = renderMostCommentedFilms;
 
+    this._userRankComponent = userRankComponent;
     this._filmComponent = null;
     this._popupComponent = null;
     this._mode = Mode.POPUP_CLOSED;
@@ -164,7 +165,7 @@ export default class Film {
   _handleWatchListClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -178,7 +179,7 @@ export default class Film {
   _handleWatchedClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -193,7 +194,7 @@ export default class Film {
   _handleFavouriteClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
