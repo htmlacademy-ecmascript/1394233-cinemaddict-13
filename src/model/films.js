@@ -32,6 +32,18 @@ export default class Films extends Observer {
     this._notify(updateType, update);
   }
 
+  getFavouritesFilmsCount() {
+    return this._films.slice().filter((film) => film.isFavourite).length;
+  }
+
+  getWatchListFilmsCount() {
+    return this._films.slice().filter((film) => film.isWatchList).length;
+  }
+
+  getWatchedFilmsCount() {
+    return this._films.slice().filter((film) => film.isWatched).length;
+  }
+
   static adaptToClient(film) {
     const adaptedFilm = Object.assign(
         {},

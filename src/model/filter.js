@@ -12,6 +12,18 @@ export default class Filter extends Observer {
     this._notify(updateType, filter);
   }
 
+  isFavouriteActive() {
+    return this._activeFilter === FilterType.FAVORITES;
+  }
+
+  isWatchListActive() {
+    return this._activeFilter === FilterType.WATCH_LIST;
+  }
+
+  isHistoryActive() {
+    return this._activeFilter === FilterType.HISTORY;
+  }
+
   get() {
     return this._activeFilter;
   }
