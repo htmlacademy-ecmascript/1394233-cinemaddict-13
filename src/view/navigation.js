@@ -1,10 +1,10 @@
 import AbstractView from "./abstract.js";
-import {FilterType} from "../consts.js";
+import {FilterType, UpdateType} from "../consts.js";
 
 export default class Navigation extends AbstractView {
-  constructor() {
+  constructor(filterModel) {
     super();
-
+    this._filterModel = filterModel;
     this._navigationClickHandler = this._navigationClickHandler.bind(this);
   }
 
@@ -13,7 +13,7 @@ export default class Navigation extends AbstractView {
     <a href="#${FilterType.STATS}" class="main-navigation__additional" data-filter-type="${FilterType.STATS}">Stats</a></nav>`;
   }
 
-  _removeActiveClass() {
+  _removeFilterLinksActiveClass() {
     this.getElement().querySelectorAll(`.main-navigation__item`).forEach((element) => {
       if (element.classList.contains(`main-navigation__item--active`)) {
         element.classList.remove(`main-navigation__item--active`);
@@ -42,7 +42,9 @@ export default class Navigation extends AbstractView {
       return;
     }
 
-    this._removeActiveClass();
+    this._removeFilterLinksActiveClass();
+
+    this._filterModel.set(UpdateType.MAJOR, FilterType.ALL);
 
     statsButtonElement.classList.add(`main-navigation__additional--active`);
 

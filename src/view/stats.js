@@ -8,7 +8,6 @@ import AbstractView from "./abstract.js";
 import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
 import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank} from "../utils/stats.js";
-import {createElement} from "../utils/render.js";
 
 dayjs.extend(isBetween);
 
@@ -18,7 +17,7 @@ const createStatisticDataTemplate = (films) => {
   return `<ul class="statistic__text-list">
   <li class="statistic__text-item">
     <h4 class="statistic__item-title">You watched</h4>
-    ${createStatisticWatchedFilms(films.length)}
+    <p class="statistic__item-text">${films.length} <span class="statistic__item-description">movies</span></p>
   </li>
   <li class="statistic__text-item">
     <h4 class="statistic__item-title">Total duration</h4>
@@ -29,10 +28,6 @@ const createStatisticDataTemplate = (films) => {
     <p class="statistic__item-text">${getMaxKey(getGenresStats(films)).join(`, `)}</p>
   </li>
   </ul>`;
-};
-
-const createStatisticWatchedFilms = (filmsAmount) => {
-  return `<p class="statistic__item-text">${filmsAmount} <span class="statistic__item-description">movies</span></p>`;
 };
 
 const createChartDataTemplate = () => {
@@ -93,13 +88,13 @@ export default class Stats extends AbstractView {
     return createStatisticsTemplate(this._watchedFilms);
   }
 
-  getStatistic(statisticType) {
+  getStatistic(statisticType, watcheFilms) {
     const labels = [];
     const counts = [];
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    const watchedFilms = getStatisticsDataForPeriod[statisticType](this._watchedFilms);
+    const watchedFilms = getStatisticsDataForPeriod[statisticType](watcheFilms);
     replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
     updateLabelData(labels, counts, watchedFilms);
 
@@ -168,14 +163,6 @@ export default class Stats extends AbstractView {
 
   changeUserRank(watchedFilms) {
     this.getElement().querySelector(`.statistic__rank-label`).textContent = `${getUserRank(watchedFilms)}`;
-  }
-
-  changeWatchedFilmsStat(watchedFilms) {
-    const newElement = createElement(createStatisticWatchedFilms(watchedFilms));
-    const oldChild = this.getElement().querySelector(`.statistic__item-text`);
-    const parent = oldChild.parentElement;
-    parent.removeChild(oldChild);
-    parent.appendChild(newElement);
   }
 
   _statisticTypeChangeHandler(evt) {

@@ -48,8 +48,7 @@ apiWithProvider.getFilms()
           filmsPresenter.hide();
           statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
-          statsComponent.getStatistic(StatsType.ALL);
-          statsComponent.changeWatchedFilmsStat(getWatchedFilms(filmsModel.get()).length);
+          statsComponent.getStatistic(StatsType.ALL, getWatchedFilms(filmsModel.get()));
           break;
         default:
           filmsPresenter.show();
@@ -96,7 +95,7 @@ const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
 const userRankComponent = new UserRankView(getWatchedFilms(filmsModel.get()).length);
 render(siteHeaderNode, userRankComponent, RenderPosition.BEFOREEND);
-const navigationComponent = new NavigationView();
+const navigationComponent = new NavigationView(filterModel);
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
 const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, apiWithProvider, userRankComponent);
