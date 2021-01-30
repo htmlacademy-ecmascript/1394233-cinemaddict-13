@@ -11,6 +11,7 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
 import {FilterType, StatsType, UpdateType} from "./consts.js";
+import {getWatchedFilms} from "./utils/stats.js";
 import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
@@ -37,15 +38,15 @@ const filmsModel = new FilmsModel();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
-    render(siteHeaderNode, new UserRangView(filmsModel.get().length), RenderPosition.BEFOREEND);
     render(statisticNode, new SiteStatisticView(filmsModel.get().length), RenderPosition.BEFOREEND);
 
-    const statsComponent = new StatsView(filmsModel);
+    const statsComponent = new StatsView(getWatchedFilms(filmsModel.get()));
 
     const handleNavigationMenuClick = (navigationItem) => {
       switch (navigationItem) {
         case FilterType.STATS:
           filmsPresenter.hide();
+          statsComponent.changeUserRang(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
           statsComponent.getStatistic(StatsType.ALL);
           break;
@@ -92,10 +93,12 @@ const siteHeaderNode = siteBodyNode.querySelector(`.header`);
 const siteMainNode = siteBodyNode.querySelector(`.main`);
 const statisticNode = siteBodyNode.querySelector(`.footer__statistics`);
 
+let userRangComponent = new UserRangView(getWatchedFilms(filmsModel.get()).length);
+render(siteHeaderNode, userRangComponent, RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRangComponent);
 
 
 filterPresenter.init();

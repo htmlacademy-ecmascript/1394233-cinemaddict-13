@@ -282,7 +282,7 @@ export default class Popup extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === KeyboardKeys.ENTER) {
+    if (evt.ctrlKey && evt.key === KeyboardKeys.ENTER || evt.metaKey && evt.key === KeyboardKeys.ENTER) {
       const newComment = {
         emoji: this._data.emojiLabel,
         text: this._data.newComment

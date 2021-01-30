@@ -3,11 +3,11 @@ import isBetween from "dayjs/plugin/isBetween";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+import AbstractView from "./abstract.js";
+
 import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
 import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank} from "../utils/stats.js";
-
-import AbstractView from "./abstract.js";
 
 dayjs.extend(isBetween);
 
@@ -36,12 +36,12 @@ const createChartDataTemplate = () => {
   </div>`;
 };
 
-const createStatisticsTemplate = (userRank) => {
+const createStatisticsTemplate = (watchedFilms) => {
   return `<section class="statistic hidden">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${getUserRank(userRank)}</span>
+      <span class="statistic__rank-label">${getUserRank(watchedFilms.length)}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -77,15 +77,15 @@ const getStatisticsDataForPeriod = {
 };
 
 export default class Stats extends AbstractView {
-  constructor(filmsModel) {
+  constructor(watchedFilms) {
     super();
-    this._films = filmsModel.get();
+    this._watchedFilms = watchedFilms;
 
     this._statisticTypeChangeHandler = this._statisticTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films.length);
+    return createStatisticsTemplate(this._watchedFilms);
   }
 
   getStatistic(statisticType) {
@@ -94,7 +94,7 @@ export default class Stats extends AbstractView {
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    const watchedFilms = getStatisticsDataForPeriod[statisticType](this._films);
+    const watchedFilms = getStatisticsDataForPeriod[statisticType](this._watchedFilms);
     replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
     updateLabelData(labels, counts, watchedFilms);
 
@@ -159,6 +159,10 @@ export default class Stats extends AbstractView {
         }
       }
     });
+  }
+
+  changeUserRang(watchedFilms) {
+    this.getElement().querySelector(`.statistic__rank-label`).textContent = `${getUserRank(watchedFilms)}`;
   }
 
   _statisticTypeChangeHandler(evt) {
