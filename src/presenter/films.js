@@ -17,13 +17,13 @@ import {getWatchedFilms} from "../utils/stats.js";
 
 const FILMS_AMOUNT_PER_STEP = 5;
 
-const AmmountExtraFilms = {
+const AmountExtraFilms = {
   MIN: 0,
   MAX: 2
 };
 
 export default class Films {
-  constructor(filmsContainer, siteBody, filmsModel, filterModel, filterPresenter, api, userRankComponent) {
+  constructor(filmsContainer, siteBody, filmsModel, filterModel, api, userRankComponent) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._filmsContainer = filmsContainer;
@@ -145,6 +145,7 @@ export default class Films {
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
+      this._sortComponent.setActiveSortButton(SortType.DEFAULT);
     }
   }
 
@@ -317,7 +318,7 @@ export default class Films {
     render(this._mainContentComponent, this._topRatedFilmsBoardComponent, RenderPosition.BEFOREEND);
     render(this._topRatedFilmsBoardComponent, topRatedFilmsListComponent, RenderPosition.BEFOREEND);
 
-    const sortedFilms = sortByRating(this._getFilms()).slice(AmmountExtraFilms.MIN, AmmountExtraFilms.MAX).filter((film) => film.rating > 0);
+    const sortedFilms = sortByRating(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.rating > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {
@@ -340,7 +341,7 @@ export default class Films {
     render(this._mainContentComponent, this._mostCommentedBoardComponent, RenderPosition.BEFOREEND);
     render(this._mostCommentedBoardComponent, mostCommentedListComponent, RenderPosition.BEFOREEND);
 
-    const sortedFilms = sortByComments(this._getFilms()).slice(AmmountExtraFilms.MIN, AmmountExtraFilms.MAX).filter((film) => film.comments.length > 0);
+    const sortedFilms = sortByComments(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.comments.length > 0);
 
     if (sortedFilms.length > 0) {
       sortedFilms.forEach((film) => {

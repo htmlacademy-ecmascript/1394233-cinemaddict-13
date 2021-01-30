@@ -49,6 +49,7 @@ apiWithProvider.getFilms()
           statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
           statsComponent.getStatistic(StatsType.ALL);
+          statsComponent.changeWatchedFilmsStat(getWatchedFilms(filmsModel.get()).length);
           break;
         default:
           filmsPresenter.show();
@@ -98,7 +99,7 @@ render(siteHeaderNode, userRankComponent, RenderPosition.BEFOREEND);
 const navigationComponent = new NavigationView();
 render(siteMainNode, navigationComponent, RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(navigationComponent, filterModel, filmsModel);
-const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, filterPresenter, apiWithProvider, userRankComponent);
+const filmsPresenter = new FilmsPresenter(siteMainNode, siteBodyNode, filmsModel, filterModel, apiWithProvider, userRankComponent);
 
 
 filterPresenter.init();
@@ -111,10 +112,10 @@ window.addEventListener(`load`, () => {
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
   apiWithProvider.sync();
-  toast(`Связь с сетью востановленна. Вы работаете онлайн!`);
+  toast(`Связь с сетью восстановлена. Вы работаете онлайн!`);
 });
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
-  toast(`Пропала связьс сетью. Вы работаете офлайн!`);
+  toast(`Пропала связь с сетью. Вы работаете офлайн!`);
 });
