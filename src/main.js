@@ -11,6 +11,7 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
 import {FilterType, StatsType, UpdateType} from "./consts.js";
+import {getWatchedFilms} from "./utils/stats.js";
 import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
@@ -37,10 +38,10 @@ const filmsModel = new FilmsModel();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
-    render(siteHeaderNode, new UserRangView(filmsModel.get().length), RenderPosition.BEFOREEND);
+    render(siteHeaderNode, new UserRangView(getWatchedFilms(filmsModel.get()).length), RenderPosition.BEFOREEND);
     render(statisticNode, new SiteStatisticView(filmsModel.get().length), RenderPosition.BEFOREEND);
 
-    const statsComponent = new StatsView(filmsModel);
+    const statsComponent = new StatsView(getWatchedFilms(filmsModel.get()));
 
     const handleNavigationMenuClick = (navigationItem) => {
       switch (navigationItem) {

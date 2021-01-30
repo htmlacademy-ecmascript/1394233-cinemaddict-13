@@ -63,6 +63,8 @@ export const updateLabelData = (labelsArray, countsArray, films) => {
   });
 };
 
+export const getWatchedFilms = (films) => films.slice().filter((film) => film.isWatched === true);
+
 export const getUserRank = (watchedFilms) => {
   if (watchedFilms >= UserRanks.NOVICE.watched && watchedFilms < UserRanks.FAN.watched) {
     return UserRanks.NOVICE.rank;
