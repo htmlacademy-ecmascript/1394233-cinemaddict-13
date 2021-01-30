@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-export default class SiteStatistic extends AbstractView {
+export default class Statistic extends AbstractView {
   constructor(statistic) {
     super();
     this._statistic = statistic;

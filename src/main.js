@@ -4,7 +4,7 @@ import {toast} from "./utils/toast/toast.js";
 import UserRankView from "./view/user-rank.js";
 import NavigationView from "./view/navigation.js";
 import StatsView from "./view/stats.js";
-import SiteStatisticView from "./view/statistics.js";
+import StatisticsView from "./view/statistics.js";
 import FilmsPresenter from "./presenter/films.js";
 import FilterPresenter from "./presenter/filter.js";
 import FilmsModel from "./model/films.js";
@@ -38,7 +38,7 @@ const filmsModel = new FilmsModel();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
-    render(statisticNode, new SiteStatisticView(filmsModel.get().length), RenderPosition.BEFOREEND);
+    render(statisticNode, new StatisticsView(filmsModel.get().length), RenderPosition.BEFOREEND);
 
     const statsComponent = new StatsView(getWatchedFilms(filmsModel.get()));
 
