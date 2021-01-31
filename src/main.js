@@ -46,7 +46,7 @@ apiWithProvider.getFilms()
       switch (navigationItem) {
         case FilterType.STATS:
           filmsPresenter.hide();
-          statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
+          statsComponent.changeUserRank();
           statsComponent.show();
           statsComponent.getStatistic(StatsType.ALL);
           break;
