@@ -7,7 +7,7 @@ import AbstractView from "./abstract.js";
 
 import {StatsType, PeriodsForStatistic} from "../consts.js";
 import {getMaxKey} from "../utils/common.js";
-import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank} from "../utils/stats.js";
+import {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getUserRank, getWatchedFilms} from "../utils/stats.js";
 
 dayjs.extend(isBetween);
 
@@ -77,24 +77,24 @@ const getStatisticsDataForPeriod = {
 };
 
 export default class Stats extends AbstractView {
-  constructor(watchedFilms) {
+  constructor(filmsModel) {
     super();
-    this._watchedFilms = watchedFilms;
+    this._filmsModel = filmsModel;
 
     this._statisticTypeChangeHandler = this._statisticTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._watchedFilms);
+    return createStatisticsTemplate(getWatchedFilms(this._filmsModel.get()));
   }
 
-  getStatistic(statisticType, watcheFilms) {
+  getStatistic(statisticType) {
     const labels = [];
     const counts = [];
     const statisticDataElement = this.getElement().querySelector(`.statistic__text-list`);
     const statisticChartElement = this.getElement().querySelector(`.statistic__chart-wrap`);
 
-    const watchedFilms = getStatisticsDataForPeriod[statisticType](watcheFilms);
+    const watchedFilms = getStatisticsDataForPeriod[statisticType](getWatchedFilms(this._filmsModel.get()));
     replaceStatsElements(this.getElement(), statisticDataElement, statisticChartElement, createStatisticDataTemplate(watchedFilms), createChartDataTemplate());
     updateLabelData(labels, counts, watchedFilms);
 

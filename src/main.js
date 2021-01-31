@@ -40,7 +40,7 @@ apiWithProvider.getFilms()
     filmsModel.set(UpdateType.INIT, films);
     render(statisticNode, new StatisticsView(filmsModel.get().length), RenderPosition.BEFOREEND);
 
-    const statsComponent = new StatsView(getWatchedFilms(filmsModel.get()));
+    const statsComponent = new StatsView(filmsModel);
 
     const handleNavigationMenuClick = (navigationItem) => {
       switch (navigationItem) {
@@ -48,7 +48,7 @@ apiWithProvider.getFilms()
           filmsPresenter.hide();
           statsComponent.changeUserRank(getWatchedFilms(filmsModel.get()).length);
           statsComponent.show();
-          statsComponent.getStatistic(StatsType.ALL, getWatchedFilms(filmsModel.get()));
+          statsComponent.getStatistic(StatsType.ALL);
           break;
         default:
           filmsPresenter.show();
