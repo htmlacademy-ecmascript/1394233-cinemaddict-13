@@ -159,7 +159,7 @@ export default class Films {
       return;
     }
 
-    for (let film of this._getFilms()) {
+    for (const film of this._getFilms()) {
       const commentsModel = new CommentsModel();
       this._api.getComments(film.id)
         .then((comments) => {
