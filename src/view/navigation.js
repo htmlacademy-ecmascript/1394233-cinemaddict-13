@@ -42,9 +42,9 @@ export default class Navigation extends AbstractView {
       return;
     }
 
-    this._removeFilterLinksActiveClass();
-
     this._filterModel.set(UpdateType.MAJOR, FilterType.ALL);
+
+    this._removeFilterLinksActiveClass();
 
     statsButtonElement.classList.add(`main-navigation__additional--active`);
 

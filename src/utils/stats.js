@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import {createElement} from "./render.js";
 import {UserRanks} from "../consts.js";
 
-export const getDuration = (films) => {
+const getDuration = (films) => {
   let totalDuration = 0;
 
   films.forEach((element) => {
@@ -16,7 +16,7 @@ export const getDuration = (films) => {
   };
 };
 
-export const getGenresStats = (films) => {
+const getGenresStats = (films) => {
   const results = {};
 
   films.reduce((acc, film) => acc.concat(film.genre), [])
@@ -30,9 +30,9 @@ export const getGenresStats = (films) => {
   return results;
 };
 
-export const dateFrom = (daysToFull) => dayjs().subtract(daysToFull, `day`).toDate();
+const dateFrom = (daysToFull) => dayjs().subtract(daysToFull, `day`).toDate();
 
-export const replaceStatsElements = (parent, textDataElement, chartElement, statisticDataTemplate, chartDataTemplate) => {
+const replaceStatsElements = (parent, textDataElement, chartElement, statisticDataTemplate, chartDataTemplate) => {
   if (textDataElement && chartElement) {
     parent.removeChild(textDataElement);
     parent.removeChild(chartElement);
@@ -44,25 +44,26 @@ export const replaceStatsElements = (parent, textDataElement, chartElement, stat
   parent.appendChild(newChartElement);
 };
 
-export const updateLabelData = (labelsArray, countsArray, films) => {
+const updateLabelData = (labels, counts, films) => {
   Object
   .entries(getGenresStats(films))
   .sort((a, b) => b[1] - a[1])
   .forEach(([label, count]) => {
-    labelsArray.push(label);
-    countsArray.push(count);
+    labels.push(label);
+    counts.push(count);
   });
 };
 
-export const getWatchedFilms = (films) => films.slice().filter((film) => film.isWatched === true);
+const getWatchedFilms = (films) => films.slice().filter((film) => film.isWatched);
 
-export const getUserRank = (watchedFilms) => {
+const getUserRank = (watchedFilms) => {
   if (watchedFilms >= UserRanks.NOVICE.watched && watchedFilms < UserRanks.FAN.watched) {
     return UserRanks.NOVICE.rank;
   } else if (watchedFilms >= UserRanks.FAN.watched && watchedFilms < UserRanks.MOVIE_BUFF.watched) {
     return UserRanks.FAN.rank;
-  } else if (watchedFilms >= UserRanks.MOVIE_BUFF.watched) {
-    return UserRanks.MOVIE_BUFF.rank;
   }
-  return ``;
+
+  return UserRanks.MOVIE_BUFF.rank;
 };
+
+export {getDuration, getGenresStats, dateFrom, replaceStatsElements, updateLabelData, getWatchedFilms, getUserRank};

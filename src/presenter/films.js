@@ -70,6 +70,8 @@ export default class Films {
   }
 
   show() {
+    this._handleSortTypeChange(SortType.DEFAULT);
+    this._sortComponent.setActiveSortButton(SortType.DEFAULT);
     this._mainContentComponent.show();
     this._sortComponent.show();
   }
@@ -77,8 +79,6 @@ export default class Films {
   hide() {
     this._mainContentComponent.hide();
     this._sortComponent.hide();
-    this._handleSortTypeChange(SortType.DEFAULT);
-    this._sortComponent.setActiveSortButton(SortType.DEFAULT);
   }
 
   _getFilms() {
@@ -342,9 +342,9 @@ export default class Films {
     const sortedFilms = sortByRating(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.rating > 0);
 
     if (sortedFilms.length > 0) {
-      sortedFilms.forEach((film) => {
+      for (const film of sortedFilms) {
         this._renderFilm(topRatedFilmsListComponent, film, this._topRatedFilmPresenter);
-      });
+      }
 
       return;
     }
@@ -365,9 +365,9 @@ export default class Films {
     const sortedFilms = sortByComments(this._getFilms()).slice(AmountExtraFilms.MIN, AmountExtraFilms.MAX).filter((film) => film.comments.length > 0);
 
     if (sortedFilms.length > 0) {
-      sortedFilms.forEach((film) => {
-        this._renderFilm(mostCommentedListComponent, film, this._mostCommentedFilmPresenter);
-      });
+      for (const film of sortedFilms) {
+        this._renderFilm(mostCommentedListComponent, film, this._topRatedFilmPresenter);
+      }
 
       return;
     }

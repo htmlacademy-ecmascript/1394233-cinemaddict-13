@@ -47,8 +47,8 @@ apiWithProvider.getFilms()
         case FilterType.STATS:
           filmsPresenter.hide();
           statsComponent.changeUserRank();
-          statsComponent.show();
           statsComponent.getStatistic(StatsType.ALL);
+          statsComponent.show();
           break;
         default:
           filmsPresenter.show();

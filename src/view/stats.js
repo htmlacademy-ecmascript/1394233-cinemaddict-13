@@ -47,7 +47,7 @@ const createStatisticsTemplate = (watchedFilms) => {
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time">
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
       <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
@@ -66,14 +66,16 @@ const createStatisticsTemplate = (watchedFilms) => {
     </section>`;
 };
 
-const dateTo = dayjs().toDate();
+const getСurrentTime = () => {
+  return dayjs().toDate();
+};
 
 const getStatisticsDataForPeriod = {
   [StatsType.ALL]: (films) => films,
-  [StatsType.TODAY]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), dateTo)),
-  [StatsType.WEEK]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), dateTo)),
-  [StatsType.MONTH]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), dateTo)),
-  [StatsType.YEAR]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), dateTo))
+  [StatsType.TODAY]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.DAY), getСurrentTime())),
+  [StatsType.WEEK]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.WEEK), getСurrentTime())),
+  [StatsType.MONTH]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.MONTH), getСurrentTime())),
+  [StatsType.YEAR]: (films) => films.filter((film) => dayjs(film.watchedDate).isBetween(dateFrom(PeriodsForStatistic.YEAR), getСurrentTime()))
 };
 
 export default class Stats extends AbstractView {
@@ -86,6 +88,11 @@ export default class Stats extends AbstractView {
 
   getTemplate() {
     return createStatisticsTemplate(getWatchedFilms(this._filmsModel.get()));
+  }
+
+  show() {
+    this.getElement().querySelector(`#statistic-all-time`).checked = true;
+    this.getElement().classList.remove(`hidden`);
   }
 
   getStatistic(statisticType) {
