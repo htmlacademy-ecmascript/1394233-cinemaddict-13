@@ -1,35 +1,34 @@
-export const MAX_SYMBOLS_DESCRIPTION = 140;
-export const AMOUNT_GENRES_FOR_SINGLE_NUMBER = 1;
+const MAX_SYMBOLS_DESCRIPTION = 140;
+const AMOUNT_GENRES_FOR_SINGLE_NUMBER = 1;
+const ACTIVE_SORT_CLASS = `sort__button--active`;
 
-export const FilmListTitles = {
+const FilmListTitles = {
   MOST_COMMENTED: `Most commented`,
   TOP_RATED: `Top rated`,
   ALL: `All movies. Upcoming`
 };
 
-export const SortType = {
+const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
   RATING: `rating`
 };
 
-export const ACTIVE_SORT_CLASS = `sort__button--active`;
-
-export const UserAction = {
+const UserAction = {
   UPDATE_FILM: `UPDATE_FILM`,
   LOCAL_UPDATE_FILM: `LOCAL_UPDATE_FILM`,
   DELETE_COMMENT: `DELETE_COMMENT`,
   ADD_COMMENT: `ADD_COMMENT`
 };
 
-export const UpdateType = {
+const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
   INIT: `INIT`
 };
 
-export const FilterType = {
+const FilterType = {
   ALL: `all`,
   WATCH_LIST: `watchlist`,
   HISTORY: `history`,
@@ -37,7 +36,7 @@ export const FilterType = {
   STATS: `stats`
 };
 
-export const StatsType = {
+const StatsType = {
   ALL: `all-time`,
   TODAY: `today`,
   WEEK: `week`,
@@ -45,14 +44,14 @@ export const StatsType = {
   YEAR: `year`
 };
 
-export const PeriodsForStatistic = {
+const PeriodsForStatistic = {
   DAY: 1,
   WEEK: 6,
   MONTH: 31,
   YEAR: 365
 };
 
-export const UserRanks = {
+const UserRanks = {
   NOVICE: {
     watched: 1,
     rank: `Novice`
@@ -67,9 +66,24 @@ export const UserRanks = {
   }
 };
 
-export const CommentElementState = {
+const CommentElementState = {
   ADDING: `ADDING`,
   DELETING: `DELETING`,
   ABORTING: `ABORTING`,
   ABORTING_DELETING: `ABORTING_DELETING`
+};
+
+export {
+  MAX_SYMBOLS_DESCRIPTION,
+  AMOUNT_GENRES_FOR_SINGLE_NUMBER,
+  ACTIVE_SORT_CLASS,
+  FilmListTitles,
+  SortType,
+  UserAction,
+  UpdateType,
+  FilterType,
+  StatsType,
+  PeriodsForStatistic,
+  UserRanks,
+  CommentElementState
 };

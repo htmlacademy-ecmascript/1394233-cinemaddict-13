@@ -1,12 +1,11 @@
 import Abstract from "../view/abstract.js";
 
-export const RenderPosition = {
+const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
 };
 
-
-export const render = (container, child, place) => {
+const render = (container, child, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -25,7 +24,7 @@ export const render = (container, child, place) => {
   }
 };
 
-export const renderTemplate = (container, template, place) => {
+const renderTemplate = (container, template, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -33,14 +32,14 @@ export const renderTemplate = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export const createElement = (template) => {
+const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
   return newElement.firstChild;
 };
 
-export const remove = (component) => {
+const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
@@ -49,7 +48,7 @@ export const remove = (component) => {
   component.removeElement();
 };
 
-export const addElement = (place, element) => {
+const addElement = (place, element) => {
   if (!(element instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
@@ -57,7 +56,7 @@ export const addElement = (place, element) => {
   place.appendChild(element.getElement());
 };
 
-export const removeElement = (place, element) => {
+const removeElement = (place, element) => {
   if (!(element instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
@@ -65,7 +64,7 @@ export const removeElement = (place, element) => {
   place.removeChild(element.getElement());
 };
 
-export const replace = (newChild, oldChild) => {
+const replace = (newChild, oldChild) => {
   if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
   }
@@ -81,4 +80,15 @@ export const replace = (newChild, oldChild) => {
   }
 
   parent.replaceChild(newChild, oldChild);
+};
+
+export {
+  RenderPosition,
+  render,
+  renderTemplate,
+  createElement,
+  remove,
+  addElement,
+  removeElement,
+  replace
 };
