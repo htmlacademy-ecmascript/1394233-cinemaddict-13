@@ -59,10 +59,10 @@ const getWatchedFilms = (films) => films.slice().filter((film) => film.isWatched
 const getUserRank = (watchedFilms) => {
   if (watchedFilms >= UserRanks.NOVICE.watched && watchedFilms < UserRanks.FAN.watched) {
     return UserRanks.NOVICE.rank;
-  } else if (watchedFilms >= UserRanks.FAN.watched && watchedFilms < UserRanks.MOVIE_BUFF.watched) {
+  }
+  if (watchedFilms >= UserRanks.FAN.watched && watchedFilms < UserRanks.MOVIE_BUFF.watched) {
     return UserRanks.FAN.rank;
   }
-
   return UserRanks.MOVIE_BUFF.rank;
 };
 
